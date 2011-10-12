@@ -28,7 +28,7 @@ list g_lNewButtons;
 
 list g_lMenuIDs;
 
-string g_sHTTPDB_Url = "http://data.mycollar.org/"; //defaul OC url, can be changed in defaultsettings notecard and wil be send by settings script if changed
+string g_sHTTPDB_Url = "http://data.collardb.com/"; //defaul OC url, can be changed in defaultsettings notecard and wil be send by settings script if changed
 
 integer g_iAppLock = FALSE;
 string g_sAppLockToken = "AppLock";

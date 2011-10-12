@@ -1,9 +1,6 @@
-﻿//OpenCollar - hovertext@FloatText - 3.526
+﻿//OpenCollar - hovertext - 3.584
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "FloatText";
-
-//has to be same as in the update script !!!!
-integer g_iUpdatePin = 4711;
 
 //MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
@@ -29,6 +26,7 @@ integer SUBMENU = 3002;
 vector g_vHideScale = <.02,.02,.02>;
 vector g_vShowScale = <.02,.02,1.0>;
 
+integer g_link=0;
 integer g_iLastRank = 0;
 integer g_iOn = FALSE;
 string g_sText;
@@ -55,16 +53,48 @@ Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
     }
 }
 
-// Return  1 IF inventory is removed - llInventoryNumber will drop
-integer SafeRemoveInventory(string sItem)
+// Find the floattext prim
+GetFloatLink()
 {
-    if (llGetInventoryType(sItem) != INVENTORY_NONE)
+    integer max = llGetNumberOfPrims();
+    integer i = 0;
+    list desc = [];
+    for (;i<=max;i++)
     {
-        llRemoveInventory(sItem);
-        return 1;
-    }
-    return 0;
+        desc = llGetObjectDetails(llGetLinkKey(i),[OBJECT_DESC]);
+        if (llSubStringIndex((string)desc,"FloatText") != -1)
+        {
+            g_link = i;
+        }
+    }   
 }
+
+// 
+TextDisplay(string sText, integer iVisible)
+{
+    vector vColor;
+    vector vScale;        
+    if(iVisible)
+    {
+        vColor = g_vColor;
+        vScale = g_vShowScale;
+        g_iOn = TRUE;
+    }
+    else
+    {
+        vColor = <1,1,1>;
+        vScale = g_vHideScale;
+        g_iOn = FALSE;
+    }
+    llSetLinkPrimitiveParamsFast(g_link,[PRIM_TEXT, sText, vColor, 1.0]);
+    if (g_link > 1)
+    {//don't scale the root prim
+        llSetLinkPrimitiveParamsFast(g_link,[PRIM_SIZE,vScale]);
+    }    
+    
+
+}
+
 
 ShowText(string sNewText)
 {
@@ -79,104 +109,17 @@ ShowText(string sNewText)
             sNewText += llList2String(lTmp, i) + "\n";
         }
     }
-    llSetText(sNewText, g_vColor, 1.0);
-    if (llGetLinkNumber() > 1)
-    {//don't scale the root prim
-        llSetScale(g_vShowScale);
-    }
-    g_iOn = TRUE;
-}
-
-HideText()
-{
-    Debug("hide text");
-    llSetText("", <1,1,1>, 1.0);
-    if (llGetLinkNumber() > 1)
-    {
-        llSetScale(g_vHideScale);
-    }
-    g_iOn = FALSE;
-    //    if (g_sText!="")
-    //    {
-    //        llMessageLinked(LINK_ROOT, HTTPDB_SAVE, g_sDBToken + "=off:" + (string)g_iLastRank + ":" + llEscapeURL(g_sText), NULL_KEY);
-    //    }
-    //    else
-    //    {
-    //        llMessageLinked(LINK_ROOT, HTTPDB_DELETE, g_sDBToken, NULL_KEY);
-    //    }
-
-}
-
-CleanPrim()
-{
-    integer i;
-    for (i = 0; i  < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
-    {
-        if (llGetInventoryName(INVENTORY_SCRIPT, i) != llGetScriptName())
-        {
-            i -= SafeRemoveInventory(llGetInventoryName(INVENTORY_SCRIPT, i));
-        }
-    }
-    SafeRemoveInventory(llGetScriptName());
-}
-CleanUp()
-{
-    integer i;
-    list lTmp;
-    string sNam1;
-    string sNam2;
-    string sScr1;
-    string sScr2;
-    float fVer1;
-    float fVer2;
-    for (i = 0 ; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
-    {
-        sNam1 = llGetInventoryName(INVENTORY_SCRIPT, i);
-        sNam2 = llGetInventoryName(INVENTORY_SCRIPT, i + 1);
-        lTmp = llParseString2List(sNam1, [" - "], []);
-        sScr1 =  llList2String(lTmp, 1);
-        fVer1 = (float)llList2String(lTmp, 2);
-        lTmp = llParseString2List(sNam2, [" - "], []);
-        sScr2 = llList2String(lTmp, 1);
-        fVer2 = (float)llList2String(lTmp, 2);
-        if(sScr1 == sScr2)
-        {
-            // remove the older version
-            if (fVer1 <= fVer2)
-            {
-                i -= SafeRemoveInventory(sNam1);
-            }
-            else
-            {
-                i -= SafeRemoveInventory(sNam2);
-            }
-        }
-    }
-    for (i = 0; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
-    {
-        sNam1 = llGetInventoryName(INVENTORY_SCRIPT, i);
-        if (sNam1 != llGetScriptName())
-        {
-            if(llGetInventoryType(sNam1) == INVENTORY_SCRIPT)
-            {
-                llResetOtherScript(sNam1);
-            }
-        }
-    }
-    llResetScript();
+    TextDisplay(sNewText,TRUE);
 }
 
 default
 {
     state_entry()
     {
+        GetFloatLink();
         g_vColor = llGetColor(ALL_SIDES);
         g_kWearer = llGetOwner();
-        llSetText("", <1,1,1>, 0.0);
-        if (llGetLinkNumber() > 1)
-        {
-            llSetScale(g_vHideScale);
-        }
+        TextDisplay("",FALSE);
         llMessageLinked(LINK_ROOT, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
     }
     on_rez(integer start)
@@ -187,11 +130,7 @@ default
         }
         else
         {
-            llSetText("", <1,1,1>, 0.0);
-            if (llGetLinkNumber() > 1)
-            {
-                llSetScale(g_vHideScale);
-            }
+            TextDisplay("",FALSE); 
         }
     }
     link_message(integer iSender, integer iNum, string sStr, key kID)
@@ -214,7 +153,7 @@ default
                         if (sNewText == "")
                         {
                             g_sText = "";
-                            HideText();
+                            TextDisplay("",FALSE);
                         }
                         else
                         {
@@ -234,7 +173,7 @@ default
                     if (sNewText == "")
                     {
                         g_sText = "";
-                        HideText();
+                        TextDisplay("",FALSE);
                     }
                     else
                     {
@@ -252,13 +191,13 @@ default
                     if (iNum <= g_iLastRank)
                     {
                         g_iLastRank = COMMAND_WEARER;
-                        HideText();
+                        TextDisplay("",FALSE);
                     }
                 }
                 else
                 {
                     g_iLastRank = COMMAND_WEARER;
-                    HideText();
+                    TextDisplay("",FALSE);
                 }
             }
             else if (sCommand == "texton")
@@ -272,7 +211,7 @@ default
             else if (sStr == "reset" && (iNum == COMMAND_OWNER || iNum == COMMAND_WEARER))
             {
                 g_sText = "";
-                HideText();
+                TextDisplay("",FALSE);
                 llResetScript();
             }
         }
@@ -293,46 +232,9 @@ default
             if (sToken == g_sDBToken)
             {
                 // no more storing or restoring of text in the db
-                //                sToken = llGetSubString(sStr, llStringLength(sToken) + 1, -1);
-                //                lParams = [] + llParseString2List(sToken, [":"], []);
-                //
-                //                string iStatus = llList2String(lParams, 0);
-                //                Debug("Status: " + iStatus);
-                //                if(iStatus == "on")
-                //                {
-                //                    iNum = (integer)llList2String(lParams, 1);
-                //                    lParams = llDeleteSubList(lParams, 0, 1);
-                //                    g_sText = llUnescapeURL( llDumpList2String(lParams, ":"));
-                //                    ShowText(g_sText);
-                //                    g_iLastRank = iNum;
-                //                }
-                //                else
-                //                {
-                //                    g_iLastRank = COMMAND_WEARER;
-                //                    HideText();
-                //                }
-
                 // but kil any entries in the db to clean the house
 
                 llMessageLinked(LINK_ROOT, HTTPDB_DELETE, g_sDBToken , NULL_KEY);
-            }
-        }
-        else if (iNum == UPDATE)
-        {
-            if(sStr == "prepare")
-            {
-                llSetRemoteScriptAccessPin(g_iUpdatePin);
-                string scriptName = llList2String(llParseString2List(llGetScriptName(), [" - "], []), 1);
-                llMessageLinked(LINK_ROOT, UPDATE, scriptName + "|" + (string)g_iUpdatePin, llGetKey());
-            }
-            else if(sStr == "reset")
-            {
-                llSetRemoteScriptAccessPin(0);
-                CleanUp();
-            }
-            else if(sStr == "cleanup prim")
-            {
-                CleanPrim();
             }
         }
     }

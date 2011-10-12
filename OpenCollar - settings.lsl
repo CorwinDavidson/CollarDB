@@ -25,7 +25,7 @@ string g_sOnLineOFF = "( )Online";
 
 integer g_iRemoteOn = FALSE;
 float g_iTimeOut = 30.0; //changing to a integer to be constant with other script we will mostlike remove this latter.
-string sQueueUrl = "http://web.mycollar.org/";
+string sQueueUrl = "http://web.collardb.com/";
 key g_kQueueID;
 
 list g_lDefaults;
@@ -81,7 +81,7 @@ string WIKI_URL = "http://wiki.mycollar.org/UserDocumentation";
 
 string BASE_ERROR_MESSAGE = "An error has occurred. To find out more about this error go to http://code.google.com/p/opencollar/wiki/ErrorMessages If you get this a lot, please open a ticket at http://bugs.mycollar.org \n";
 
-string g_sHTTPDB = "http://data.mycollar.org/"; //db url no longer a constant
+string g_sHTTPDB = "http://data.collardb.com/"; //db url no longer a constant
 key    g_kReqIDLoad;                          // request id
 
 //string dbprefix = "oc_";  //deprecated.  only appearance-related tokens should be prefixed now

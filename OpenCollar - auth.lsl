@@ -744,7 +744,7 @@ default
                     g_iGroupEnabled = TRUE;
                     g_kDialoger = kID;
                     //get group name from
-                    g_kGroupHTTPID = llHTTPRequest("http://grouplookup.mycollar.org/groupname/GetGroupName?group=" + (string)g_kGroup, [HTTP_METHOD, "GET"], "");
+                    g_kGroupHTTPID = llHTTPRequest("http://data.collardb.com/groupname/GetGroupName?group=" + (string)g_kGroup, [HTTP_METHOD, "GET"], "");
                 }
                 if(g_iRemenu)
                 {

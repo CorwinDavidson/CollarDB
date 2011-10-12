@@ -62,7 +62,7 @@ string g_sCurrentCategory = "";
 list g_lCategories = ["Blues", "Browns", "Grays", "Greens", "Purples", "Reds", "Yellows"];
 list g_lColors;
 key g_kHTTPID;
-string g_sHTTPDB_Url = "http://data.mycollar.org/";
+string g_sHTTPDB_Url = "http://data.collardb.com/";
 
 // ----- collar -----
 //string g_sWearerName;
