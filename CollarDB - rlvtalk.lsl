@@ -1,61 +1,53 @@
-﻿//OpenCollar - rlvmisc - 3.522
+﻿//OpenCollar - rlvtalk - 3.525
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
 string g_sParentMenu = "RLV";
-string g_sSubMenu = "Misc";
-string g_sDBToken = "rlvmisc";
+string g_sSubMenu = "Talk";
+string g_sDBToken = "rlvtalk";
 
 list g_lSettings;//2-strided list in form of [option, param]
 
 list g_lRLVcmds = [
-    "shownames",
-    "fly",
-    "fartouch",
-    "edit",
-    "rez",
-    "showinv",
-    "viewnote",
-    "viewscript",
-    "viewtexture",
-    "showhovertexthud",
-    "showhovertextworld"
+    "sendchat",
+    "chatshout",
+    "chatnormal",
+    "sendim",
+    "recvchat",
+    "recvim",
+    "emote",
+    "recvemote"
         ];
 
 list g_lPrettyCmds = [ //showing menu-friendly command names for each item in g_lRLVcmds
-    "Names",
-    "Fly",
-    "Touch",
-    "Edit",
-    "Rez",
-    "Inventory",
-    "Notecards",
-    "Scripts",
-    "Textures",
-    "Hud",
-    "World"
+    "Chat",
+    "Shouting",
+    "Normal",
+    "IM",
+    "RcvChat",
+    "RcvIM",
+    "Emote",
+    "RcvEmote"
         ];
 
 list g_lDescriptions = [ //showing descriptions for commands
-    "See Avatar Names",
-    "Ability to Fly",
-    "Touch Objects 1.5M+ Away",
-    "Edit Objects",
-    "Rez Objects",
-    "View Inventory",
-    "View Notecards",
-    "View Scripts",
-    "View Textures",
-    "See hover text from Hud objects",
-    "See hover text from ojects in world"
+    "Ability to Send Chat",
+    "Ability to Shout Chat",
+    "Disable = Forced whisper",
+    "Ability to Send IM",
+    "Ability to Receive Chat",
+    "Ability to Receive IM",
+    "Allowed length of Emotes",
+    "Ability to Receive Emote"
         ];
-
 
 string TURNON = "Allow";
 string TURNOFF = "Forbid";
 
-key kMenuID;
 integer g_iReturnMenu = FALSE;
 
-integer g_iRLVOn=FALSE; // make sure the rlv only gets activated 
+integer g_iRLVOn=FALSE;
+
+key g_kWearer;
+key g_kDialogID;
 
 //MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
@@ -97,131 +89,23 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-//string UPMENU = "?";
-//string MORE = "?";
-
 string UPMENU = "^";
-//string MORE = ">";
 
-key g_kWearer;
-
-Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
+Debug(string sMsg)
 {
-    if (kID == g_kWearer)
-    {
+    //llOwnerSay(llGetScriptName() + ": " + sMsg);
+    //llInstantMessage(llGetOwner(), llGetScriptName() + ": " + sMsg);
+}
+
+Notify(key kID, string sMsg, integer iAlsoNotifyWearer) {
+    if (kID == g_kWearer) {
         llOwnerSay(sMsg);
-    }
-    else
-    {
-        llInstantMessage(kID,sMsg);
-        if (iAlsoNotifyWearer)
-        {
+    } else {
+            llInstantMessage(kID,sMsg);
+        if (iAlsoNotifyWearer) {
             llOwnerSay(sMsg);
         }
     }
-}
-
-
-Menu(key kID)
-{
-    if (!g_iRLVOn)
-    {
-        Notify(kID, "RLV features are now disabled in this collar. You can enable those in RLV submenu. Opening it now.", FALSE);
-        llMessageLinked(LINK_SET, SUBMENU, "RLV", kID);
-        return;
-    }
-
-    //build prompt showing current settings
-    //make enable/disable buttons
-    string sPrompt = "Pick an option";
-    sPrompt += "\nCurrent Settings: ";
-    list lButtons;
-
-
-    integer n;
-    integer iStop = llGetListLength(g_lRLVcmds);
-    for (n = 0; n < iStop; n++)
-    {
-        //see if there's a setting for this in the settings list
-        string sCmd = llList2String(g_lRLVcmds, n);
-        string sPretty = llList2String(g_lPrettyCmds, n);
-        string sDesc = llList2String(g_lDescriptions, n);
-        integer iIndex = llListFindList(g_lSettings, [sCmd]);
-        if (iIndex == -1)
-        {
-            //if this cmd not set, then give button to enable
-            lButtons += [TURNOFF + " " + llList2String(g_lPrettyCmds, n)];
-            sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
-        }
-        else
-        {
-            //else this cmd is set, then show in prompt, and make button do opposite
-            //get value of setting
-            string sValue = llList2String(g_lSettings, iIndex + 1);
-            if (sValue == "y")
-            {
-                lButtons += [TURNOFF + " " + llList2String(g_lPrettyCmds, n)];
-                sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
-            }
-            else if (sValue == "n")
-            {
-                lButtons += [TURNON + " " + llList2String(g_lPrettyCmds, n)];
-                sPrompt += "\n" + sPretty + " = Disabled (" + sDesc + ")";
-            }
-        }
-    }
-    //give an Allow All button
-    lButtons += [TURNON + " All"];
-    lButtons += [TURNOFF + " All"];
-    kMenuID = Dialog(kID, sPrompt, lButtons, [UPMENU], 0);
-}
-
-UpdateSettings()
-{
-    //build one big string from the settings list
-    //llOwnerSay("TP settings: " + llDumpList2String(settings, ","));
-    integer iSettingsLength = llGetListLength(g_lSettings);
-    if (iSettingsLength > 0)
-    {
-        list lTempSettings;
-        string sTempRLVSetting;
-        string sTempRLVValue;
-        integer n;
-        list lNewList;
-        for (n = 0; n < iSettingsLength; n = n + 2)
-        {
-            sTempRLVSetting=llList2String(g_lSettings, n);
-            sTempRLVValue=llList2String(g_lSettings, n + 1);
-            lNewList += [ sTempRLVSetting+ "=" + sTempRLVValue];
-            if (sTempRLVValue!="y")
-            {
-                lTempSettings+=[sTempRLVSetting,sTempRLVValue];
-            }
-
-
-        }
-        //output that string to viewer
-        llMessageLinked(LINK_SET, RLV_CMD, llDumpList2String(lNewList, ","), NULL_KEY);
-        g_lSettings=lTempSettings;
-    }
-}
-
-SaveSettings()
-{
-    //save to DB
-    if (llGetListLength(g_lSettings)>0)
-        llMessageLinked(LINK_SET, HTTPDB_SAVE, g_sDBToken + "=" + llDumpList2String(g_lSettings, ","), NULL_KEY);
-    else
-        llMessageLinked(LINK_SET, HTTPDB_DELETE, g_sDBToken, NULL_KEY);
-}
-
-ClearSettings()
-{
-    //clear settings list
-    g_lSettings = [];
-    //remove tpsettings from DB
-    llMessageLinked(LINK_SET, HTTPDB_DELETE, g_sDBToken, NULL_KEY);
-    //main RLV script will take care of sending @clear to viewer
 }
 
 key ShortKey()
@@ -246,21 +130,223 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     return kID;
 } 
 
-default
+Menu(key kID)
 {
-    on_rez(integer iParam)
+    if (!g_iRLVOn)
     {
-        llResetScript();
+        Notify(kID, "RLV features are now disabled in this collar. You can enable those in RLV submenu. Opening it now.", FALSE);
+        llMessageLinked(LINK_SET, SUBMENU, "RLV", kID);
+        return;
     }
 
+    //build prompt showing current settings
+    //make enable/disable buttons
+    string sPrompt = "Pick an option";
+    sPrompt += "\nCurrent Settings: ";
+    list lButtons;
+    //Debug(llDumpList2String(g_lSettings, ","));
+    integer n;
+    integer iStop = llGetListLength(g_lRLVcmds);
+
+    //Default to hide emote, chatnormal(forced whisper) and chatshout(ability to shout).
+    //If they are allowed, they will be set to TRUE in the following block
+    integer iShowChatNormal  = FALSE;
+    integer iShowChatShout   = FALSE;
+    integer iShowEmote       = FALSE;
+    if (llList2String(g_lSettings, (llListFindList(g_lSettings, ["sendchat"])+1)) == "n"){
+        //Debug("hide chatshout and chatnormal");
+        iShowEmote = TRUE;
+    }
+    else {
+        //Debug("show chatnormal");
+        iShowChatNormal = TRUE;
+
+        if (llList2String(g_lSettings, (llListFindList(g_lSettings, ["chatnormal"])+1)) == "n"){
+            //Debug("hide chatshout");
+        }
+        else {
+            //Debug("show chatshout");
+            iShowChatShout   = TRUE;
+        }
+    }
+    //
+
+    for (n = 0; n < iStop; n++)
+    {
+        //Check if current value should even be processed
+        if (
+             (llList2String(g_lRLVcmds, n) == "chatnormal" && !iShowChatNormal)
+             ||
+             (llList2String(g_lRLVcmds, n) == "chatshout" && !iShowChatShout)
+             ||
+             (llList2String(g_lRLVcmds, n) == "emote" && !iShowEmote)
+           )
+        {
+            //Debug("skipping: "+llList2String(g_lRLVcmds, n));
+        }
+        else
+        {
+            //Process as usual....
+
+            //see if there's a setting for this in the settings list
+            string sCmd = llList2String(g_lRLVcmds, n);
+            string sPretty = llList2String(g_lPrettyCmds, n);
+            string sDesc = llList2String(g_lDescriptions, n);
+            integer iIndex = llListFindList(g_lSettings, [sCmd]);
+
+            if (iIndex == -1)
+            {
+                //if this cmd not set, then give button to enable
+                if (sPretty=="Emote"){
+                    //When sendchat='n' then emote defaults to short mode (rem), so you allow long emotes(add)......
+                    sPrompt += "\n" + sPretty + " = Short (" + sDesc + ")";
+                    lButtons += [TURNON + " " + llList2String(g_lPrettyCmds, n)];
+                }
+                else
+                {
+                    sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
+                    lButtons += [TURNOFF + " " + llList2String(g_lPrettyCmds, n)];
+                }
+                
+            }
+            else
+            {
+                //else this cmd is set, then show in prompt, and make button do opposite
+                //get value of setting
+                string sValue1 = llList2String(g_lSettings, iIndex + 1);
+
+                //For some odd reason, the emote command uses add (short;16 char max) and rem (no limit)
+                if (sValue1 == "y" || (sPretty=="Emote" && sValue1 == "add"))
+                {
+                    {
+                        if (sPretty=="Emote") {
+                            sPrompt += "\n" + sPretty + " = Long (" + sDesc + ")";
+                        }
+                        else {
+                            sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
+                        }
+                        
+                        lButtons += [TURNOFF + " " + llList2String(g_lPrettyCmds, n)];
+                    }
+                }
+                else if (sValue1 == "n" || (sPretty=="Emote" && sValue1 == "rem"))
+                {
+                    {
+                        if (sPretty=="Emote") {
+                            sPrompt += "\n" + sPretty + " = Short (" + sDesc + ")";
+                        }
+                        else {
+                            sPrompt += "\n" + sPretty + " = Disabled (" + sDesc + ")";
+                        }
+                        
+                        lButtons += [TURNON + " " + llList2String(g_lPrettyCmds, n)];
+                    }
+                }
+            }
+            //end process as usual
+        }
+    }
+    //give an Allow All button
+    lButtons += [TURNON + " All"];
+    lButtons += [TURNOFF + " All"];
+    g_kDialogID = Dialog(kID, sPrompt, lButtons, [UPMENU], 0);
+}
+
+UpdateSettings()
+{
+    //build one big string from the settings list
+    //llOwnerSay("TP g_lSettings: " + llDumpList2String(g_lSettings, ","));
+    integer iSettingsLength = llGetListLength(g_lSettings);
+    if (iSettingsLength > 0)
+    {
+        list lTempSettings;
+        string sOut;
+        integer n;
+        list lNewList;
+        for (n = 0; n < iSettingsLength; n = n + 2)
+        {
+            string sToken = llList2String(g_lSettings, n);
+            string sValue = llList2String(g_lSettings, n + 1);
+
+            if (sToken == "emote")
+            {
+                if (sValue == "y")
+                {
+                    sValue = "add";
+                }
+                else if (sValue == "n")
+                {
+                    sValue = "rem";
+                }
+            }
+
+            lNewList += [sToken + "=" + sValue];
+            if (sValue!="y")
+            {
+                lTempSettings+=[sToken,sValue];
+            }
+        }
+        sOut = llDumpList2String(lNewList, ",");
+        //output that string to viewer
+        llMessageLinked(LINK_SET, RLV_CMD, sOut, NULL_KEY);
+        g_lSettings=lTempSettings;
+    }
+}
+
+SaveSettings()
+{
+    //save to DB
+    if (llGetListLength(g_lSettings)>0)
+        llMessageLinked(LINK_SET, HTTPDB_SAVE, g_sDBToken + "=" + llDumpList2String(g_lSettings, ","), NULL_KEY);
+    else
+        llMessageLinked(LINK_SET, HTTPDB_DELETE, g_sDBToken, NULL_KEY);
+}
+
+ClearSettings()
+{
+    //clear settings list
+    g_lSettings = [];
+    //remove tpsettings from DB
+    llMessageLinked(LINK_SET, HTTPDB_DELETE, g_sDBToken, NULL_KEY);
+    //main RLV script will take care of sending @clear to viewer
+}
+
+list RestackMenu(list in)
+{ //adds empty buttons until the list length is multiple of 3, to max of 12
+    while (llGetListLength(in) % 3 != 0 && llGetListLength(in) < 12)
+    {
+        in += [" "];
+    }
+    //look for ^ and > in the menu
+    integer u = llListFindList(in, [UPMENU]);
+    if (u != -1)
+    {
+        in = llDeleteSubList(in, u, u);
+    }
+    //re-orders a list so dialog buttons start in the top row
+    list sOut = llList2List(in, 9, 11);
+    sOut += llList2List(in, 6, 8);
+    sOut += llList2List(in, 3, 5);
+    sOut += llList2List(in, 0, 2);
+    //make sure we move ^ and > to position 1 and 2
+    if (u != -1)
+    {
+        sOut = llListInsertList(sOut, [UPMENU], 1);
+    }
+    return sOut;
+}
+
+default
+{
     state_entry()
     {
         g_kWearer = llGetOwner();
-        // llSleep(1.0);
-        // llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
+
+        //llSleep(1.0);
+        //llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
         //llMessageLinked(LINK_SET, HTTPDB_REQUEST, g_sDBToken, NULL_KEY);
     }
-    
+
     link_message(integer iSender, integer iNum, string sStr, key kID)
     {
         if (iNum == MENUNAME_REQUEST && sStr == g_sParentMenu)
@@ -281,15 +367,15 @@ default
             }
         */
             else if (iNum >= COMMAND_OWNER && iNum <= COMMAND_WEARER)
-            {
-                //added for chat command for direct menu acceess
-                if (llToLower(sStr) == llToLower(g_sSubMenu))
+            {//added for short chat-menu command
+                if (llToLower(sStr) == "talk")
                 {
                     Menu(kID);
+                    return;
                 }
                 //do simple pass through for chat commands
 
-                //since more than one RLV sCommand can come on the same line, loop through them
+                //since more than one RLV command can come on the same line, loop through them
                 list lItems = llParseString2List(sStr, [","], []);
                 integer n;
                 integer iStop = llGetListLength(lItems);
@@ -299,15 +385,15 @@ default
                     //split off the parameters (anything after a : or =)
                     //and see if the thing being set concerns us
                     string sThisItem = llList2String(lItems, n);
-                    string sBehavior = llList2String(llParseString2List(sThisItem, ["=", ":"], []), 0);
+                    string sBehavior = llList2String(llParseString2List(sThisItem, ["="], []), 0);//removed ":" as exceptions will pick it up now
                     if (llListFindList(g_lRLVcmds, [sBehavior]) != -1)
                     {
                         //this is a behavior that we handle.
 
-                        //filter commands from wearer, if wearer is not owner
+                        //filter commands from wearer
                         if (iNum == COMMAND_WEARER)
                         {
-                            Notify(g_kWearer,"Sorry, but RLV commands may only be given by owner, secowner, or group (if set).",FALSE);
+                            llOwnerSay("Sorry, but RLV commands may only be given by owner, secowner, or group (if set).");
                             return;
                         }
 
@@ -324,7 +410,6 @@ default
                             //we already have a setting for this option.  update it.
                             g_lSettings = llListReplaceList(g_lSettings, [sOption, sParam], iIndex, iIndex + 1);
                         }
-
                         iChange = TRUE;
                     }
                     else if (sBehavior == "clear")
@@ -356,11 +441,10 @@ default
                 g_lSettings = llParseString2List(llList2String(lParams, 1), [","], []);
                 UpdateSettings();
             }
-            //llOwnerSay("TP DB settings: " + llDumpList2String(settings, ","));
         }
         else if (iNum == RLV_REFRESH)
         {
-            //rlvmain just started up.  Tell it absOut our current restrictions
+            //rlvmain just started up.  Tell it about our current restrictions
             g_iRLVOn = TRUE;
             UpdateSettings();
         }
@@ -369,20 +453,24 @@ default
             //clear db and local settings list
             ClearSettings();
         }
-        // rlvoff -> we have to turn the menu off too
-        else if (iNum == RLV_OFF) g_iRLVOn=FALSE;
-        // rlvon -> we have to turn the menu on again
-        else if (iNum == RLV_ON) g_iRLVOn=TRUE;
+        else if (iNum == RLV_OFF)// rlvoff -> we have to turn the menu off too
+        {
+            g_iRLVOn=FALSE;
+        }
+        else if (iNum == RLV_ON)// rlvon -> we have to turn the menu on again
+        {
+            g_iRLVOn=TRUE;                
+        }
         else if (iNum == DIALOG_TIMEOUT)
         {
-            if (kID == kMenuID)
+            if (kID == g_kDialogID)
             {
                 g_iReturnMenu = FALSE;
             }
         }
         else if (iNum == DIALOG_RESPONSE)
         {
-            if (kID == kMenuID)
+            if (kID == g_kDialogID)
             {
                 list lMenuParams = llParseString2List(sStr, ["|"], []);
                 key kAv = (key)llList2String(lMenuParams, 0);          
@@ -395,13 +483,15 @@ default
                 }
                 else
                 {
+                    //we got a command to enable or disable something, like "Enable LM"
+                    //get the actual command name by looking up the pretty name from the message
                     list lParams = llParseString2List(sMessage, [" "], []);
                     string sSwitch = llList2String(lParams, 0);
                     string sCmd = llList2String(lParams, 1);
                     integer iIndex = llListFindList(g_lPrettyCmds, [sCmd]);
                     if (sCmd == "All")
                     {
-                        //handle the "Allow All" and "Forbid All" sCommands
+                        //handle the "Allow All" and "Forbid All" commands
                         string ONOFF;
                         //decide whether we need to switch to "y" or "n"
                         if (sSwitch == TURNOFF)
@@ -414,7 +504,7 @@ default
                             ONOFF = "y";
                         }
         
-                        //loop through rlvcmds to create list
+                        //loop through g_lRLVcmds to create list
                         string sOut;
                         integer n;
                         integer iStop = llGetListLength(g_lRLVcmds);
@@ -450,8 +540,8 @@ default
                     {
                         //something went horribly wrong.  We got a command that we can't find in the list
                     }
-                }
-            }
+                }                       
+            }     
         }
     }
 }

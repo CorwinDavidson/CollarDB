@@ -52,8 +52,8 @@ integer DIALOG_TIMEOUT = -9002;
 
 //5000 block is reserved for IM slaves
 
-//string UPMENU = "↑";
-//string MORE = "→";
+//string UPMENU = "?";
+//string MORE = "?";
 string UPMENU = "^";
 //string MORE = ">";
 string GIVECARD = "Guide";

@@ -76,7 +76,7 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-//string UPMENU = "↑";//when your menu hears this, give the parent menu
+//string UPMENU = "?";//when your menu hears this, give the parent menu
 string UPMENU = "^";
 
 key g_kWearer;
