@@ -37,7 +37,7 @@ string RELEASE = "*Release*";
 integer g_iAnimLock = FALSE;
 string g_sLockToken = "animlock";
 
-string g_sHTTPDB_Url = "http://data.mycollar.org/"; //defaul OC url, can be changed in defaultsettings notecard and wil be send by settings script if changed
+string g_sHTTPDB_Url = "http://data.collardb.com/"; //defaul OC url, can be changed in defaultsettings notecard and wil be send by settings script if changed
 
 string g_sAnimToken = "currentpose";
 //MESSAGE MAP

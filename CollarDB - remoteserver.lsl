@@ -395,7 +395,7 @@ default
         Debug("State Entry!");
         NewURL();
         g_kWearer=llGetOwner();
-        g_sWEBINTERFACE_PUBLIC_URL = "http://web.mycollar.org/publichttp/?key=" + (string)g_kWearer;
+        g_sWEBINTERFACE_PUBLIC_URL = "http://web.collardb.com/publichttp/?key=" + (string)g_kWearer;
         llSleep(1.0);
 
         llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
@@ -461,7 +461,7 @@ default
             {
                 if (5 < ++g_iErrPass)
                 {
-                    Notify(g_kWearer, "There seems to be someone is tring to hack into your collar. If you keep getting this please file a bug at http://bugs.mycollar.org/", TRUE);
+                    Notify(g_kWearer, "There seems to be someone is tring to hack into your collar. If you keep getting this please file a bug at http://bugs.collardb.com/", TRUE);
                     NewURL();
                 }
                 return;
@@ -499,7 +499,7 @@ default
             {
                 if (5 < ++g_iErrPass)
                 {
-                    Notify(g_kWearer, "There seems to be someone is tring to hack into your collar. If you keep getting this please file a bug at http://bugs.mycollar.org/", TRUE);
+                    Notify(g_kWearer, "There seems to be someone is tring to hack into your collar. If you keep getting this please file a bug at http://bugs.collardb.com/", TRUE);
                     NewURL();
                 }
                 return;

@@ -20,7 +20,7 @@ Restrained Love Viewer API (Application Programming Interface) is a Second Life 
 
 A Restrained Love Viewer relay, or just "relay", is  a script that listens for in-world object commands and transmits them to your viewer so that you can be controlled by objects belonging to *other* people. Of course, the task of the relay is not only to transmit such commands, but also to manage which objects should be allowed or not, and to keep track of the applied restrictions.
 
-OpenCollar includes such a relay. The relay included in OpenCollar has a few particularities:
+CollarDB includes such a relay. The relay included in CollarDB has a few particularities:
 
 - In contrast to most older relays (prior to 2009), it allows several concurrent sources to communicate with your viewer and lock your relay.
 
@@ -126,9 +126,9 @@ This script uses a lot of memory, and even more when it has to decompose and ana
 
 - To make your relay work again, you will have to reset the script using the Tools menu of your viewer (alas, a script that crashed cannot be reset by another script).
 
-- We would be glad if you could tell us where and how the crash happened, and report your incident on the OpenCollar bug tracker at http://code.google.com/p/opencollar/issues. Any other bug in the relay or issue with the documentation should be reported there as well.
+- We would be glad if you could tell us where and how the crash happened, and report your incident on the CollarDB bug tracker at http://code.google.com/p/CollarDB/issues. Any other bug in the relay or issue with the documentation should be reported there as well.
 
-Also, due to the way RLV works, having several RLV sources managing from a single script (and hence a single prim) can trigger unexpected results. For instance, the command @getstatus would report all restrictions set by the collar, instead of just those set by the source sending the command. This is not something we can fix unless we restrict the relay to a single source (which would be a shame!) or unless we use a multiprim approach, which would be highly impractical in the OpenCollar context.
+Also, due to the way RLV works, having several RLV sources managing from a single script (and hence a single prim) can trigger unexpected results. For instance, the command @getstatus would report all restrictions set by the collar, instead of just those set by the source sending the command. This is not something we can fix unless we restrict the relay to a single source (which would be a shame!) or unless we use a multiprim approach, which would be highly impractical in the CollarDB context.
 
 Some other bugs might arise, related to contradictory commands, restrictions and exceptions from different sources. This category of bugs can sometimes be mitigated in some way by using scripting tricks, so if you notice one of this kind please report it on the bug tracker so we can see if something can be done.
 

@@ -1,6 +1,6 @@
-﻿OpenCollar is a set of scripts for a collar similar other collars common in SL.  Unlike those systems however, OpenCollar is open source.  You are free to copy and redistribute the OpenCollar scripts, provided that you leave them full perms.  Read the entire OpenCollar License in the notecard accompanying the scripts.
+﻿CollarDB is a set of scripts for a collar similar other collars common in SL.  Unlike those systems however, CollarDB is open source.  You are free to copy and redistribute the CollarDB scripts, provided that you leave them full perms.  Read the entire CollarDB License in the notecard accompanying the scripts.
 
-The OpenCollar architecture is plugin-based, allowing for many more features to be added in the future.  Features not found in other collars include:
+The CollarDB architecture is plugin-based, allowing for many more features to be added in the future.  Features not found in other collars include:
 
 - complete, menu-driven support for the Restrained Life Viewer.
 - ability to automatically punish the sub for saying any word from a list you specify.
@@ -11,10 +11,10 @@ The OpenCollar architecture is plugin-based, allowing for many more features to 
 - and best of all, free and open source!
 
 
-Please report any bugs you find or feature requests to the OpenCollar bug tracker at http://code.google.com/p/opencollar/issues.
+Please report any bugs you find or feature requests to the CollarDB bug tracker at http://code.google.com/p/CollarDB/issues.
 
 
-**Important**  OpenCollar automatically sets the command prefix to the wearer's initials.  Use the wearer's initials before all the commands below.  For example, if Greta Grumpsalot were wearing the collar, she would prefix all commands with her initials "gg", such as saying "ggowner" instead of "owner".  Use the "prefix" command to change the prefix if you want one other than the default initials.
+**Important**  CollarDB automatically sets the command prefix to the wearer's initials.  Use the wearer's initials before all the commands below.  For example, if Greta Grumpsalot were wearing the collar, she would prefix all commands with her initials "gg", such as saying "ggowner" instead of "owner".  Use the "prefix" command to change the prefix if you want one other than the default initials.
 
 To give a command to two subs at once, use a * in place of the prefix.  For example, *kiss would make all the subs near you give you a kiss, if you have some degree ownership in their collars (owner, secowner, or group).
 

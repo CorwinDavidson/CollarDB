@@ -77,9 +77,9 @@ integer MENUNAME_REMOVE = 3003;
 
 
 string WIKI ="Online Guide";
-string WIKI_URL = "http://wiki.mycollar.org/UserDocumentation";
+string WIKI_URL = "http://www.collardb.com/static/UserDocumentation";
 
-string BASE_ERROR_MESSAGE = "An error has occurred. To find out more about this error go to http://www.collardb.com/static/ErrorMessages If you get this a lot, please open a ticket at http://bugs.mycollar.org \n";
+string BASE_ERROR_MESSAGE = "An error has occurred. To find out more about this error go to http://www.collardb.com/static/ErrorMessages If you get this a lot, please open a ticket at http://bugs.collardb.com \n";
 
 string g_sHTTPDB = "http://data.collardb.com/"; //db url no longer a constant
 key    g_kReqIDLoad;                          // request id
