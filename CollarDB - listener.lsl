@@ -1,5 +1,5 @@
-﻿//OpenCollar - listener - 3.531
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- listener - 3.531
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //listener
 
 integer g_iListenChan = 1;
@@ -196,11 +196,11 @@ default
     {
         if (kID == NULL_KEY)
         {
-            llWhisper(g_iInterfaceChannel, "OpenCollar=No");
+            llWhisper(g_iInterfaceChannel, "CollarDB=No");
         }
         else
         {
-            llWhisper(g_iInterfaceChannel, "OpenCollar=Yes");
+            llWhisper(g_iInterfaceChannel, "CollarDB=Yes");
         }
     }
 
@@ -246,9 +246,9 @@ default
             Debug(sMsg);
             //do nothing if wearer isnt owner of the object
             if (llGetOwnerKey(kID) != g_kWearer) return;
-            if (sMsg == "OpenCollar?")
+            if (sMsg == "CollarDB?")
             {
-                llWhisper(g_iInterfaceChannel, "OpenCollar=Yes");
+                llWhisper(g_iInterfaceChannel, "CollarDB=Yes");
                 return;
             }
             else if (sMsg == "version")

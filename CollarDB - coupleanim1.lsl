@@ -1,5 +1,5 @@
-﻿//OpenCollar - coupleanim1 - 3.522
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- coupleanim1 - 3.522
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //coupleanim1
 string g_sParentMenu = "Animations";
 string g_sSubMenu = "Couples";

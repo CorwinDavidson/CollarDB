@@ -1,5 +1,5 @@
-﻿//OpenCollar - texture - 3.525
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- texture - 3.525
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //color
 
 //set textures by uuid, and save uuids instead of texture names to DB

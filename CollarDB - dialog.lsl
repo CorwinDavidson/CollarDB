@@ -1,4 +1,4 @@
-﻿//OpenCollar - dialog - 3.531
+﻿//CollarDB- dialog - 3.531
 //an adaptation of Schmobag Hogfather's SchmoDialog script
 
 //MESSAGE MAP

@@ -1,4 +1,4 @@
-﻿//OpenCollar - camera - 3.520
+﻿//CollarDB- camera - 3.520
 //allows dom to set different camera mode
 //responds to commands from modes list
 

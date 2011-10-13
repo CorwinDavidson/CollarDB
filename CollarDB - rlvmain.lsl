@@ -1,5 +1,5 @@
-﻿//OpenCollar - rlvmain - 3.531
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- rlvmain - 3.531
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //new viewer checking method, as of 2.73
 //on rez, restart script
 //on script start, query db for rlvon setting
@@ -201,7 +201,7 @@ SendCommand(string sCmd)
 //        llMessageLinked(LINK_SET,CMD_ML,"off",NULL_KEY);
 //    }
 //    else
-//   there is no mouselook module in opencollar! easy to add again if there a popular vote  ^^
+//   there is no mouselook module in CollarDB! easy to add again if there a popular vote  ^^
     llOwnerSay("@"+sCmd);
     if (g_iRLVNotify)
     {

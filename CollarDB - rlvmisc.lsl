@@ -1,5 +1,5 @@
-﻿//OpenCollar - rlvmisc - 3.522
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- rlvmisc - 3.522
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 string g_sParentMenu = "RLV";
 string g_sSubMenu = "Misc";
 string g_sDBToken = "rlvmisc";

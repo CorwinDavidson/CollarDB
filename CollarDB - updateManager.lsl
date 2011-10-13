@@ -40,10 +40,10 @@ SafeResetOther(string scriptname)
     }
 }
 
-integer isOpenCollarScript(string name)
+integer IsCollarDBScript(string name)
 {
     name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
-    if (name == "OpenCollar")
+    if (name == "CollarDB")
     {
         return TRUE;
     }

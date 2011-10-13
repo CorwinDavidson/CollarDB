@@ -1,5 +1,5 @@
-﻿//OpenCollar - hide - 3.530
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- hide - 3.530
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //on getting menu request, give element menu
 //on getting element type, give Hide and Show buttons
 //on hearing "hide" or "Show", do that for the current element type

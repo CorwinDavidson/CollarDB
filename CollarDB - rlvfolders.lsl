@@ -1,5 +1,5 @@
-﻿//OpenCollar - rlvfolders - 3.520
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- rlvfolders - 3.520
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //give 4 menus:
     //Folder
 

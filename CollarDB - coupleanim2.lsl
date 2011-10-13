@@ -1,5 +1,5 @@
-﻿//OpenCollar - coupleanim2 - 3.520
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- coupleanim2 - 3.520
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 key g_kPartner;
 float g_fTimeOut = 30.0;//time for the potential kissee to respond before we give up
 

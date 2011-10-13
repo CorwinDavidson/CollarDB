@@ -1,4 +1,4 @@
-﻿//OpenCollar - hovertext - 3.584
+﻿//CollarDB- hovertext - 3.584
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "FloatText";
 

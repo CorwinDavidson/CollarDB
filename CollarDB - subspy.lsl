@@ -1,11 +1,11 @@
-﻿//OpenCollar - subspy - 3.521
+﻿//CollarDB- subspy - 3.521
 //put all reporting on an interval of 30 or 60 secs.  That way we won't get behind with IM delays.
 //use sensorrepeat as a second timer to do the reporting (since regular timer is already used by menu system
 //if radar is turned off, just don't report avs when the sensor or no_sensor event goes off
 
 
-// Spy script for the OpenCollar Project (c)
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+// Spy script for the CollarDBProject (c)
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 
 
 list g_lAvBuffer;//if this changes between report intervals then tell owners (if radar enabled)

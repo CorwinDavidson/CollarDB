@@ -1,5 +1,5 @@
-﻿//OpenCollar - rlvtp - 3.529
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- rlvtp - 3.529
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 
 //3.004 - adding "accepttp" support.  No button, just automatically turned on for owner.
 //3.524+ - moving accepttp to the exception script.

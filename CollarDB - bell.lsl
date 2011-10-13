@@ -1,5 +1,5 @@
-﻿//OpenCollar - bell - 3.520
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- bell - 3.520
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //Collar Cuff Menu
 
 //=============================================================================

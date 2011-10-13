@@ -1,5 +1,5 @@
-﻿?//OpenCollar - lock - 3.529
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿?//CollarDB- lock - 3.529
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 
 list g_lOwners;
 

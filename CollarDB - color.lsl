@@ -1,5 +1,5 @@
-﻿//OpenCollar - color - 3.520
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- color - 3.520
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //color
 
 //on getting color command, give menu to choose which element, followed by menu to pick color

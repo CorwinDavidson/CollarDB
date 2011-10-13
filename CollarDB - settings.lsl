@@ -1,5 +1,5 @@
-﻿//OpenCollar - settings - 3.521
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- settings - 3.521
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //DEFAULT STATE
 
 //on state entry, get db prefix from desc
@@ -79,7 +79,7 @@ integer MENUNAME_REMOVE = 3003;
 string WIKI ="Online Guide";
 string WIKI_URL = "http://wiki.mycollar.org/UserDocumentation";
 
-string BASE_ERROR_MESSAGE = "An error has occurred. To find out more about this error go to http://code.google.com/p/opencollar/wiki/ErrorMessages If you get this a lot, please open a ticket at http://bugs.mycollar.org \n";
+string BASE_ERROR_MESSAGE = "An error has occurred. To find out more about this error go to http://www.collardb.com/static/ErrorMessages If you get this a lot, please open a ticket at http://bugs.mycollar.org \n";
 
 string g_sHTTPDB = "http://data.collardb.com/"; //db url no longer a constant
 key    g_kReqIDLoad;                          // request id

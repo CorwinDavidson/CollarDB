@@ -1,4 +1,4 @@
-﻿//OpenCollar - timer - 3.525
+﻿//CollarDB- timer - 3.525
 
 // LVs 0.001
 //      Hacks to make it play nice with others.
@@ -40,9 +40,9 @@ string g_sToyName = "collar";
 integer g_iInterfaceChannel;
 // end time keeper
 
-// Template for creating a OpenCOllar Plugin - OpenCollar Version 3.0xx
+// Template for creating a CollarDBPlugin - CollarDBVersion 3.0xx
 
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //Collar Cuff Menu
 
 string g_sSubMenu = "Timer"; // Name of the submenu

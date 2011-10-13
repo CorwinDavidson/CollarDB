@@ -1,5 +1,5 @@
-﻿//OpenCollar - rlvrelay - 3.535
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- rlvrelay - 3.535
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 
 integer RELAY_CHANNEL = -1812221819;
 integer g_iRlvListener;
@@ -53,7 +53,7 @@ key g_kListMenuID;
 key g_kListID;
 
 //string PROTOCOL_VERSION = "1100"; //with some additions, but backward compatible, nonetheless
-//string IMPL_VERSION = "OpenCollar 3.6";   <- not required in protocol 1.100
+//string IMPL_VERSION = "CollarDB3.6";   <- not required in protocol 1.100
 //string ORG_VERSIONS = "ORG=0001/who=001";
 
 integer g_iGarbageRate = 180; //garbage collection rate
@@ -286,7 +286,7 @@ string HandleCommand(string sIdent, key kID, string sCom, integer iAuthed)
         string sAck = "ok";
         if (sCom == "!release" || sCom == "@clear") llMessageLinked(LINK_SET,RLVR_CMD,"clear",kID);
         else if (sCom == "!version") sAck = "1100";
-        else if (sCom == "!implversion") sAck = "OpenCollar 3.6";
+        else if (sCom == "!implversion") sAck = "CollarDB3.6";
         else if (sCom == "!x-orgversions") sAck = "ORG=0003/who=001";
         else if (llGetSubString(sCom,0,6)=="!x-who/") {kWho = (key)llGetSubString(sCom,7,42); iGotWho=TRUE;}
         else if (llGetSubString(sCom,0,0) == "!") sAck = "ko"; // ko unknown meta-commands
@@ -852,7 +852,7 @@ default
                     else if (sMsg=="MinMode") MinModeMenu(kAv);
                     else if (sMsg=="Help")
                     {
-                        llGiveInventory(kAv,"OpenCollar - rlvrelay - Help");
+                        llGiveInventory(kAv,"CollarDB- rlvrelay - Help");
                         Menu(kAv);
                     }
                     else if (sMsg==UPMENU)

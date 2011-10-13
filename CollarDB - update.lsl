@@ -1,5 +1,5 @@
-﻿//OpenCollar - update - 3.528
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- update - 3.528
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 //on attach and on state_entry, http request for update
 
 key g_kWearer;
@@ -133,9 +133,10 @@ SafeResetOther(string sName)
     }
 }
 
-integer IsOpenCollarScript(string sName)
+integer IsCollarDBScript(string name)
 {
-    if (llList2String(llParseString2List(sName, [" - "], []), 0) == "OpenCollar")
+    name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
+    if (name == "CollarDB")
     {
         return TRUE;
     }
@@ -152,7 +153,7 @@ CheckForUpdate(integer iUpdateMode)
     //handle in-place updates.
     if (g_sUpdateMethod == "inplace")
     {
-        sObjectName = "OpenCollarUpdater";
+        sObjectName = "CollarDBUpdater";
     }
 
     if (sObjectName == "" || sObjectVersion == "")
@@ -186,7 +187,7 @@ ReadyToUpdate(integer iDel)
 OrderlyReset(integer iFullReset, integer iIsUpdateReset)
 {
     integer i;
-    llOwnerSay("OpenCollar scripts initializing...");
+    llOwnerSay("CollarDBscripts initializing...");
 
     //put in here the full name of each script named in g_lResetFirst.  Then loop through and reset
     //we initialize the list by setting equal to g_lResetFirst to ensure that indices will line up
@@ -196,7 +197,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {
         string sFullName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sPartialName = llList2String(llParseString2List(sFullName, [" - "], []) , 1);
-        if(IsOpenCollarScript(sFullName))
+        if(IsCollarDBScript(sFullName))
         {
             integer iScriptPos = llListFindList(g_lResetFirst, [sPartialName]);
             if (iScriptPos != -1)
@@ -224,10 +225,10 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     }
     Debug("resetting everything else");
     for (i = 0; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
-    {   //reset all other OpenCollar scripts
+    {   //reset all other CollarDBscripts
         string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsOpenCollarScript(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
+        if(IsCollarDBScript(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
         {
             if(sFullScriptName != llGetScriptName() && sScriptName != "settings" && sScriptName != "updateManager")
             {
@@ -259,7 +260,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {   //last before myself reset the settings script
         string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsOpenCollarScript(sFullScriptName) && sScriptName == "settings")
+        if(IsCollarDBScript(sFullScriptName) && sScriptName == "settings")
         {
             Debug("Restting settings script");
             SafeResetOther(sFullScriptName);
@@ -292,7 +293,7 @@ default
     state_entry()
     {
         //check if we're in an updater.  if so, don't do regular startup routine.
-        if (llSubStringIndex(llGetObjectName(), "OpenCollarUpdater") == 0)
+        if (llSubStringIndex(llGetObjectName(), "CollarDBUpdater") == 0)
         {
             //we're in an updater. go to sleep
             llSetScriptState(llGetScriptName(), FALSE);
@@ -379,7 +380,7 @@ state reseted
                     {
                         g_iUpdateBeta = TRUE;
                         string sUrl = g_sHTTPDB_Url + g_sUpdatePath;
-                        sUrl += "object=" + llEscapeURL("OpenCollarUpdater Dev/Beta/RC");
+                        sUrl += "object=" + llEscapeURL("CollarDBUpdater Dev/Beta/RC");
                         sUrl += "&version=" + llEscapeURL(sObjectVersion);
                         if (!g_iUpdateMode)
                         {

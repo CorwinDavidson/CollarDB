@@ -1,5 +1,5 @@
-﻿//OpenCollar - auth - 3.530
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- auth - 3.530
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 
 //save owner, secowners, and group key
 //check credentials when messages come in on COMMAND_NOAUTH, send out message on appropriate channel
@@ -16,7 +16,7 @@ list g_lSecOwners;//strided list in the form key,name
 list g_lBlackList;//list of blacklisted UUID
 string g_sTmpName; //used temporarily to store new owner or secowner name while retrieving key
 
-string  g_sWikiURL = "http://code.google.com/p/opencollar/wiki/UserDocumentation";
+string  g_sWikiURL = "http://www.collardb.com/static/UserDocumentation";
 string g_sParentMenu = "Main";
 string g_sSubMenu = "Owners";
 

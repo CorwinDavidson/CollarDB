@@ -1,5 +1,5 @@
-﻿//OpenCollar - label - 3.526
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
+﻿//CollarDB- label - 3.526
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "Label";
 string g_sFontParent = "Appearance";
@@ -10,7 +10,7 @@ key g_kWearer;
 integer g_iAppLock = FALSE;
 string g_sAppLockToken = "AppLock";
 
-//opencollar MESSAGE MAP
+//CollarDBMESSAGE MAP
 integer COMMAND_NOAUTH = 0;
 integer COMMAND_OWNER = 500;
 integer COMMAND_SECOWNER = 501;
@@ -46,7 +46,7 @@ string UPMENU = "^";
 
 key g_kDialogID;
 
-string g_sLabelText = "OpenCollar";
+string g_sLabelText = "CollarDB";
 string g_sDesignPrefix;
 
 list g_lDesignRot = ["oc_", <0.0, 0.0, -0.992462, 0.122556>];//strided list of default rotations for label prim 0, by dbprefix
