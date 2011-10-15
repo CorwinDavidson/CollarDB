@@ -1,5 +1,5 @@
 ﻿//CollarDB- rlvrelay - 3.535
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 integer RELAY_CHANNEL = -1812221819;
 integer g_iRlvListener;

@@ -1,5 +1,5 @@
 ﻿//CollarDB- menu - 3.520
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //on start, send request for submenu names
 //on getting submenu name, add to list if not already present
 //on menu request, give dialog, with alphabetized list of submenus
@@ -9,7 +9,7 @@ list g_lMenuNames = ["Main", "Help/Debug", "AddOns"];
 list g_lMenus;//exists in parallel to g_lMenuNames, each entry containing a pipe-delimited string with the items for the corresponding menu
 list g_lMenuPrompts = [
 "Pick an option.\n",
-"Click 'Guide' to receive a help notecard,\nClick 'ResetScripts' to reset the CollarDBscripts without losing your settings.\nClick any other button for a quick popup help about the chosen topic.\n",
+"Click 'Guide' to receive a help notecard,\nClick 'ResetScripts' to reset the CollarDB scripts without losing your settings.\nClick any other button for a quick popup help about the chosen topic.\n",
 "Please choose your AddOn:\n"
 ];
 
@@ -57,7 +57,7 @@ integer DIALOG_TIMEOUT = -9002;
 string UPMENU = "^";
 //string MORE = ">";
 string GIVECARD = "Guide";
-string HELPCARD = "CollarDBGuide";
+string HELPCARD = "CollarDB Guide";
 string REFRESH_MENU = "Fix Menus";
 string RESET_MENU = "ResetScripts";
 

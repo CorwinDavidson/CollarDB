@@ -1,4 +1,4 @@
-﻿//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+﻿//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 //in place updater
 
@@ -138,7 +138,7 @@ initiate()
     UnRunScripts();
     versionstring = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 1);
     version = (float)versionstring;
-    instructions = "CollarDBUpdate - " + llGetSubString((string)version, 0, 4) + "\nTo update your collar (version 3.020 or later):\n1 - Rez it next to me.\n2 - Touch the collar and select Help/Debug->Update";
+    instructions = "CollarDB Update - " + llGetSubString((string)version, 0, 4) + "\nTo update your collar (version 3.020 or later):\n1 - Rez it next to me.\n2 - Touch the collar and select Help/Debug->Update";
     llSetText(instructions, <1,1,1>, 1);
     myKey = llGetKey();
     listenhandle = llListen(updatechannel, "", "", "");
@@ -334,7 +334,7 @@ default
             if (message=="UpdateCheck:"+(string)llGetKey())
             {
                 // so we delete ourself
-                llOwnerSay("There is more than one CollarDBCollar Updater rezzed from you. Please use only one updater.");
+                llOwnerSay("There is more than one CollarDB Collar Updater rezzed from you. Please use only one updater.");
                 //Nan: this llDie() is an incredible pain in the ass when I'm trying to compare the contents of two updaters.  A warning is enough.  llDie is overkill.
                 //Cleo: It leads to probles if we dotn kil it, we might change the updater method when the new updater is in place, for now we kil the updater again, if it doesnt have "text" in the name
                 //Star better just kill the updater part
@@ -363,7 +363,7 @@ default
                 if (llGetSubString(llDetectedName(i), 0, 16) == "CollarDBUpdater")
                     // now starts it with a name like ours?
                 {
-                    llOwnerSay("There is more than one CollarDBCollar Updater rezzed from you. Please use only one updater.");
+                    llOwnerSay("There is more than one CollarDB Collar Updater rezzed from you. Please use only one updater.");
                     //Nan: this llDie() is an incredible pain in the ass when I'm trying to compare the contents of two updaters.  A warning is enough.  llDie is overkill.
                     //Cleo: It leads to probles if we dotn kil it, we might change the updater method when the new updater is in place, for now we kil the updater again, if it doesnt have "text" in the name
                     //Star better just kill the updater part
@@ -431,7 +431,7 @@ state updating
         {
             if (!g_iRecentlyTouched)
             {
-                llOwnerSay("Have me close to your CollarDBversion 3.020 or higher and select in the Collar's Help/Debug menu Update.\nIf your version is 3.525 or higher, touch this orb again before "+(string)((integer)g_fSecondTouchDelay)+" seconds to start updating.");
+                llOwnerSay("Have me close to your CollarDB Version 3.020 or higher and select in the Collar's Help/Debug menu Update.\nIf your version is 3.525 or higher, touch this orb again before "+(string)((integer)g_fSecondTouchDelay)+" seconds to start updating.");
                 g_iRecentlyTouched = TRUE;
                 llSetTimerEvent(g_fSecondTouchDelay);
             }
@@ -477,12 +477,12 @@ state updating
                     else if ((float)command1 < 3.000 )
                     {
                         llWhisper(updatechannel, "nothing to update");
-                        llOwnerSay("Your CollarDBis previous version 3 and cannot be updated this way, please get an CollarDBversion 3 or higher first.");
+                        llOwnerSay("Your CollarDB is previous version 3 and cannot be updated this way, please get an CollarDB Version 3 or higher first.");
                     }
                     else if ((float)command1 >= version)
                     {
                         llWhisper(updatechannel, "nothing to update");
-                        llOwnerSay("Your CollarDBis the same or newer version, nothing to update.");
+                        llOwnerSay("Your CollarDB is the same or newer version, nothing to update.");
                     }
                 }
                 else if (command0 == "ready")
@@ -573,7 +573,7 @@ state linked
                 }
                 else if (message == "restarting collar scripts")
                 {
-                    llSetText("PLEASE WAIT\nFinalizing Update\nRestarting CollarDBscripts.", <1,0,0>, 1);
+                    llSetText("PLEASE WAIT\nFinalizing Update\nRestarting CollarDB scripts.", <1,0,0>, 1);
                 }
                 else if (command0 == "finished")
                 {// lets be sure also the update script is resetted before showing this

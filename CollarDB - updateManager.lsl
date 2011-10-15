@@ -40,7 +40,7 @@ SafeResetOther(string scriptname)
     }
 }
 
-integer IsCollarDBScript(string name)
+integer IsCollarDB script(string name)
 {
     name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
     if (name == "CollarDB")

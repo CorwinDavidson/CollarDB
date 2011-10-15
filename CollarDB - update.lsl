@@ -1,5 +1,5 @@
 ﻿//CollarDB- update - 3.528
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //on attach and on state_entry, http request for update
 
 key g_kWearer;
@@ -133,7 +133,7 @@ SafeResetOther(string sName)
     }
 }
 
-integer IsCollarDBScript(string name)
+integer IsCollarDB script(string name)
 {
     name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
     if (name == "CollarDB")
@@ -187,7 +187,7 @@ ReadyToUpdate(integer iDel)
 OrderlyReset(integer iFullReset, integer iIsUpdateReset)
 {
     integer i;
-    llOwnerSay("CollarDBscripts initializing...");
+    llOwnerSay("CollarDB scripts initializing...");
 
     //put in here the full name of each script named in g_lResetFirst.  Then loop through and reset
     //we initialize the list by setting equal to g_lResetFirst to ensure that indices will line up
@@ -197,7 +197,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {
         string sFullName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sPartialName = llList2String(llParseString2List(sFullName, [" - "], []) , 1);
-        if(IsCollarDBScript(sFullName))
+        if(IsCollarDB script(sFullName))
         {
             integer iScriptPos = llListFindList(g_lResetFirst, [sPartialName]);
             if (iScriptPos != -1)
@@ -225,10 +225,10 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     }
     Debug("resetting everything else");
     for (i = 0; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
-    {   //reset all other CollarDBscripts
+    {   //reset all other CollarDB scripts
         string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsCollarDBScript(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
+        if(IsCollarDB script(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
         {
             if(sFullScriptName != llGetScriptName() && sScriptName != "settings" && sScriptName != "updateManager")
             {
@@ -260,7 +260,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {   //last before myself reset the settings script
         string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsCollarDBScript(sFullScriptName) && sScriptName == "settings")
+        if(IsCollarDB script(sFullScriptName) && sScriptName == "settings")
         {
             Debug("Restting settings script");
             SafeResetOther(sFullScriptName);

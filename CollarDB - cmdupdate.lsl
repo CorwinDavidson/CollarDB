@@ -1,5 +1,5 @@
 ﻿//CollarDB- cmdupdate - 3.434
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 string HTTPDB = "http://data.collardb.com/db/"; //db url
 key    reqid_load;                          // request id

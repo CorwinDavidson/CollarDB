@@ -1,5 +1,5 @@
 ﻿//CollarDB- anim - 3.520
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 //needs to handle anim requests from sister scripts as well
 //this script as essentially two layers
@@ -182,7 +182,7 @@ AnimMenu(key kID)
         sPrompt += "\nThe height of the poses will not be changed.";
         lButtons += [UNTICKED + HEIGHTFIX];
     }
-    sPrompt += "\nATTENTION!!!!!!\nYou need the CollarDBsub AO 2.6 or higher to work with this collar menu!";
+    sPrompt += "\nATTENTION!!!!!!\nYou need the CollarDB Sub AO 2.6 or higher to work with this collar menu!";
     lButtons += llListSort(g_lAnimButtons, 1, TRUE);
     key kMenuID = Dialog(kID, sPrompt, lButtons, [UPMENU], 0);
     list lNewStride = [kID, kMenuID, ANIMMENU];
@@ -381,7 +381,7 @@ StopAnim(string sAnim)
 
 DeliverAO(key kID)
 {
-    string sName = "CollarDBSub AO";
+    string sName = "CollarDB Sub AO";
     string sVersion = "0.0";
 
     string sUrl = g_sHTTPDB_Url + "updater/check?";
@@ -788,7 +788,7 @@ default
                     {
                         llMessageLinked(LINK_SET, COMMAND_NOAUTH, "ao menu", kAv);
                         //llSay(g_iInterfaceChannel, AO_MENU + "|" + (string)kID);
-                        Notify(kAv, "Attempting to trigger the AO menu.  This will only work if " + llKey2Name(g_kWearer) + " is wearing the CollarDBSub AO.", FALSE);
+                        Notify(kAv, "Attempting to trigger the AO menu.  This will only work if " + llKey2Name(g_kWearer) + " is wearing the CollarDB Sub AO.", FALSE);
                         //                llMessageLinked(LINK_SET, COMMAND_NOAUTH, "triggerao", kID);
                     }
                     else if (sMessage == g_sGiveAO)

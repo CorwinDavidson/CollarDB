@@ -1,5 +1,5 @@
 ﻿//CollarDB- label - 3.526
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "Label";
 string g_sFontParent = "Appearance";
@@ -10,7 +10,7 @@ key g_kWearer;
 integer g_iAppLock = FALSE;
 string g_sAppLockToken = "AppLock";
 
-//CollarDBMESSAGE MAP
+//CollarDB MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
 integer COMMAND_OWNER = 500;
 integer COMMAND_SECOWNER = 501;

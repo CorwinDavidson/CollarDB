@@ -40,9 +40,9 @@ string g_sToyName = "collar";
 integer g_iInterfaceChannel;
 // end time keeper
 
-// Template for creating a CollarDBPlugin - CollarDBVersion 3.0xx
+// Template for creating a CollarDB Plugin - CollarDB Version 3.0xx
 
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //Collar Cuff Menu
 
 string g_sSubMenu = "Timer"; // Name of the submenu

@@ -1,6 +1,6 @@
-﻿// Keyholder Module - CollarDBVersion 3.526+
+﻿// Keyholder Module - CollarDB Version 3.526+
 // 
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //
 // OC3.526.2 by WhiteFire Sondergaard
 // - Safeword Support. DURP.
@@ -12,7 +12,7 @@
 // - FIXED: A few typos
 //
 // OC3.526
-// - This is now an CollarDBscript.
+// - This is now an CollarDB script.
 //
 // WS0.823 by WhiteFire Sondergaard
 // - Updated to handle new timer module's "timer on+24:00" format. ** This REQUIRES version 3.525 or better to work now, but no longer requires a hacked timer module. **
@@ -91,7 +91,7 @@
 // First Version by WhiteFire Sondergaard
 // Adapted from a templet by Cleo Collins
 
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 // Please remove any unneeded code sections to save memory and sim time
 
@@ -200,7 +200,7 @@ list g_lElementsLockedLock; // "locked lock" :kc
 list g_lElementsUnlockedLock; // "unlocked lock" :kc
 
 //===============================================================================
-// CollarDBMESSAGE MAP
+// CollarDB MESSAGE MAP
 //===============================================================================
 // messages for authenticating users
 integer COMMAND_NOAUTH = 0;

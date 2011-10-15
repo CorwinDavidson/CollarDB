@@ -4,8 +4,8 @@
 //if radar is turned off, just don't report avs when the sensor or no_sensor event goes off
 
 
-// Spy script for the CollarDBProject (c)
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+// Spy script for the CollarDB Project (c)
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 
 list g_lAvBuffer;//if this changes between report intervals then tell owners (if radar enabled)

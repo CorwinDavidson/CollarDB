@@ -1,6 +1,6 @@
 ﻿//CollarDB- leash - 3.531
 //leash script for the Open Collar Project (c)
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 // -------------------------------
 // Original leash scripting & ongoing updates

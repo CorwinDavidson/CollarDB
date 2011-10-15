@@ -1,5 +1,5 @@
 ﻿//CollarDB- settings - 3.521
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //DEFAULT STATE
 
 //on state entry, get db prefix from desc

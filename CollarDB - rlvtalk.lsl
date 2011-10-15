@@ -1,5 +1,5 @@
 ﻿//CollarDB- rlvtalk - 3.525
-//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDBLicense" for details.
+//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 string g_sParentMenu = "RLV";
 string g_sSubMenu = "Talk";
 string g_sDBToken = "rlvtalk";
