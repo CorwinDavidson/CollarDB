@@ -1,4 +1,4 @@
-﻿//CollarDB - hovertext - 3.584
+﻿//CollarDB - hovertext
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "FloatText";
 
@@ -117,7 +117,7 @@ default
     state_entry()
     {
         GetFloatLink();
-        g_vColor = llGetColor(ALL_SIDES);
+        g_vColor = (vector)llList2String(llGetLinkPrimitiveParams(g_link,[PRIM_COLOR,1]),0);
         g_kWearer = llGetOwner();
         TextDisplay("",FALSE);
         llMessageLinked(LINK_ROOT, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
@@ -248,7 +248,7 @@ default
 
         if (iChange & CHANGED_COLOR)
         {
-            g_vColor = llGetColor(ALL_SIDES);
+            g_vColor = (vector)llList2String(llGetLinkPrimitiveParams(g_link,[PRIM_COLOR,1]),0);
             if (g_iOn)
             {
                 ShowText(g_sText);
