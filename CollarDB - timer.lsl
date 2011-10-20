@@ -1,4 +1,4 @@
-﻿//CollarDB- timer - 3.525
+﻿//CollarDB - timer - 3.525
 
 // LVs 0.001
 //      Hacks to make it play nice with others.

@@ -1,4 +1,4 @@
-﻿//CollarDB- subspy - 3.521
+﻿//CollarDB - subspy - 3.521
 //put all reporting on an interval of 30 or 60 secs.  That way we won't get behind with IM delays.
 //use sensorrepeat as a second timer to do the reporting (since regular timer is already used by menu system
 //if radar is turned off, just don't report avs when the sensor or no_sensor event goes off

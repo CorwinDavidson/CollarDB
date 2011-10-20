@@ -1,4 +1,4 @@
-﻿//CollarDB- rlvrelay - 3.535
+﻿//CollarDB - rlvrelay - 3.535
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 integer RELAY_CHANNEL = -1812221819;
@@ -852,7 +852,7 @@ default
                     else if (sMsg=="MinMode") MinModeMenu(kAv);
                     else if (sMsg=="Help")
                     {
-                        llGiveInventory(kAv,"CollarDB- rlvrelay - Help");
+                        llGiveInventory(kAv,"CollarDB - rlvrelay - Help");
                         Menu(kAv);
                     }
                     else if (sMsg==UPMENU)

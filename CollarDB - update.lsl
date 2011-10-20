@@ -1,4 +1,4 @@
-﻿//CollarDB- update - 3.528
+﻿//CollarDB - update - 3.528
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //on attach and on state_entry, http request for update
 
@@ -133,7 +133,7 @@ SafeResetOther(string sName)
     }
 }
 
-integer IsCollarDB script(string name)
+integer IsCollarDBScript(string name)
 {
     name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
     if (name == "CollarDB")
@@ -197,7 +197,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {
         string sFullName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sPartialName = llList2String(llParseString2List(sFullName, [" - "], []) , 1);
-        if(IsCollarDB script(sFullName))
+        if(IsCollarDBScript(sFullName))
         {
             integer iScriptPos = llListFindList(g_lResetFirst, [sPartialName]);
             if (iScriptPos != -1)
@@ -228,7 +228,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {   //reset all other CollarDB scripts
         string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsCollarDB script(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
+        if(IsCollarDBScript(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
         {
             if(sFullScriptName != llGetScriptName() && sScriptName != "settings" && sScriptName != "updateManager")
             {
@@ -260,7 +260,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
     {   //last before myself reset the settings script
         string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsCollarDB script(sFullScriptName) && sScriptName == "settings")
+        if(IsCollarDBScript(sFullScriptName) && sScriptName == "settings")
         {
             Debug("Restting settings script");
             SafeResetOther(sFullScriptName);

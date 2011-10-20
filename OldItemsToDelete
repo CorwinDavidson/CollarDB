@@ -62,17 +62,48 @@ subsit 2
 Seraglio
 Temple
 Leash Holder
-OpenCollar - settings - 3.4269
-OpenCollar - remoteserver*
-OpenCollar - update -*
-OpenCollar - coupleanim*
 OpenCollar - httpdb*
-OpenCollar - bell*
 OpenCollar - macros*
-OpenCollar - rlvmain -*
-OpenCollar - rlvrelay -*
-OpenCollar - rlvex -
 OpenCollar - anim/pose*
+OpenCollar - anim*
+OpenCollar - appearance*
+OpenCollar - auth*
+OpenCollar - badwords*
+OpenCollar - bell*
+OpenCollar - camera*
+OpenCollar - cmdupdate*
+OpenCollar - color*
+OpenCollar - coupleanim*
+OpenCollar - dialog*
+OpenCollar - hide*
+OpenCollar - hovertext*
+OpenCollar - keyholder plugin*
+OpenCollar - label*
+OpenCollar - leash*
+OpenCollar - leashParticle*
+OpenCollar - listener*
+OpenCollar - lock*
+OpenCollar - menu*
+OpenCollar - remoteserver*
+OpenCollar - rlvex*
+OpenCollar - rlvfolders*
+OpenCollar - rlvmain*
+OpenCollar - rlvmisc*
+OpenCollar - rlvrelay*
+OpenCollar - rlvsit*
+OpenCollar - rlvtalk*
+OpenCollar - rlvtp*
+OpenCollar - rlvundress*
+OpenCollar - settings*
+OpenCollar - subspy*
+OpenCollar - texture*
+OpenCollar - timer*
+OpenCollar - update*
+OpenCollar - updateManager
+OpenCollar - inplaceUpdater
+OpenCollar - rlvrelay - Help
+OpenCollar Guide
+OpenCollar License
 brushedmetal-hshaded
 brushedmetal-hshaded-contrasty
 brushedmetal-roundshaded

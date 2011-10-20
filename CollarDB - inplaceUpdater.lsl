@@ -470,6 +470,10 @@ state updating
                     {//Collar version is at least 3.000 and lower than to Update version
                         llWhisper(updatechannel, "get ready");
                     }
+                    if (command1 == "X")
+                    {//Collar is 3.706 or higher, so replace everything anywat
+                        llWhisper(updatechannel, "get ready");
+                    }
                     else if ((float)command1 > 3.019 && (float)command1 < version)
                     {//Collar version is at least 3.000 and lower than to Update version
                         llWhisper(updatechannel, "items,0,0");
@@ -521,7 +525,13 @@ state linked
         debughandle = llListen(DEBUG_CHANNEL, "", g_kCollar, "");
         if (llGetListLength(oldItemsToDelete) > 0 && llToLower(llList2String(oldItemsToDelete, 0)) != "nothing")
         {
-            llWhisper(updatechannel, "delete|" + llDumpList2String(oldItemsToDelete, "|"));
+            integer iLen = llGetListLength(oldItemsToDelete);
+            integer i=0;
+            for(;i < iLen-1;i=i+50)
+            {
+                llWhisper(updatechannel, "delete|" + llDumpList2String(llList2List(oldItemsToDelete,i,i+50), "|"));
+            }
+            llWhisper(updatechannel, "deleteDone|");            
         }
         else
         {

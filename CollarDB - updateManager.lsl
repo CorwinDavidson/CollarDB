@@ -40,7 +40,7 @@ SafeResetOther(string scriptname)
     }
 }
 
-integer IsCollarDB script(string name)
+integer IsCollarDBScript(string name)
 {
     name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
     if (name == "CollarDB")
@@ -105,7 +105,6 @@ DeleteOld(list toDelete)
             }
         }
     }
-    llWhisper(updatechannel, "deletedOld");
 }
 
 DeleteItems(list toDelete)
@@ -416,6 +415,10 @@ state linked
                 DeleteOld(thingstodelete);
                 //send a message to child prims
                 llMessageLinked(LINK_ALL_OTHERS, UPDATE, "prepare", "");
+            }
+            else if(command0 == "deleteDone")
+            {
+                llWhisper(updatechannel, "deletedOld");                    
             }
             else if(command0 == "toupdate")
             {
