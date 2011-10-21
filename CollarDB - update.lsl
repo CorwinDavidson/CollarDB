@@ -1,4 +1,5 @@
-﻿//CollarDB - update - 3.528
+﻿//CollarDB - update
+//
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //on attach and on state_entry, http request for update
 
@@ -7,13 +8,15 @@ key g_kWearer;
 integer COMMAND_NOAUTH = 0;
 integer COMMAND_OWNER = 500;
 integer COMMAND_WEARER = 503;
+
 string g_sResetScripts = "resetscripts";
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
-//str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+
+integer HTTPDB_SAVE = 2000;      //scripts send messages on this channel to have settings saved to httpdb
+                                 //str must be in form of "token=value"
+integer HTTPDB_REQUEST = 2001;   //when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;  //the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;    //delete token from DB
+integer HTTPDB_EMPTY = 2004;     //sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -24,10 +27,10 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-string g_sDBToken = "updatemethod";//valid values are "replace" and "inplace"
+string g_sDBToken = "updatemethod";     //valid values are "replace" and "inplace"
 string g_sUpdateMethod = "inplace";
 
-integer g_iUpdateChildPin = 4711;//not used?
+integer g_iUpdateChildPin = 4711;     //not used?
 
 string g_sParentMenu = "Help/Debug";
 string g_sSubMenu1 = "Update";
@@ -45,14 +48,12 @@ string g_sHTTPDB_Url = "http://update.collardb.com/"; //defaul OC url, can be ch
 string g_sUpdatePath = "updater/check?";
 key g_kHTTPUpdate;
 integer g_iUpdateAvail = FALSE;
-
 integer g_iUpdateMode=FALSE;
-
 integer g_iUpdateBeta = FALSE;
 
 list g_lResetFirst = ["menu", "rlvmain", "anim", "appearance"];
 
-integer g_iChecked = FALSE;//set this to true after checking version
+integer g_iChecked = FALSE;     //set this to true after checking version
 
 key g_kUpdater; // key of avi who asked for the update
 integer g_iUpdatersNearBy = -1;
@@ -66,7 +67,7 @@ integer g_iRemenu = FALSE;
 
 Debug(string sMessage)
 {
-    //llOwnerSay(llGetScriptName() + ": " + sMessage);
+    llOwnerSay(llGetScriptName() + ": " + sMessage);
 }
 
 
@@ -113,6 +114,7 @@ ConfirmUpdate(key kUpdater)
     + "Do not rez any items till the update has started.";
     g_kConfirmUpdate = Dialog(g_kWearer, sPrompt, ["Yes", "No"], [], 0);
 }
+
 // Return  1 IF inventory is removed - llInventoryNumber will drop
 integer SafeRemoveInventory(string sItem)
 {
@@ -123,12 +125,16 @@ integer SafeRemoveInventory(string sItem)
     }
     return 0;
 }
+
 SafeResetOther(string sName)
 {
     Debug("safely resetting: " + sName);
     if (llGetInventoryType(sName) == INVENTORY_SCRIPT)
     {
-        llResetOtherScript(sName);
+         if (IsCollarDBScript(sName))
+        {
+            llResetOtherScript(sName);
+        }
         llSetScriptState(sName, TRUE);
     }
 }
@@ -145,7 +151,7 @@ integer IsCollarDBScript(string name)
 
 CheckForUpdate(integer iUpdateMode)
 {
-    Debug("checking for update");
+    Debug("Checking for update");
     list lParams = llParseString2List(llGetObjectDesc(), ["~"], []);
     string sObjectName = llList2String(lParams, 0);
     string sObjectVersion = llList2String(lParams, 1);
@@ -191,12 +197,13 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
 
     //put in here the full name of each script named in g_lResetFirst.  Then loop through and reset
     //we initialize the list by setting equal to g_lResetFirst to ensure that indices will line up
-    Debug("resetting menu-hosting scripts");
+    Debug("Setting Reset Order of Scripts...");
     list lResetFirstFullNames = g_lResetFirst;
     for (i = 0; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
     {
         string sFullName = llGetInventoryName(INVENTORY_SCRIPT, i);
         string sPartialName = llList2String(llParseString2List(sFullName, [" - "], []) , 1);
+        Debug("Checking Script: " + sFullName);
         if(IsCollarDBScript(sFullName))
         {
             integer iScriptPos = llListFindList(g_lResetFirst, [sPartialName]);
@@ -205,6 +212,16 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
                 //add to lResetFirstFullNames in same position as iScriptPos
                 lResetFirstFullNames = llListReplaceList(lResetFirstFullNames, [sFullName], iScriptPos, iScriptPos);
             }
+            else if(sFullName != llGetScriptName() && sFullName != "settings" && sFullName != "updateManager")
+            {
+                // Add to end of lResetFirstFullNames in order seen in inventory
+                lResetFirstFullNames += [sFullName];
+            }
+        }
+        else
+        {
+            // Add to end of lResetFirstFullNames in order seen in inventory   
+            lResetFirstFullNames += [sFullName];
         }
     }
     //now loop through lResetFirstFullNames and reset
@@ -214,43 +231,15 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
         //do not reset rlvmain on rez, only on a full reset (since it maintains its own local settings)
         string sFullName = llList2String(lResetFirstFullNames, i);
         string sPartialName = llList2String(llParseString2List(sFullName, [" - "], []) , 1);
-        if (iFullReset)
+        if ((iFullReset) || (sPartialName != "rlvmain" && sPartialName != "settings"))
         {
-            SafeResetOther(sFullName);
-        }
-        else if (sPartialName != "rlvmain" && sPartialName != "settings")
-        {
-            SafeResetOther(sFullName);
-        }
-    }
-    Debug("resetting everything else");
-    for (i = 0; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
-    {   //reset all other CollarDB scripts
-        string sFullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
-        string sScriptName = llList2String(llParseString2List(sFullScriptName, [" - "], []) , 1);
-        if(IsCollarDBScript(sFullScriptName) && llListFindList(g_lResetFirst, [sScriptName]) == -1)
-        {
-            if(sFullScriptName != llGetScriptName() && sScriptName != "settings" && sScriptName != "updateManager")
-            {
-                if (llSubStringIndex(sFullScriptName, "@") != -1)
-                { //just check once more if some childprim script remained and delete if
-                    i -= SafeRemoveInventory(sFullScriptName);
-                }
-                else
-                {
-                    SafeResetOther(sFullScriptName);
-                }
+            if (llSubStringIndex(sFullName, "@") != -1)
+            { //just check once more if some childprim script remained and delete if
+              SafeRemoveInventory(sFullName);
             }
-        }
-        //take care of non OC script that were set to "not running" for the update, do not reset but set them back to "running"
-        else //if (iIsUpdateReset)
-        {
-            if(!llGetScriptState(sFullScriptName))
+            else
             {
-                if (llGetInventoryType(sFullScriptName) == INVENTORY_SCRIPT)
-                {
-                    llSetScriptState(sFullScriptName, TRUE);
-                }
+              SafeResetOther(sFullName);
             }
         }
     }
@@ -571,9 +560,6 @@ state reseted
             } else if (g_iWillingUpdaters > 1) {
                     Notify(g_kUpdater,"Multiple updaters were found within 10m.  Please remove all but one and try again",FALSE);
             } else if (g_iWillingUpdaters) {
-                    //integer pin = (integer)llFrand(99999998.0) + 1; //set a random pin
-                //llSetRemoteScriptAccessPin(pin);
-                //llWhisper(g_iUpdateChan, "ready|" + (string)pin ); //give the ok to send update scripts etc... 
                 ConfirmUpdate(g_kUpdaterOrb);
             }
             g_iUpdatersNearBy = -1;
