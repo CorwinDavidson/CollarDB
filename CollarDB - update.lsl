@@ -11,12 +11,12 @@ integer COMMAND_WEARER = 503;
 
 string g_sResetScripts = "resetscripts";
 
-integer HTTPDB_SAVE = 2000;      //scripts send messages on this channel to have settings saved to httpdb
-                                 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;   //when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;  //the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;    //delete token from DB
-integer HTTPDB_EMPTY = 2004;     //sent by httpdb script when a token has no value in the db
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
+								//str must be in form of "token=value"
+integer HTTPDB_REQUEST = 2001;	//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;	//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;	//delete token from DB
+integer HTTPDB_EMPTY = 2004;	//sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -30,7 +30,7 @@ integer DIALOG_TIMEOUT = -9002;
 string g_sDBToken = "updatemethod";     //valid values are "replace" and "inplace"
 string g_sUpdateMethod = "inplace";
 
-integer g_iUpdateChildPin = 4711;     //not used?
+integer g_iUpdateChildPin = 4711;		//not used?
 
 string g_sParentMenu = "Help/Debug";
 string g_sSubMenu1 = "Update";
@@ -53,7 +53,7 @@ integer g_iUpdateBeta = FALSE;
 
 list g_lResetFirst = ["menu", "rlvmain", "anim", "appearance"];
 
-integer g_iChecked = FALSE;     //set this to true after checking version
+integer g_iChecked = FALSE;		//set this to true after checking version
 
 key g_kUpdater; // key of avi who asked for the update
 integer g_iUpdatersNearBy = -1;
@@ -67,7 +67,7 @@ integer g_iRemenu = FALSE;
 
 Debug(string sMessage)
 {
-    llOwnerSay(llGetScriptName() + ": " + sMessage);
+   // llOwnerSay(llGetScriptName() + ": " + sMessage);
 }
 
 
@@ -131,7 +131,7 @@ SafeResetOther(string sName)
     Debug("safely resetting: " + sName);
     if (llGetInventoryType(sName) == INVENTORY_SCRIPT)
     {
-         if (IsCollarDBScript(sName))
+        if (IsCollarDBScript(sName))
         {
             llResetOtherScript(sName);
         }
@@ -197,7 +197,7 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
 
     //put in here the full name of each script named in g_lResetFirst.  Then loop through and reset
     //we initialize the list by setting equal to g_lResetFirst to ensure that indices will line up
-    Debug("Setting Reset Order of Scripts...");
+    Debug("Resetting menu-hosting scripts");
     list lResetFirstFullNames = g_lResetFirst;
     for (i = 0; i < llGetInventoryNumber(INVENTORY_SCRIPT); i++)
     {
@@ -207,20 +207,19 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
         if(IsCollarDBScript(sFullName))
         {
             integer iScriptPos = llListFindList(g_lResetFirst, [sPartialName]);
+            Debug("CS: " + sPartialName + " }{ " + (string)iScriptPos);
             if (iScriptPos != -1)
             {
                 //add to lResetFirstFullNames in same position as iScriptPos
                 lResetFirstFullNames = llListReplaceList(lResetFirstFullNames, [sFullName], iScriptPos, iScriptPos);
             }
-            else if(sFullName != llGetScriptName() && sFullName != "settings" && sFullName != "updateManager")
+            else if(sFullName != llGetScriptName() && sPartialName != "settings" && sPartialName != "updateManager")
             {
-                // Add to end of lResetFirstFullNames in order seen in inventory
                 lResetFirstFullNames += [sFullName];
             }
         }
         else
         {
-            // Add to end of lResetFirstFullNames in order seen in inventory   
             lResetFirstFullNames += [sFullName];
         }
     }
@@ -231,15 +230,16 @@ OrderlyReset(integer iFullReset, integer iIsUpdateReset)
         //do not reset rlvmain on rez, only on a full reset (since it maintains its own local settings)
         string sFullName = llList2String(lResetFirstFullNames, i);
         string sPartialName = llList2String(llParseString2List(sFullName, [" - "], []) , 1);
-        if ((iFullReset) || (sPartialName != "rlvmain" && sPartialName != "settings"))
+        Debug("CHECKING: " + sFullName );
+        if ((iFullReset) || (sPartialName != "rlvmain" && sPartialName != "settings" && sPartialName != "updateManager"))
         {
             if (llSubStringIndex(sFullName, "@") != -1)
             { //just check once more if some childprim script remained and delete if
-              SafeRemoveInventory(sFullName);
+                SafeRemoveInventory(sFullName);
             }
             else
             {
-              SafeResetOther(sFullName);
+                SafeResetOther(sFullName);
             }
         }
     }

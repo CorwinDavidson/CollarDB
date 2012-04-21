@@ -8,13 +8,13 @@
 string g_sSubMenu = "Un/Dress";
 string g_sParentMenu = "RLV";
 
-list g_lChildren = ["Clothing","Attachment"]; //,"LockClothing","LockAttachment"];//,"LockClothing","UnlockClothing"];
+list g_lChildren = ["Clothing","Attachment"]; //,"LockClothing","LockAttachment"];    //,"LockClothing","UnlockClothing"];
 list g_sSubMenus= [];
 string SELECT_CURRENT = "*InFolder";
 string SELECT_RECURS= "*Recursively";
 list g_lRLVcmds = ["attach","detach","remoutfit", "addoutfit","remattach","addattach"];
 
-list g_lSettings;//2-strided list in form of [option, param]
+list g_lSettings;    //2-strided list in form of [option, param]
 
 
 list LOCK_CLOTH_POINTS = [
@@ -27,12 +27,13 @@ list LOCK_CLOTH_POINTS = [
     "Socks",
     "Underpants",
     "Undershirt",
-    "skin",
-    "eyes",
-    "hair",
-    "shape",
-    "alpha",
-    "tattoo"
+    "Skin",
+    "Eyes",
+    "Hair",
+    "Shape",
+    "Alpha",
+    "Tattoo",
+    "Physics"
         ];
 
 
@@ -50,27 +51,10 @@ list DETACH_CLOTH_POINTS = [
     "xx", //"eyes", those are not to be detached, so we ignore them later
     "xx", //"hair", those are not to be detached, so we ignore them later
     "xx", //"shape", those are not to be detached, so we ignore them later
-    "alpha",
-    "tattoo"
+    "Alpha",
+    "Tattoo",
+    "Physics"
         ];
-
-
-//Nan: The below are commented out because.... can you really remove skin?
-//"skin",
-//"eyes",
-//"hair",
-//"shape"
-//    ];
-
-//Someone else: well you can't remove it, but you can certainly lock it!
-//list EXTRA_CLOTH_POINTS = [];
-//    "skin",
-//    "eyes",
-//    "hair",
-//    "shape",
-//    "alpha",
-//    "tattoo"
-//        ];
 
 list ATTACH_POINTS = [//these are ordered so that their indices in the list correspond to the numbers returned by llGetAttached
     "None",
@@ -111,7 +95,9 @@ list ATTACH_POINTS = [//these are ordered so that their indices in the list corr
     "Center",
     "Bottom Left",
     "Bottom",
-    "Bottom Right"
+    "Bottom Right",
+    "Neck",
+    "Avatar Center"
         ];
 
 //MESSAGE MAP
@@ -123,15 +109,14 @@ integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
 integer CHAT = 505;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;    //scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;    //when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;    //the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;    //delete token from DB
+integer HTTPDB_EMPTY = 2004;    //sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -139,8 +124,8 @@ integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;    //RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;    //RLV plugins should clear their restriction lists upon receiving this message.
 integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version upon receiving this message..
 
 integer RLV_OFF = 6100; // send to inform plugins that RLV is disabled now, no message or key needed
@@ -216,7 +201,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);    //yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -387,14 +372,19 @@ UpdateSettings()
             string sValue=llList2String(g_lSettings, n + 1);
             //Debug(llList2String(g_lSettings, n) + "=" + sValue);
             lNewList += [llList2String(g_lSettings, n) + "=" + llList2String(g_lSettings, n + 1)];
-            if (llGetListLength(sOption)==2&&
-                (llList2String(sOption,0)=="adddetach"&&sValue=="n"
-                    ||llList2String(sOption,0)=="remdetach"&&sValue=="n"))
+            if (llGetListLength(sOption)==2
+                && (llList2String(sOption,0)=="addoutfit"
+                    ||llList2String(sOption,0)=="remoutfit")
+                && sValue=="n")
                 g_lLockedItems += [llList2String(sOption,1)];
-            if (llGetListLength(sOption)==1&&llList2String(sOption,0)=="remoutfit"&&sValue=="n")
+            if (llGetListLength(sOption)==1 && llList2String(sOption,0)=="remoutfit" && sValue=="n")
                 g_lLockedItems += [ALL];
 
-            if (llGetListLength(sOption)==2&&llList2String(sOption,0)=="detach"&&sValue=="n")
+            if (llGetListLength(sOption)==2
+                && (llList2String(sOption,0)=="addattach"
+                    || llList2String(sOption,0)=="remattach"
+                    || llList2String(sOption,0)=="detach")
+                && sValue=="n")
                 g_lLockedAttach += [llList2String(sOption,1)];
         }
         //output that string to viewer

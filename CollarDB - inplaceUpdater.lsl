@@ -1,6 +1,7 @@
 ﻿//Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 //in place updater
+list Charset_LeftRight      = ["   ","▏","▎","▍","▌","▋","▊","▉","█"];
 
 string RELESENOTE_URL = "http://www.collardb.com/static/ReleaseNotes"; // ad the version in form of "XYYY" at the end
 string ISSUETRACKER_URL = "http://www.collardb.com/static/milestoneRelease"; // add the version in from of x.y at the end
@@ -25,7 +26,8 @@ integer g_iItemPageSize = 20;
 
 string instructions;
 
-key particletexture = "41873cb5-cb92-abca-16c4-ac319c9e2067";
+//key particletexture = "41873cb5-cb92-abca-16c4-ac319c9e2067";
+key particletexture = "070f1f09-3091-04a6-ca69-bb63c32cef10";
 
 integer debughandle;
 string debugMessage;
@@ -37,9 +39,32 @@ key g_keyWearer; // id of wearer
 integer g_iRecentlyTouched = FALSE;
 float g_fSecondTouchDelay = 10.0;
 
+integer g_link;
+integer g_link2;
+
 debug(string str)
 {
     //llOwnerSay(llGetScriptName() + ": " + str);
+}
+
+// Find the floattext prim
+GetSphereLink()
+{
+    integer max = llGetNumberOfPrims();
+    integer i = 0;
+    list desc = [];
+    for (;i<=max;i++)
+    {
+        desc = llGetObjectDetails(llGetLinkKey(i),[OBJECT_DESC]);
+        if (llSubStringIndex((string)desc,"partsphere") != -1)
+        {
+            g_link = i;
+        }
+        if (llSubStringIndex((string)desc,"dockring") != -1)
+        {
+            g_link2 = i;
+        }    
+    }   
 }
 
 integer isUpdateManagerScript(string name)
@@ -71,42 +96,44 @@ UpdateParticle(key target, vector color)
     integer effectFlags;
     effectFlags = effectFlags|PSYS_PART_INTERP_COLOR_MASK;
     effectFlags = effectFlags|PSYS_PART_INTERP_SCALE_MASK;
-    effectFlags = effectFlags|PSYS_PART_FOLLOW_SRC_MASK;
-    effectFlags = effectFlags|PSYS_PART_FOLLOW_VELOCITY_MASK;
-    effectFlags = effectFlags|PSYS_PART_TARGET_POS_MASK;
+   // effectFlags = effectFlags|PSYS_PART_FOLLOW_SRC_MASK;
+   // effectFlags = effectFlags|PSYS_PART_FOLLOW_VELOCITY_MASK;
+   // effectFlags = effectFlags|PSYS_PART_TARGET_POS_MASK;
     effectFlags = effectFlags|PSYS_PART_EMISSIVE_MASK;
-    llParticleSystem([
+    llLinkParticleSystem(g_link,[
         PSYS_PART_FLAGS,            effectFlags,
-        PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_DROP,
+        PSYS_SRC_PATTERN,           PSYS_SRC_PATTERN_ANGLE_CONE,
+        PSYS_SRC_ANGLE_BEGIN,       0.0, 
+        PSYS_SRC_ANGLE_END,         PI, 
         PSYS_PART_START_COLOR,      color,
         PSYS_PART_END_COLOR,        color,
         PSYS_PART_START_ALPHA,      0.75,
         PSYS_PART_END_ALPHA,        0.25,
-        PSYS_PART_START_SCALE,      <0.25,0.25,0.0>,
-        PSYS_PART_END_SCALE,        <0.04,0.04,0.0>,
+        PSYS_PART_START_SCALE,      <0.05,0.05,0.0>,
+        PSYS_PART_END_SCALE,        <0.01,0.01,0.0>,
         PSYS_PART_MAX_AGE,          2.0,
+        PSYS_SRC_TEXTURE,           particletexture,         
         PSYS_SRC_ACCEL,             <0.0,0.0,0.0>,
-        PSYS_SRC_TEXTURE,           particletexture,
         PSYS_SRC_BURST_RATE,        0.1,
-        PSYS_SRC_INNERANGLE,        0.0,
-        PSYS_SRC_OUTERANGLE,        0.0,
-        PSYS_SRC_BURST_PART_COUNT,  1,
-        PSYS_SRC_BURST_RADIUS,      0.0,
-        PSYS_SRC_BURST_SPEED_MIN,   1.0,
-        PSYS_SRC_BURST_SPEED_MAX,   2.0,
-        PSYS_SRC_MAX_AGE,           0.0,
+        PSYS_SRC_BURST_PART_COUNT,  100,
+        PSYS_SRC_BURST_RADIUS,      0.08,
+        PSYS_SRC_BURST_SPEED_MIN,   0.01,
+        PSYS_SRC_BURST_SPEED_MAX,   0.02,
         PSYS_SRC_TARGET_KEY,        target,
-        PSYS_SRC_OMEGA,             <0.0, 0.0, 0.0>   ]);
+        PSYS_SRC_OMEGA,             <0.0, 0.0, 0.0>   ]);       
 }
 
 initiate()
 {   //create a list of inventory types the updater has to offer the collar, store the updater version and open the listener
     // llSleep(2.0);
+    list rPos = llGetLinkPrimitiveParams(g_link2,[PRIM_POSITION]);
+    vector p = (llList2Vector(rPos,0) - llGetPos())/llGetRot();
+    llSetLinkPrimitiveParamsFast(g_link,[PRIM_POSITION,p] + [PRIM_COLOR,ALL_SIDES,<0,0,.5>,1.0]); 
     line = 0;
     oldItemsToDelete = [];
     dataid = llGetNotecardLine(noteCard, line);
-    llParticleSystem([]);
-    llSetLinkColor(3, <1,0,0>, ALL_SIDES);
+    llLinkParticleSystem(g_link,[]);
+    llSetLinkColor(g_link, <0,0,.5>, ALL_SIDES);
     integer n;
     list types = [INVENTORY_SCRIPT, INVENTORY_OBJECT, INVENTORY_NOTECARD, INVENTORY_TEXTURE, INVENTORY_ANIMATION, INVENTORY_SOUND, INVENTORY_LANDMARK];
     integer iStop = llGetListLength(types);
@@ -139,7 +166,7 @@ initiate()
     versionstring = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 1);
     version = (float)versionstring;
     instructions = "CollarDB Update - " + llGetSubString((string)version, 0, 4) + "\nTo update your collar (version 3.020 or later):\n1 - Rez it next to me.\n2 - Touch the collar and select Help/Debug->Update";
-    llSetText(instructions, <1,1,1>, 1);
+    updatetext(LINK_ROOT,instructions, <1,1,1>, 1);
     myKey = llGetKey();
     listenhandle = llListen(updatechannel, "", "", "");
     instructions = "\nTo update your collar (version 3.020 or later):\n1 - Rez it next to me.\n2 - Touch the collar and select Help/Debug->Update";
@@ -181,8 +208,8 @@ UnRunScripts()
 OfferUpdate(key id)
 {
     UpdateParticle(id, <1,0,0>);
-    llSetLinkColor(3, <1,0,1>, ALL_SIDES);
-    llSetText(hoverText + "Preparing Update", <1,1,0>, 1);
+    llSetLinkColor(g_link, <1,0,1>, ALL_SIDES);
+    updatetext(LINK_ROOT,hoverText + "Preparing Update", <1,1,0>, 1);
     llDialog(llGetOwner(),"Update started, please wait until it finished completely.\nThis will take 1 to 5 minutes.", ["Ok"],-47114711);
     string message = "toupdate|" + llDumpList2String(offering, "|");
     llWhisper(updatechannel, message);
@@ -237,8 +264,7 @@ CopyUpdateManager(key id, integer updatePin_local)
         name = llGetInventoryName(INVENTORY_SCRIPT, n);
         if("updateManager" == llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 1))//Should be " - " and we want it to be
         {
-            hoverText += ".";
-            llSetText(hoverText + "\n" + name, <1,0,0>, 1);
+            updatetext(LINK_ROOT,name, <1,0,0>, 1);
             llRemoteLoadScriptPin(id, name, updatePin_local, TRUE, 42);
             n = iStop;//end the loop
         }
@@ -250,8 +276,8 @@ StartUpdate(key id, integer update)
     UpdateParticle(id, <1,1,1>);
     integer i;
     hoverText += "Updating Collar Items\n";
-    llSetLinkColor(3, <0,0,1>, ALL_SIDES);
-    llSetText(hoverText, <1,0,0>, 1);
+    llSetLinkColor(g_link, <0,0,1>, ALL_SIDES);
+    updatetext(LINK_ROOT,hoverText, <1,0,0>, 1);
     string name;
     debug("sending non script items");
     for (i = 0; i < llGetListLength(offering); i++)
@@ -266,8 +292,9 @@ StartUpdate(key id, integer update)
                 name = llGetInventoryName(type, n);
                 if(name != noteCard)
                 {
-                    hoverText += ".";
-                    llSetText(hoverText + "\n" + name, <1,0,0>, 1);
+                    float pct = (float)n / (float)iStop;
+                    string per = (string)((integer)(pct * 100)) + "%";
+                    updatetext(LINK_ROOT,hoverText + "▕"+Bars( pct, 10, Charset_LeftRight )+"▏ " + per + "\n" + name, <1,0,0>, 1);
                     llGiveInventory(id, name);
                 }
             }
@@ -280,8 +307,9 @@ StartUpdate(key id, integer update)
         name = llGetInventoryName(INVENTORY_SCRIPT, i);
         if (!isUpdateManagerScript(name))
         {
-            hoverText += ".";
-            llSetText(hoverText + "\n" + name, <1,0,0>, 1);
+            float pct = (float)i / (float)iStop;
+            string per = (string)((integer)(pct * 100)) + "%";           
+            updatetext(LINK_ROOT,hoverText + "▕"+Bars( pct, 10, Charset_LeftRight )+"▏ " + per + "\n" + name, <1,0,0>, 1);
             llRemoteLoadScriptPin(id, name, update, FALSE, 42);
         }
     }
@@ -291,18 +319,45 @@ StartUpdate(key id, integer update)
     llSleep(2.0);
     llWhisper(updatechannel, "version|" + (string)version);
     UpdateParticle(id, <1,0,0>);
-    llSetText("PLEASE WAIT\nFinalizing Update", <1,0,0>, 1);
+    updatetext(LINK_ROOT,"PLEASE WAIT\nFinalizing Update", <1,0,0>, 1);
 
 }
+
+string Bars( float Cur, integer Bars, list Charset ){
+    // Input    = 0.0 to 1.0
+    // Bars     = char length of progress bar
+    // Charset  = [Blank,<Shades>,Solid];
+    integer Shades = llGetListLength(Charset)-1;
+            Cur *= Bars;
+    integer Solids  = llFloor( Cur );
+    integer Shade   = llRound( (Cur-Solids)*Shades );
+    integer Blanks  = Bars - Solids - 1;
+    string str;
+    while( Solids-- >0 ) str += llList2String( Charset, -1 );
+    if( Blanks >= 0 ) str += llList2String( Charset, Shade );
+    while( Blanks-- >0 ) str += llList2String( Charset, 0 );
+    return str; }
+    
+    
+updatetext(integer link, string text, vector color, float alpha)
+{
+    text = "CollarDB - Updater\n=================\n" + text + "\n=================\n";
+    llSetLinkPrimitiveParamsFast(link,[PRIM_TEXT,text,color,alpha]);
+}
+  
 
 default
     //state to eleminate multiple updaters
 {
     state_entry()
     {
+        GetSphereLink();
+        list rPos = llGetLinkPrimitiveParams(g_link2,[PRIM_POSITION]);
+        vector p = (llList2Vector(rPos,0) - llGetPos())/llGetRot();
+        llSetLinkPrimitiveParamsFast(g_link,[PRIM_POSITION,p] + [PRIM_COLOR,ALL_SIDES,<0,0,.5>,1.0]);    
         g_keyWearer=llGetOwner();
         // init the double updater search
-        llSetText("Updater is initalizing. Please wait ...",<1,0,0>,1.0);
+        updatetext(LINK_ROOT,"Updater is initalizing. Please wait ...",<1,0,0>,1.0);
         // listen on a channel
         llListen(g_nDoubleCheckChannel,"",NULL_KEY,"");
         // and say on the smae channel we are here
@@ -483,6 +538,10 @@ state updating
                         llWhisper(updatechannel, "nothing to update");
                         llOwnerSay("Your CollarDB is previous version 3 and cannot be updated this way, please get an CollarDB Version 3 or higher first.");
                     }
+                    else if ((float)command1 >= 20111001.1)
+                    {//Collar is 3.706 or higher, so replace everything anywat
+                        llWhisper(updatechannel, "get ready");
+                    }
                     else if ((float)command1 >= version)
                     {
                         llWhisper(updatechannel, "nothing to update");
@@ -491,6 +550,9 @@ state updating
                 }
                 else if (command0 == "ready")
                 {// Collar responed everything is ready, douplicate items were deleted so start to send stuff over
+                    list idpos = llGetObjectDetails(id,[OBJECT_POS]);
+                    vector movepos = ((vector)llList2String(idpos,0) - llGetPos())/ llGetRot();
+                     llSetLinkPrimitiveParamsFast(g_link,[PRIM_POSITION,movepos]  + [PRIM_COLOR,ALL_SIDES,<0,0,.5>,0.25]);
                     updatePin = (integer)command1;
                     CopyUpdateManager(id, updatePin);
                     // StartUpdate(id, (integer)command1, TRUE);
@@ -579,19 +641,19 @@ state linked
                 }
                 else if (message == "copying child scripts")
                 {
-                    llSetText("PLEASE WAIT\nFinalizing Update\nCopying Scripts to Childprims", <1,0,0>, 1);
+                    updatetext(LINK_ROOT,"PLEASE WAIT\nFinalizing Update\nCopying Scripts to Childprims", <1,0,0>, 1);
                 }
                 else if (message == "restarting collar scripts")
                 {
-                    llSetText("PLEASE WAIT\nFinalizing Update\nRestarting CollarDB scripts.", <1,0,0>, 1);
+                    updatetext(LINK_ROOT,"PLEASE WAIT\nFinalizing Update\nRestarting CollarDB scripts.", <1,0,0>, 1);
                 }
                 else if (command0 == "finished")
                 {// lets be sure also the update script is resetted before showing this
                     llSleep(2.0);
-                    llSetLinkColor(3, <0,1,0>, ALL_SIDES);
-                    llSetText("Update Finished.\nYour collar has been updated to:\n" + llGetSubString((string)version, 0, 4), <0,1,0>, 1);
+                    llSetLinkColor(g_link, <0,1,0>, ALL_SIDES);
+                    updatetext(LINK_ROOT,"Update Finished.\nYour collar has been updated to:\n" + llGetSubString((string)version, 0, 4), <0,1,0>, 1);
                     hoverText = "PLEASE WAIT\n";
-                    llParticleSystem([]);
+                    llLinkParticleSystem(g_link,[]);
                     //get the info about the version and show the user a appropiate wiki page:
                     string sURL;
                     string sInfo;
@@ -642,8 +704,8 @@ state inactive
 {
     state_entry()
     {
-        llSetLinkColor(3, <1,1,0>, ALL_SIDES);//yellow for inactive
-        llSetText("Deactivated due to another updater close by\nRerez to reactiavte", <1,1,0>, 1);
+        llSetLinkColor(g_link, <1,1,0>, ALL_SIDES);//yellow for inactive
+        updatetext(LINK_ROOT,"Deactivated due to another updater close by\nRerez to reactiavte", <1,1,0>, 1);
     }
 
     on_rez(integer start_param)
