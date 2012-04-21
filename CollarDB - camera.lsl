@@ -187,28 +187,10 @@ string Capitalize(string sIn)
     return llToUpper(llGetSubString(sIn, 0, 0)) + llGetSubString(sIn, 1, -1);
 }
 
-string StrReplace(string sSrc, string sFrom, string sTo)
-{//replaces all occurrences of 'sFrom' with 'sTo' in 'sSrc'.
-    integer iLen = (~-(llStringLength(sFrom)));
-    if(~iLen)
-    {
-        string  sBuffer = sSrc;
-        integer iBufPos = -1;
-        integer iToLen = (~-(llStringLength(sTo)));
-        @loop;//instead of a while loop, saves 5 bytes (and run faster).
-        integer iToPos = ~llSubStringIndex(sBuffer, sFrom);
-        if(iToPos)
-        {
-//            iBufPos -= iToPos;
-//            sSrc = llInsertString(llDeleteSubString(sSrc, iBufPos, iBufPos + iLen), iBufPos, sTo);
-//            iBufPos += iToLen;
-//            sBuffer = llGetSubString(sSrc, (-~(iBufPos)), 0x8000);
-            sBuffer = llGetSubString(sSrc = llInsertString(llDeleteSubString(sSrc, iBufPos -= iToPos, iBufPos + iLen), iBufPos, sTo), (-~(iBufPos += iToLen)), 0x8000);
-            jump loop;
-        }
-    }
-    return sSrc;
+string StrReplace(string sStr, string sSearch, string sReplace) {
+    return llDumpList2String(llParseStringKeepNulls((sStr = "") + sStr, [sSearch], []), sReplace);
 }
+
 
 //These TightListType functions allow serializing a list to a string, and deserializing it back, while preserving variable type information.  We use them so we can have a list of camera modes, where each mode is itself a list
 integer TightListTypeLength(string sInput)

@@ -246,10 +246,12 @@ ClearURL()
     g_kBroadcastRequestDel = llHTTPRequest(g_sBROADCAST_URL, [HTTP_METHOD, "DELETE"], "");
     //g_kBroadcastRequestDel = llHTTPRequest(g_sBROADCAST_URL+"d=True", [HTTP_METHOD, "POST"], "");
 }
-//moded from wiki
+
 string StrReplace(string sStr, string sSearch, string sReplace) {
     return llDumpList2String(llParseStringKeepNulls((sStr = "") + sStr, [sSearch], []), sReplace);
 }
+
+
 //***********************************************************replace with new vars
 // Convert a strided list to json format
 string Strided2JSON(list lInput)
