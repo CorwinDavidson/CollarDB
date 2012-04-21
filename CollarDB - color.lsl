@@ -194,7 +194,7 @@ SetElementColor(string sElement, vector vColor)
         }
     }
     //create shorter string from the color vectors before saving
-    string sStrColor = Vec2String(vColor);
+    string sStrColor = (string)vColor;
     //change the g_lColorSettings list entry for the current element
     integer iIndex = llListFindList(g_lColorSettings, [sElement]);
     if (iIndex == -1)
@@ -215,24 +215,6 @@ SetElementColor(string sElement, vector vColor)
 integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
 {
     return llDeleteSubString(sHayStack, llStringLength(sNeedle), -1) == sNeedle;
-}
-
-string Vec2String(vector vVec)
-{
-    list lParts = [vVec.x, vVec.y, vVec.z];
-
-    integer n;
-    for (n = 0; n < 3; n++)
-    {
-        string sStr = llList2String(lParts, n);
-        //remove any trailing 0's or .'s from sStr
-        while ((~(integer)llSubStringIndex(sStr, ".")) && (llGetSubString(sStr, -1, -1) == "0" || llGetSubString(sStr, -1, -1) == "."))
-        {
-            sStr = llGetSubString(sStr, 0, -2);
-        }
-        lParts = llListReplaceList(lParts, [sStr], n, n);
-    }
-    return "<" + llDumpList2String(lParts, ",") + ">";
 }
 
 default

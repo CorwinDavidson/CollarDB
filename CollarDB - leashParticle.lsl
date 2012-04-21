@@ -225,22 +225,6 @@ Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
     }
 }
 
-string Vec2String(vector vVec)
-{
-    list lParts = [vVec.x, vVec.y, vVec.z];
-    for (g_iLoop = 0; g_iLoop < 3; g_iLoop++)
-    {
-        string sStr = llList2String(lParts, g_iLoop);
-        //remove any trailing 0's or .'s from sStr
-        while ((~(integer)llSubStringIndex(sStr, ".")) && (llGetSubString(sStr, -1, -1) == "0" || llGetSubString(sStr, -1, -1) == "."))
-        {
-            sStr = llGetSubString(sStr, 0, -2);
-        }
-        lParts = llListReplaceList(lParts, [sStr], g_iLoop, g_iLoop);
-    }
-    return "<" + llDumpList2String(lParts, ",") + ">";
-}
-
 SaveSettings(string sToken, string sSave, integer bSaveToLocal)
 {
     integer iIndex = llListFindList(g_lSettings, [sToken]);
@@ -609,7 +593,7 @@ default
                     if (iIndex)
                     {
                         g_vLeashColor = (vector)llList2String(g_lColors, iIndex);
-                        SaveSettings(L_COLOR, Vec2String(g_vLeashColor), TRUE);
+                        SaveSettings(L_COLOR, (string)g_vLeashColor, TRUE);
                     }
                     if (!g_bInvisibleLeash && g_bLeashActive)
                     {
@@ -780,7 +764,7 @@ default
                 if (iIndex)
                 {
                     g_vLeashColor = (vector)llList2CSV(llList2List(lRecievedSettings, iIndex, iIndex + 2));
-                    SaveSettings(L_COLOR, Vec2String(g_vLeashColor), FALSE);
+                    SaveSettings(L_COLOR, (string)g_vLeashColor, FALSE);
                 }
             }
         }
@@ -808,18 +792,18 @@ default
                 else if (sToken == L_GRAVITY)
                 {
                     g_vLeashGravity.z = -(float)sValue;
-                    SaveDefaultSettings(sToken, Vec2String(g_vLeashGravity));
+                    SaveDefaultSettings(sToken, (string)g_vLeashGravity);
                 }
                 else if (sToken == L_SIZE)
                 {
                     g_vLeashSize.x = (float)sValue;
                     g_vLeashSize.y = (float)sValue;
-                    SaveDefaultSettings(sToken, Vec2String(g_vLeashSize));
+                    SaveDefaultSettings(sToken, (string)g_vLeashSize);
                 }
                 else if (sToken == L_COLOR)
                 {
                     g_vLeashColor = (vector)sValue;
-                    SaveDefaultSettings(sToken, Vec2String(g_vLeashColor));
+                    SaveDefaultSettings(sToken, (string)g_vLeashColor);
                 }
                 else if (sToken == "Glow")
                 {
