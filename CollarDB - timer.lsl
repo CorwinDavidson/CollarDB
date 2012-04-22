@@ -184,21 +184,6 @@ Debug(string sMsg)
     //llOwnerSay(llGetScriptName() + ": " + sMsg);
 }
 
-//===============================================================================
-//= parameters   :    string    sMsg    message string received
-//=
-//= return        :    integer TRUE/FALSE
-//=
-//= description  :    checks if a string begin with another string
-//=
-//===============================================================================
-
-integer StartsWith(string sHaystack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
-{
-    return (llDeleteSubString(sHaystack, llStringLength(sNeedle), -1) == sNeedle);
-}
-
-
 key ShortKey()
 {//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
     string sChars = "0123456789abcdef";

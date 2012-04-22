@@ -455,20 +455,6 @@ string CheckBox(string name, integer value)
 }
 
 //===============================================================================
-//= parameters   :    string    szMsg   message string received
-//=
-//= return        :    integer TRUE/FALSE
-//=
-//= description  :    checks if a string begin with another string
-//=
-//===============================================================================
-
-integer nStartsWith(string szHaystack, string szNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
-{
-    return (llDeleteSubString(szHaystack, llStringLength(szNeedle), -1) == szNeedle);
-}
-
-//===============================================================================
 //= parameters   :    string    keyID   key of person requesting the menu
 //=
 //= return        :    none

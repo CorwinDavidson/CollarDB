@@ -158,7 +158,6 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     return kID;
 }
 
-// http://wiki.secondlife.com/wiki/llSubStringIndex
 integer StartsWith(string sHayStack, string sNeedle) {
     return llDeleteSubString(sHayStack, llStringLength(sNeedle), -1) == sNeedle;
 }
