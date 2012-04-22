@@ -117,28 +117,8 @@ string AutoPrefix()
     return llToLower(llGetSubString(llList2String(sName, 0), 0, 0)) + llToLower(llGetSubString(llList2String(sName, 1), 0, 0));
 }
 
-string StringReplace(string sSrc, string sFrom, string sTo)
-{//replaces all occurrences of 'sFrom' with 'sTo' in 'sSrc'.
-    //Ilse: blame/applaud Strife Onizuka for this godawfully ugly though apparently optimized function
-    integer iLen = (~-(llStringLength(sFrom)));
-    if(~iLen)
-    {
-        string  sBuffer = sSrc;
-        integer iBufPos = -1;
-        integer iToLen = (~-(llStringLength(sTo)));
-        @loop;//instead of a while loop, saves 5 bytes (and run faster).
-        integer iToPos = ~llSubStringIndex(sBuffer, sFrom);
-        if(iToPos)
-        {
-            iBufPos -= iToPos;
-            sSrc = llInsertString(llDeleteSubString(sSrc, iBufPos, iBufPos + iLen), iBufPos, sTo);
-            iBufPos += iToLen;
-            sBuffer = llGetSubString(sSrc, (-~(iBufPos)), 0x8000);
-            //sBuffer = llGetSubString(sSrc = llInsertString(llDeleteSubString(sSrc, iBufPos -= iToPos, iBufPos + iLen), iBufPos, sTo), (-~(iBufPos += iToLen)), 0x8000);
-            jump loop;
-        }
-    }
-    return sSrc;
+string StrReplace(string sStr, string sSearch, string sReplace) {
+    return llDumpList2String(llParseStringKeepNulls((sStr = "") + sStr, [sSearch], []), sReplace);
 }
 
 integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
@@ -477,8 +457,8 @@ default
         else if (iNum == POPUP_HELP)
         {
             //replace _PREFIX_ with prefix, and _CHANNEL_ with (strin) channel
-            sStr = StringReplace(sStr, "_PREFIX_", g_sPrefix);
-            sStr = StringReplace(sStr, "_CHANNEL_", (string)g_iListenChan);
+            sStr = StrReplace(sStr, "_PREFIX_", g_sPrefix);
+            sStr = StrReplace(sStr, "_CHANNEL_", (string)g_iListenChan);
             Notify(kID, sStr, FALSE);
         }
         //added for attachment auth (garvin)
