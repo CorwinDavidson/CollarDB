@@ -209,7 +209,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;
@@ -217,7 +217,6 @@ integer COMMAND_BLACKLIST = 520;
 // added for timer so when the sub is locked out they can use postions
 integer COMMAND_WEARERLOCKEDOUT = 521;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bit of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 // messages for storing and retrieving values from http db
@@ -363,7 +362,6 @@ integer CompareDBPrefix(string str, string value)
 //=
 //===============================================================================
 
-
 Debug(string szMsg)
 {
     if (!g_nDebugMode) return;
@@ -406,7 +404,6 @@ Notify(key kID, string msg, integer alsoNotifyWearer)
 //=
 //===============================================================================
 
-
 key ShortKey()
 {//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
     string chars = "0123456789abcdef";
@@ -434,7 +431,6 @@ key ShortKey()
 //= description  :    displays a dialog to the given recipient
 //=
 //===============================================================================
-
 
 key Dialog(key rcpt, string prompt, list choices, list utilitybuttons, integer page)
 {
@@ -597,9 +593,6 @@ Only the owner may change these.
     // and dispay the menu
     g_keyConfigMenuID = Dialog(keyID, prompt, mybuttons, [UPMENU], 0);
 }
-
-
-
 
 //===============================================================================
 TakeKey(key avatar, integer auth, integer remote)
@@ -877,7 +870,6 @@ string GetDBPrefix()
     return llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 2);
 }
 
-
 //===============================================================================
 
 default
@@ -925,7 +917,6 @@ default
         
         updateVisible();
     }
-
 
     // listen for likend messages from OC scripts
     link_message(integer sender, integer num, string str, key id)

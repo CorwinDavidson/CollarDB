@@ -3,10 +3,9 @@
 //coupleanim1
 string g_sParentMenu = "Animations";
 string g_sSubMenu = "Couples";
-//string UPMENU = "?";
-//string MORE = "?";
+
 string UPMENU = "^";
-//string MORE = ">";
+
 key g_kAnimmenu;
 key g_kPart;
 string g_sSensorMode;		//will be set to "chat" or "menu" later
@@ -57,11 +56,10 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -91,8 +89,6 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-
-
 Debug(string sStr)
 {
     //llOwnerSay(llGetScriptName() + ": " + sStr);
@@ -120,7 +116,6 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     return kID;
 }
 
-
 PartnerMenu(key kID, list kAvs)
 {
     string sPrompt = "Pick a partner.";
@@ -143,7 +138,6 @@ TimerMenu(key kID)
     lButtons += ["90", "120", "endless"];
     g_kPart=Dialog(kID, sPrompt, lButtons, [UPMENU],0);
 }
-
 
 integer AnimExists(string sAnim)
 {
@@ -186,7 +180,6 @@ integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.c
 string StrReplace(string sStr, string sSearch, string sReplace) {
     return llDumpList2String(llParseStringKeepNulls((sStr = "") + sStr, [sSearch], []), sReplace);
 }
-
 
 PrettySay(string sText)
 {
@@ -410,7 +403,6 @@ state ready
     {
         llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
     }
-
 
     on_rez(integer start)
     {

@@ -22,7 +22,6 @@ list g_lButtons;
 integer g_iAppLock = FALSE;
 string g_sAppLockToken = "AppLock";
 
-
 //MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
 integer COMMAND_OWNER = 500;
@@ -30,9 +29,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -97,7 +94,6 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
     return kID;
 }
-
 
 SetAllElementsAlpha(float fAlpha)
 {
@@ -238,7 +234,6 @@ BuildElementList()
         }
     }
     g_lElements = llListSort(g_lElements, 1, TRUE);
-
 
 }
 

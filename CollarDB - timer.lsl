@@ -32,7 +32,6 @@ integer REAL_TIME_EXACT=5;
 integer ON_TIME=3;
 integer ON_TIME_EXACT=7;
 
-
 integer LINK_WHAT = LINK_SET;
 string g_sToyName = "collar";
 
@@ -77,7 +76,6 @@ integer g_iWhoCanChangeTime;
 integer g_iWhoCanChangeLeash;
 integer g_iWhoCanOtherSettings;
 
-
 integer g_iClockTime;
 integer g_iTimeChange;
 integer g_iOnUpdate;
@@ -96,13 +94,12 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 // added so when the sub is locked out they can use postions
 integer COMMAND_WEARERLOCKEDOUT = 521;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 // messages for storing and retrieving values from http db
@@ -148,7 +145,6 @@ integer TIMER_EVENT = -10000; // str = "start" or "end". For start, either "onli
 
 integer WEARERLOCKOUT=620;
 
-
 // menu option to go one step back in menustructure
 string UPMENU = "^";
 string MORE = ">";
@@ -177,7 +173,6 @@ Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
 //= description  :    output debug messages
 //=
 //===============================================================================
-
 
 Debug(string sMsg)
 {
@@ -340,7 +335,6 @@ DoRealMenu(key keyID)
     g_kRealMenuID = Dialog(keyID, sPrompt, g_lTimeButtons, [UPMENU], 0);
 }
 
-
 //===============================================================================
 //= parameters   :    none
 //=
@@ -437,7 +431,6 @@ TimerStart(integer perm)
         g_iOnRunning=3;
     }
 }
-
 
 default
 {

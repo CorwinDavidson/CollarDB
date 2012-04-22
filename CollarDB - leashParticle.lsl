@@ -82,7 +82,6 @@ integer g_bLeashActive;
 //strided list... LM name, linkNumber, BOOL_ACVTIVE
 list g_lLeashPrims;
 
-
 //global integer used for loops
 integer g_iLoop;
 

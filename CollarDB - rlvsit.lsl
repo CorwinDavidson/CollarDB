@@ -4,9 +4,7 @@ string g_sParentMenu = "RLV";
 string g_sSubMenu = "Sit";
 string g_sDBToken = "rlvsit";
 
-
 list g_lSettings;		//2-strided list in form of [option, param]
-
 
 list g_lRLVcmds = [
     "unsit",//may stand, if seated
@@ -29,7 +27,6 @@ list g_lIdmtCmds = [
     "sit","SitNow","Force Sit",
     "forceunsit","StandNow","Force Stand"
         ];
-
 
 string TURNON = "Allow";
 string TURNOFF = "Forbid";
@@ -60,11 +57,10 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -171,7 +167,6 @@ Menu(key kID)
     string sPrompt = "Pick an option";
     sPrompt += "\nCurrent Settings: ";
     list lButtons;
-
 
     integer n;
     integer iStop = llGetListLength(g_lRLVcmds);
@@ -435,7 +430,6 @@ default
                     llSensor("", NULL_KEY, SCRIPTED, g_fScanRange, PI);
                     return;
                 }
-
 
                  //do simple pass through for chat commands
 

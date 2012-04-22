@@ -23,12 +23,11 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;  		   // new for safeword
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;				   //scripts send messages on this channel to have settings saved to httpdb
@@ -194,8 +193,6 @@ Unlock()
     llMessageLinked(LINK_SET, MENUNAME_REMOVE, g_sParentMenu + "|" + UNLOCK, NULL_KEY);
     SetLockElementAlpha(); //EB
 }
-
-
 
 default
 {

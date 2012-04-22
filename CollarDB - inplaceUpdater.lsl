@@ -432,7 +432,6 @@ default
         }
     }
 
-
     timer()
     {
         // now answer from another upder, so all is good, back to normal updating mode
@@ -440,8 +439,6 @@ default
     }
 
 }
-
-
 
 state updating
 {
@@ -698,7 +695,6 @@ state linked
         //dont think this is needed as we do not get here till linked.
     }
 }
-
 
 state inactive
 {

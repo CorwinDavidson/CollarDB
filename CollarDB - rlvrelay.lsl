@@ -93,7 +93,6 @@ list g_lCollarOwnersList;
 list g_lCollarSecOwnersList;
 list g_lCollarBlackList;
 
-
 //settings
 integer g_iMinBaseMode = 0;
 integer g_iMinSafeMode = 1;
@@ -105,8 +104,6 @@ integer g_iLandMode = 1;
 integer g_iPlayMode = 0;
 
 key g_kDebugRcpt = NULL_KEY; // recipient key for relay chat debugging (useful since you cannot eavesdrop llRegionSayTo)
-
-
 
 // Sanitizes a key coming from the outside, so that only valid
 // keys are returned, and invalid ones are mapped to NULL_KEY
@@ -205,7 +202,6 @@ UpdateSettings(string sSettings)
     }
 }
 
-
 integer Auth(key object, key user)
 {
 
@@ -242,7 +238,6 @@ integer Auth(key object, key user)
     return iAuth;
 }
 
-
 Dequeue()
 {
     string sCommand;
@@ -275,7 +270,6 @@ Dequeue()
     g_iAuthPending = TRUE;
     g_kAuthMenuID = Dialog(g_kWearer, sPrompt, lButtons, [], 0);
 }
-
 
 string HandleCommand(string sIdent, key kID, string sCom, integer iAuthed)
 {
@@ -555,7 +549,6 @@ refreshRlvListener()
         g_iRlvListener = llListen(RELAY_CHANNEL, "", NULL_KEY, "");
 }
 
-
 CleanQueue()
 {
                     //clean newly iNumed events, while preserving the order of arrival for every device
@@ -593,7 +586,6 @@ CleanQueue()
                     //end of cleaning, now check if there is still events in queue and act accordingly
                     Dequeue();
 }
-
 
 default
 {

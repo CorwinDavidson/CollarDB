@@ -17,7 +17,6 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
 
 integer POPUP_HELP = 1001;
 
@@ -36,12 +35,8 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-
-
 integer g_iCharLimit = 12;
 
-//string UPMENU = "â†‘";
-//string MORE = "â†’";
 string UPMENU = "^";
 
 key g_kDialogID;
@@ -237,7 +232,6 @@ integer GetIndex(string sChar)
 
 }
 // END SALAHZAR
-
 
 RenderString(integer iLink, string sStr) {
     // Get the grid positions for each pair of characters.

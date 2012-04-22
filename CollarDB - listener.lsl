@@ -23,11 +23,11 @@ integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
 integer COMMAND_COLLAR = 499;
-//integer CHAT = 505; //deprecated.  Too laggy to make every single script parse a link message any time anyone says anything
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;  // new for safeword
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
+
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -59,7 +59,6 @@ string g_sSeparator = "|";
 string g_iAuth;
 string UUID;
 string g_sCmd;
-
 
 //===============================================================================
 //= parameters   :    key owner            key of the person to send the message to

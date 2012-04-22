@@ -35,7 +35,6 @@ integer g_iLine = 0;
 key g_kDataID;
 list g_lDeleteIDs;		//so we do not throw 404 errors on them
 
-
 list g_lDBCache;
 list g_lLocalCache;		//stores settings that we dont' want to save to DB because they change so frequently
 key g_kAllID;
@@ -51,9 +50,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -75,7 +72,6 @@ integer MENUNAME_RESPONSE = 3001;
 integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
-
 string WIKI ="Online Guide";
 string WIKI_URL = "http://www.collardb.com/static/UserDocumentation";
 
@@ -83,9 +79,6 @@ string BASE_ERROR_MESSAGE = "An error has occurred. To find out more about this 
 
 string g_sHTTPDB = "http://data.collardb.com/"; //db url no longer a constant
 key    g_kReqIDLoad;                          // request id
-
-//string dbprefix = "oc_";  //deprecated.  only appearance-related tokens should be prefixed now
-//on a per-plugin basis
 
 list g_sTokenIDs;		//strided list of token names and their corresponding request ids, so that token names can be returned in link messages
 
@@ -198,7 +191,6 @@ DumpCache(string sWichCache)
         lCache=g_lDBCache;
         sOut = "DB Settings Cache:";
     }
-
 
     integer n;
     integer iStop = llGetListLength(lCache);
@@ -319,7 +311,6 @@ string Serialize(list lInput, string sIndicators) {
     }
     return sOutput;
 }
-
 
 default
 {

@@ -30,10 +30,9 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
+
 integer RLV_CMD = 6000;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -72,12 +71,9 @@ string g_sMenu_PublicHTTP_Disabled = "( )Public Web Access";
 string g_sMenu_WebInterFace = "Web Interface";
 string g_sMenu_PublicWebInterFace = "Public Web";
 
-
-
 list g_lButtons;
 
 integer g_iRemenu=FALSE;
-
 
 string UPMENU = "^";		//when your menu hears this, give the parent menu
 
@@ -107,7 +103,6 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
     return kID;
 }
-
 
 Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
 {
@@ -145,7 +140,6 @@ DoMenu(key kID)
     
     // sPrompt += "(Menu will time out in " + (string)g_iTimeOut + " seconds.)\n";
     list lMyButtons;
-
 
     //fill in your button list here
 
@@ -186,7 +180,6 @@ DoMenu(key kID)
     {
         lMyButtons += g_sMenu_PublicWebInterFace;
     }
-
 
     g_kDialogID=Dialog(kID, sPrompt, lMyButtons + g_lButtons, [UPMENU], 0);
 }
@@ -250,7 +243,6 @@ ClearURL()
 string StrReplace(string sStr, string sSearch, string sReplace) {
     return llDumpList2String(llParseStringKeepNulls((sStr = "") + sStr, [sSearch], []), sReplace);
 }
-
 
 //***********************************************************replace with new vars
 // Convert a strided list to json format
@@ -337,7 +329,6 @@ string Serialize(list lInput, string sIndicators) {
     return sOutput;
 }
 //********************************************************end
-
 
 SaveHTTP()
 {

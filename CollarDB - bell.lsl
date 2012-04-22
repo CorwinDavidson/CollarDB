@@ -80,11 +80,10 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -116,9 +115,6 @@ integer DIALOG_TIMEOUT = -9002;
 
 string UPMENU = "^";		//when your menu hears this, give the parent menu
 
-
-
-
 key ShortKey()
 {//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
     string sChars = "0123456789abcdef";
@@ -141,7 +137,6 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     return kID;
 }
 
-
 string AutoPrefix()
 {
     list sName = llParseString2List(llKey2Name(llGetOwner()), [" "], []);
@@ -158,8 +153,6 @@ string AutoPrefix()
 //= description  :    send a message to a receiver and if needed to the wearer as well
 //=
 //===============================================================================
-
-
 
 Notify(key kID, string sMsg, integer nAlsoNotifyWearer)
 {
@@ -178,7 +171,6 @@ Notify(key kID, string sMsg, integer nAlsoNotifyWearer)
     }
 }
 
-
 //===============================================================================
 //= parameters   :    string    sMsg    message string received
 //=
@@ -187,7 +179,6 @@ Notify(key kID, string sMsg, integer nAlsoNotifyWearer)
 //= description  :    output debug messages
 //=
 //===============================================================================
-
 
 Debug(string sMsg)
 {
@@ -219,7 +210,6 @@ integer nStartsWith(string sHaystack, string sNeedle) // http://wiki.secondlife.
 //= description  :    generate the prefix from the object desctiption
 //=
 //===============================================================================
-
 
 string sGetDBPrefix()
 {//get db prefix from list in object desc
@@ -355,7 +345,6 @@ BuildBellElementList()
 //=
 //===============================================================================
 
-
 PrepareSounds()
 {
     // parse names of sounds in inventiory if those are for the bell
@@ -385,7 +374,6 @@ PrepareSounds()
 //= description  :    show help for shat commands
 //=
 //===============================================================================
-
 
 ShowHelp(key kID)
 {
@@ -418,7 +406,6 @@ ShowHelp(key kID)
 //=
 //===============================================================================
 
-
 RestoreBellSettings(string sSettings)
 {
     list lstSettings=llParseString2List(sSettings,[","],[]);
@@ -435,7 +422,6 @@ RestoreBellSettings(string sSettings)
         g_iHasControl=FALSE;
 
     }
-
 
     // is the bell visible?
     g_iBellShow=(integer)llList2String(lstSettings,1);
@@ -492,7 +478,6 @@ SaveBellSettings()
 
     llMessageLinked(LINK_SET, HTTPDB_SAVE,sSettings,NULL_KEY);
 }
-
 
 default
 {
@@ -681,7 +666,6 @@ default
                             g_iBellOn=iNum;
                             if (!g_iHasControl)
                                 llRequestPermissions(g_kWearer,PERMISSION_TAKE_CONTROLS);
-
 
                             SaveBellSettings();
                             Notify(kID,"The bell rings now.",TRUE);

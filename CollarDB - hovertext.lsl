@@ -9,7 +9,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer SEND_IM = 1000;
+
 integer POPUP_HELP = 1001;
 integer UPDATE = 10001;
 
@@ -94,7 +94,6 @@ TextDisplay(string sText, integer iVisible)
     
 
 }
-
 
 ShowText(string sNewText)
 {

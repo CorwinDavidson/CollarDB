@@ -40,9 +40,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -59,8 +57,6 @@ integer SUBMENU = 3002;
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
-
-
 
 //5000 block is reserved for IM slaves
 
@@ -89,7 +85,6 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)g_iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
     return kID;
 }
-
 
 Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
 {
@@ -139,7 +134,6 @@ string ElementType(integer iLinkNumber)
         return llList2String(lParams, 0);
     }
 }
-
 
 LoadColorSettings()
 {
@@ -209,8 +203,6 @@ SetElementColor(string sElement, vector vColor)
     llMessageLinked(LINK_SET, HTTPDB_SAVE, g_sDBToken + "=" + llDumpList2String(g_lColorSettings, "~"), NULL_KEY);
     //g_sCurrentElement = "";
 }
-
-
 
 integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
 {

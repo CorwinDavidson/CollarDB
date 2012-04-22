@@ -6,10 +6,6 @@
 //chekc default stornage
 //fix names for people
 
-
-
-
-
 ///****************
 //
 /*
@@ -58,7 +54,6 @@ string g_sDBToken2 = "rlvexlist";
 integer OWNER_DEFUALT = 63;		//1+2+4+8+16+32;		//all on
 integer SECOWNER_DEFUALT = 0;		//all off
 
-
 integer g_iOwnerDefault = 63;		//1+2+4+8+16+32;		//all on
 integer g_iSecOwnerDefault = 0;		//all off
 
@@ -66,7 +61,6 @@ string g_sLatestRLVersionSupport = "1.15.1"; //the version which brings the late
 string g_sDetectedRLVersion;
 list g_lSettings;		//2-strided list in form of [key, value]
 list g_lNames;
-
 
 list g_lRLVcmds = [
     "sendim",
@@ -126,11 +120,10 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;		//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave descripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -166,10 +159,9 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-//string UPMENU = "?";
-//string MORE = "?";
+
 string UPMENU = "^";
-//string MORE = ">";
+
 
 Debug(string sMsg)
 {
@@ -288,7 +280,6 @@ ExMenu(key kID, string sWho)
 
 // /* use this later
 
-
     //build sPrompt showing s_Current settings
     //make enable/disable lButtons
     //    string sPrompt = "Pick an option";
@@ -340,7 +331,6 @@ ExMenu(key kID, string sWho)
     g_lExMenus = [kTmp, sWho] + g_lExMenus;
 }
 // */
-
 
 UpdateSettings()
 {

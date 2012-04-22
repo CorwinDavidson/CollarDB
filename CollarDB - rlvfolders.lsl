@@ -14,9 +14,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 //integer HTTPDB_SAVE = 2000;    //scripts send messages on this channel to have settings saved to httpdb
@@ -53,8 +51,6 @@ string UPMENU = "^";
 string MORE = ">";
 
 // Folder actions
-//string ALL = "*All*";
-//string SELECT_CURRENT = "*This*";
 string REPLACE_ALL = "Replace all";
 string ADD_ALL = "Add all";
 string DETACH_ALL = "Detach all";
@@ -98,7 +94,6 @@ list g_lFolderStates; //corresponding folder states
 integer g_iLastFolderState;
 
 key g_kWearer;
-
 
 Debug(string sMsg)
 {
@@ -304,7 +299,6 @@ doLockFolder(integer iIndex)
 //    llOwnerSay(sRlvCom);
     llMessageLinked(LINK_SET, RLV_CMD,  sRlvCom, NULL_KEY);
 }
-
 
 updateUnsharedLocks(integer iAdd, integer iRem)
 { // adds and removes locks for unshared items, which implies saving to central settings and triggering a RLV command (dolockUnshared)

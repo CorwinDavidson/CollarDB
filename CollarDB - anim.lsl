@@ -48,11 +48,10 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
+
 integer COMMAND_SAFEWORD = 510;  // new for safeword
 integer COMMAND_WEARERLOCKEDOUT = 521;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
@@ -84,11 +83,9 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-//string UPMENU = "?";
-//string MORE = "?";
 string UPMENU = "^";
 string MORE = ">";
-//string PREV = "<";
+
 
 //integer iPage = 0;
 //integer g_sAnimMenuchannel = 2348207;
@@ -404,7 +401,6 @@ RequestPerms()
     }
 }
 
-
 CreateAnimList()
 {
     g_lPoseList=[];
@@ -428,7 +424,6 @@ CreateAnimList()
     }
     //    g_iNumAnims=llGetListLength(g_lPoseList);
 }
-
 
 default
 {

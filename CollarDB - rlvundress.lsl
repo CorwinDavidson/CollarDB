@@ -16,7 +16,6 @@ list g_lRLVcmds = ["attach","detach","remoutfit", "addoutfit","remattach","addat
 
 list g_lSettings;    //2-strided list in form of [option, param]
 
-
 list LOCK_CLOTH_POINTS = [
     "Gloves",
     "Jacket",
@@ -35,7 +34,6 @@ list LOCK_CLOTH_POINTS = [
     "Tattoo",
     "Physics"
         ];
-
 
 list DETACH_CLOTH_POINTS = [
     "Gloves",
@@ -107,7 +105,6 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
 
 integer POPUP_HELP = 1001;
 
@@ -131,11 +128,9 @@ integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version
 integer RLV_OFF = 6100; // send to inform plugins that RLV is disabled now, no message or key needed
 integer RLV_ON = 6101; // send to inform plugins that RLV is enabled now, no message or key needed
 
-
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
-
 
 string UPMENU = "^";
 
@@ -307,7 +302,6 @@ QuerySingleAttachment(string sAttachmetn)
     llMessageLinked(LINK_SET, RLV_CMD, "getattach:"+sAttachmetn+"=" + (string)iChan, NULL_KEY);
 }
 
-
 LockAttachmentMenu(key kID)
 {
     g_iRemenu=FALSE;
@@ -442,7 +436,6 @@ DolockAll(string sCommand, key kID)
         llMessageLinked(LINK_SET, RLV_CMD,  "addoutfit=y", kID);
     }
 }
-
 
 default
 {

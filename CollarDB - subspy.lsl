@@ -3,10 +3,8 @@
 //use sensorrepeat as a second timer to do the reporting (since regular timer is already used by menu system
 //if radar is turned off, just don't report avs when the sensor or no_sensor event goes off
 
-
 // Spy script for the CollarDB Project (c)
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
-
 
 list g_lAvBuffer;		//if this changes between report intervals then tell owners (if radar enabled)
 list g_lChatBuffer;		//if this has anything in it at end of interval, then tell owners (if listen enabled)
@@ -31,10 +29,9 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
+
 integer COMMAND_SAFEWORD = 510;  // new for safeword
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb

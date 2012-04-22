@@ -421,7 +421,6 @@ YankTo(key kIn)
     llStopMoveToTarget();    
 }
 
-
 // ---------------------------------------------
 // ------ IMPLEMENTATION ------
 default

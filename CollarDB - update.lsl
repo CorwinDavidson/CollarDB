@@ -70,7 +70,6 @@ Debug(string sMessage)
    // llOwnerSay(llGetScriptName() + ": " + sMessage);
 }
 
-
 key ShortKey()
 {//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
     string sChars = "0123456789abcdef";
@@ -306,7 +305,6 @@ default
     }
 }
 
-
 state reseted
 {
     state_entry()
@@ -335,8 +333,6 @@ state reseted
             llResetScript();
         }
         g_iUpdateMode = FALSE;
-
-
 
     }
 

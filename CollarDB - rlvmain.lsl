@@ -84,7 +84,6 @@ key g_kWearer;
 
 integer g_iLastDetach; //unix time of the last detach: used for checking if the detached time was small enough for not triggering the ping mechanism
 
-
 Debug(string sStr)
 {
     //llOwnerSay(llGetScriptName() + ": " + sStr);
@@ -162,7 +161,6 @@ integer StartsWith(string sHayStack, string sNeedle) {
     return llDeleteSubString(sHayStack, llStringLength(sNeedle), -1) == sNeedle;
 }
 
-
 // Book keeping functions
 
 integer SIT_CHANNEL;
@@ -179,7 +177,6 @@ list g_lBaked=[];
 integer g_iSitListener;
 key g_kSitter=NULL_KEY;
 key g_kSitTarget=NULL_KEY;
-
 
 integer CMD_ADDSRC = 11;
 integer CMD_REMSRC = 12;
@@ -353,7 +350,6 @@ Release(key kID, string sPattern)
     }
 }
 
-
 SafeWord(integer iCollarToo) {
     SendCommand("clear");
     g_lBaked=[];
@@ -364,7 +360,6 @@ SafeWord(integer iCollarToo) {
         llMessageLinked(LINK_SET,RLV_REFRESH,"",NULL_KEY);
     }
 }
-
 
 // End of book keeping functions
 
@@ -542,7 +537,6 @@ state checked {
             llMessageLinked(LINK_SET, RLV_REFRESH, "", NULL_KEY);         
         }
     }
-
 
     attach(key kID)
     {
@@ -740,7 +734,6 @@ state checked {
                         llMessageLinked(LINK_SET, HTTPDB_SAVE, "rlvon=0", NULL_KEY);
                         SafeWord(TRUE);
                         llMessageLinked(LINK_SET, RLV_OFF, "", NULL_KEY);
-
 
                     }
                     else
