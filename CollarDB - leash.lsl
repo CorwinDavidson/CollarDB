@@ -1,4 +1,4 @@
-﻿//CollarDB - leash - 3.531
+﻿//CollarDB - leash
 //leash script for the Open Collar Project (c)
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
@@ -25,7 +25,7 @@
 // - Should be constant across collars, so not prefixed
 // --- db tokens ---
 string TOK_LENGTH   = "leashlength";
-string TOK_ROT = "leashrot";
+string TOK_ROT 		= "leashrot";
 string TOK_DEST     = "leashedto"; // format: uuid,rank
 // --- channel tokens ---
 // - MESSAGE MAP
