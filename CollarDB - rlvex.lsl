@@ -35,7 +35,7 @@ recvemote
 
 */
 
-key g_kLMID;//store the request id here when we look up  a LM
+key g_kLMID;		//store the request id here when we look up  a LM
 
 key g_kMenuID;
 key g_kSensorMenuID;
@@ -55,16 +55,16 @@ string g_sDBToken = "rlvex";
 string g_sDBToken2 = "rlvexlist";
 
 //statics to compare
-integer OWNER_DEFUALT = 63;//1+2+4+8+16+32;//all on
-integer SECOWNER_DEFUALT = 0;//all off
+integer OWNER_DEFUALT = 63;		//1+2+4+8+16+32;		//all on
+integer SECOWNER_DEFUALT = 0;		//all off
 
 
-integer g_iOwnerDefault = 63;//1+2+4+8+16+32;//all on
-integer g_iSecOwnerDefault = 0;//all off
+integer g_iOwnerDefault = 63;		//1+2+4+8+16+32;		//all on
+integer g_iSecOwnerDefault = 0;		//all off
 
 string g_sLatestRLVersionSupport = "1.15.1"; //the version which brings the latest used feature to check against
 string g_sDetectedRLVersion;
-list g_lSettings;//2-strided list in form of [key, value]
+list g_lSettings;		//2-strided list in form of [key, value]
 list g_lNames;
 
 
@@ -126,23 +126,23 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave descripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //sStr must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer LOCALSETTING_SAVE = 2500;
 integer LOCALSETTING_REQUEST = 2501;
-integer LOCALSETTING_RESPONSE = 2502;//should no longer be in use
+integer LOCALSETTING_RESPONSE = 2502;		//should no longer be in use
 integer LOCALSETTING_DELETE = 2503;
 integer LOCALSETTING_EMPTY = 2504;
 
@@ -152,15 +152,15 @@ integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version upon receiving this message.
 
 integer RLV_OFF = 6100; // send to inform plugins that RLV is disabled now, no message or key needed
 integer RLV_ON = 6101; // send to inform plugins that RLV is enabled now, no message or key needed
 
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
+integer ANIM_START = 7000;		//send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP = 7001;		//send this with the name of an anim in the string part of the message to stop the anim
 
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
@@ -195,7 +195,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -467,11 +467,11 @@ SetOwnersExs(string sVal)
                 {
                     if (g_iOwnerDefault & llList2Integer(g_lBinCmds, i) )
                     {
-                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];// +sVal];
+                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];		// +sVal];
                     }
                     else
                     {
-                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];// +sVal];
+                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];		// +sVal];
                     }
                 }
                 string sStr = llDumpList2String(sCmd, ",");
@@ -506,11 +506,11 @@ SetAllExs(string sVal)
                 {
                     if (g_iOwnerDefault & llList2Integer(g_lBinCmds, i) )
                     {
-                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];// +sVal];
+                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];		// +sVal];
                     }
                     else
                     {
-                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];// +sVal];
+                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];		// +sVal];
                     }
                 }
                 string sStr = llDumpList2String(sCmd, ",");
@@ -536,11 +536,11 @@ SetAllExs(string sVal)
                 {
                     if (g_iSecOwnerDefault & llList2Integer(g_lBinCmds, i) )
                     {
-                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];// +sVal];
+                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];		// +sVal];
                     }
                     else
                     {
-                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];// +sVal];
+                        sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];		// +sVal];
                     }
                 }
                 string sStr = llDumpList2String(sCmd, ",");
@@ -565,11 +565,11 @@ SetAllExs(string sVal)
             {
                 if (iTmpOwner & llList2Integer(g_lBinCmds, i) )
                 {
-                    sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];// +sVal];
+                    sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=n"];		// +sVal];
                 }
                 else
                 {
-                    sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];// +sVal];
+                    sCmd += [llList2String(g_lRLVcmds, i) + ":" + sTmpOwner + "=y"];		// +sVal];
                 }
             }
             string sStr = llDumpList2String(sCmd, ",");
@@ -643,7 +643,7 @@ default
                 list items = llParseString2List(sStr, [","], []);
                 integer n;
                 integer iStop = llGetListLength(items);
-                integer iChange = FALSE;//set this to true if we see a setting that concerns us
+                integer iChange = FALSE;		//set this to true if we see a setting that concerns us
                 for (n = 0; n < iStop; n++)
                 {   //split off the parameters (anything after a : or =)
                     //and see if the thing being set concerns us
@@ -683,7 +683,7 @@ default
                                     if((key)sWho)
                                     {
                                         g_lSettings = [sWho, llList2Integer(g_lBinCmds, iRLVIndex)] + g_lSettings;
-                                        AddName(sWho);//should add to name list
+                                        AddName(sWho);		//should add to name list
                                         iChange = iChange | 2;
                                     }
                                 }
@@ -723,7 +723,7 @@ default
                                         }
                                         iTmp = iTmp & ~llList2Integer(g_lBinCmds, iRLVIndex);
                                         g_lSettings = [sWho, iTmp] + g_lSettings;
-                                        AddName(sWho);// add person to name list
+                                        AddName(sWho);		// add person to name list
                                         iChange = iChange | 2;
                                     }
                                 }
@@ -765,7 +765,7 @@ default
                                 g_lSettings = llDeleteSubList(g_lSettings, iIndex, iIndex + 1);
                                 iIndex = llListFindList(g_lNames, [sWho]);
                                 Debug("NamesIndex:"+(string)iIndex+" name:"+llList2String(g_lNames, iIndex));
-                                g_lNames = llDeleteSubList(g_lNames, iIndex, iIndex + 1);//should remove the name from this list too
+                                g_lNames = llDeleteSubList(g_lNames, iIndex, iIndex + 1);		//should remove the name from this list too
                                 iChange = iChange | 2;
                             }
                         }
@@ -854,7 +854,7 @@ default
             {
                 if (sValue == "sent")
                 {
-                    SetAllExs("");//sendcommands
+                    SetAllExs("");		//sendcommands
                 }
             }
         }
@@ -904,7 +904,7 @@ default
         else if (iNum == RLV_ON)
         {
             g_iRLVOn=TRUE;
-            UpdateSettings();//send the settings as we did notbefore
+            UpdateSettings();		//send the settings as we did notbefore
         }
         else if (iNum == DIALOG_RESPONSE)
         {

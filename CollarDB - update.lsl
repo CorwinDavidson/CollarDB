@@ -78,7 +78,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -141,7 +141,7 @@ SafeResetOther(string sName)
 
 integer IsCollarDBScript(string name)
 {
-    name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
+    name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);		// we prefer " - "
     if (name == "CollarDB")
     {
         return TRUE;
@@ -524,7 +524,7 @@ state reseted
                 integer iPage = (integer)llList2String(lMenuParams, 2);
                 if (sMessage == "Yes")
                 {
-                    ReadyToUpdate(TRUE);//any num will do
+                    ReadyToUpdate(TRUE);		//any num will do
                 }
             }
         }

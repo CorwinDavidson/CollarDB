@@ -21,12 +21,12 @@ integer CHAT = 505;
 
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent when a token has no value in the httpdb
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -49,7 +49,7 @@ key g_kDialogID;
 string g_sLabelText = "CollarDB";
 string g_sDesignPrefix;
 
-list g_lDesignRot = ["oc_", <0.0, 0.0, -0.992462, 0.122556>];//strided list of default rotations for label prim 0, by dbprefix
+list g_lDesignRot = ["oc_", <0.0, 0.0, -0.992462, 0.122556>];		//strided list of default rotations for label prim 0, by dbprefix
 float g_iRotIncrement = 11.75;
 
 ////////////////////////////////////////////
@@ -115,9 +115,9 @@ key     null_key        = NULL_KEY;
 //key g_kFontTexture = "020f8783-0d0d-88e3-487d-df3e07d068e7"; //Lucida Bright
 //key g_kFontTexture = "fa87184c-35ca-5143-fe24-cdf70e427a09"; // monotype Corsiva
 //key g_kFontTexture = "34835ebf-b13a-a054-46bc-678d0849025c"; // DejaVu Sans Mono
-//key g_kFontTexture = "316b2161-0669-1796-fec2-976526a29efd";//Andale Mono, Etched
-//key g_kFontTexture = "f38c6993-d85e-cffb-fce9-7aed87b80c2e";//andale mono etched 45 point
-key g_kFontTexture = "bf2b6c21-e3d7-877b-15dc-ad666b6c14fe";//verily serif 40 etched, on white
+//key g_kFontTexture = "316b2161-0669-1796-fec2-976526a29efd";		//Andale Mono, Etched
+//key g_kFontTexture = "f38c6993-d85e-cffb-fce9-7aed87b80c2e";		//andale mono etched 45 point
+key g_kFontTexture = "bf2b6c21-e3d7-877b-15dc-ad666b6c14fe";		//verily serif 40 etched, on white
 
 list g_lFonts = [
     "Andale 1", "ccc5a5c9-6324-d8f8-e727-ced142c873da",
@@ -141,7 +141,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 

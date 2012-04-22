@@ -9,15 +9,15 @@
 //2009-03-22, Lulu Pink, animlock - issue 367
 
 list g_lAnims;
-//integer g_iNumAnims;//the number of anims that don't start with "~"
-//integer g_iPageSize = 8;//number of anims we can fit on one page of a multi-page menu
+//integer g_iNumAnims;		//the number of anims that don't start with "~"
+//integer g_iPageSize = 8;		//number of anims we can fit on one page of a multi-page menu
 list g_lPoseList;
 
 //for the height scaling feature
 key g_kDataID;
 string card = "~heightscalars";
 integer g_iLine = 0;
-list g_lAnimScalars;//a 3-strided list in form animname,scalar,delay
+list g_lAnimScalars;		//a 3-strided list in form animname,scalar,delay
 integer g_iAdjustment = 0;
 
 string g_sCurrentPose = "";
@@ -55,12 +55,12 @@ integer COMMAND_WEARERLOCKEDOUT = 521;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer LOCALSETTING_SAVE = 2500;
 integer LOCALSETTING_REQUEST = 2501;
@@ -104,7 +104,7 @@ string AO_MENU = "ZHAO_MENU";
 
 key g_kWearer;
 
-list g_lMenuIDs;//three strided list of avkey, dialogid, and menuname
+list g_lMenuIDs;		//three strided list of avkey, dialogid, and menuname
 integer g_iMenuStride = 3;
 
 string ANIMMENU = "Anim";
@@ -142,7 +142,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -236,7 +236,7 @@ RefreshAnim()
                         llStopAnimation(s_Current);
                     }
                 //add anim to list
-                g_lAnims = [sAnim] + g_lAnims;//this way, g_lAnims[0] is always the currently playing anim
+                g_lAnims = [sAnim] + g_lAnims;		//this way, g_lAnims[0] is always the currently playing anim
                 llStartAnimation(sAnim);
                 llSay(g_iInterfaceChannel, AO_OFF);
                 */
@@ -273,7 +273,7 @@ StartAnim(string sAnim)
             }
 
             //add anim to list
-            g_lAnims = [sAnim] + g_lAnims;//this way, g_lAnims[0] is always the currently playing anim
+            g_lAnims = [sAnim] + g_lAnims;		//this way, g_lAnims[0] is always the currently playing anim
             llStartAnimation(sAnim);
             llWhisper(g_iInterfaceChannel, "CollarComand|499|" + AO_OFF);
             llWhisper(g_iAOChannel, AO_OFF);

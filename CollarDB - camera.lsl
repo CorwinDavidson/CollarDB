@@ -12,7 +12,7 @@ string g_sCurrentMode = "default";
 float g_fReapeat = 0.5;
 
 //these 4 are used for syncing dom to us by broadcasting cam pos/rot
-integer g_iSync2Me;//TRUE if we're currently dumping cam pos/rot iChanges to chat so the owner can sync to us
+integer g_iSync2Me;		//TRUE if we're currently dumping cam pos/rot iChanges to chat so the owner can sync to us
 vector g_vCamPos;
 rotation g_rCamRot;
 integer g_rBroadChan;
@@ -35,7 +35,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;  // new for safeword
@@ -44,12 +44,12 @@ integer COMMAND_BLACKLIST = 520;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
                             //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent when a token has no value in the httpdb
 integer HTTPDB_REQUEST_NOCACHE = 2005;
 
 integer LOCALSETTING_SAVE = 2500;
@@ -153,7 +153,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
      
@@ -202,7 +202,7 @@ list TightListTypeParse(string sInput) {
         integer iSubPos = (0);
         do
         {
-            list s_Current = (list)(sInput = llList2String(lPartial, iSubPos= -~iPos));//TYPE_STRING || TYPE_INVALID (though we don't care about invalid)
+            list s_Current = (list)(sInput = llList2String(lPartial, iSubPos= -~iPos));		//TYPE_STRING || TYPE_INVALID (though we don't care about invalid)
             if(!(iType = llSubStringIndex(sSeperators, llList2String(lPartial,iPos))))//TYPE_INTEGER
                 s_Current = (list)((integer)sInput);
             else if(iType == 1)//TYPE_FLOAT
@@ -292,7 +292,7 @@ default
             string sCommand = llList2String(lParams, 0);
             string sValue = llList2String(lParams, 1);
             string sValue2 = llList2String(lParams, 2);
-            string sLastValue = llList2String(lParams, -1);//with this, the menu can be just a layer over the chat commands. put a "returnmenu" here and user will be given a menu after the command takes effect.
+            string sLastValue = llList2String(lParams, -1);		//with this, the menu can be just a layer over the chat commands. put a "returnmenu" here and user will be given a menu after the command takes effect.
             if (sCommand == "cam" || sCommand == "camera")
             {
                 if (llGetPermissions() & PERMISSION_CONTROL_CAMERA)

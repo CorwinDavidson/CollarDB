@@ -8,7 +8,7 @@ string g_sParentMenu = "Main";
 string g_sRequestType; //may be "owner" or "secowner" or "rem secowner"
 key g_kHTTPID;
 
-integer g_iListenChan = 802930;//just something i randomly chose
+integer g_iListenChan = 802930;		//just something i randomly chose
 integer g_iListener;
 
 integer g_iLocked = FALSE;
@@ -29,7 +29,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;  // new for safeword
@@ -37,12 +37,12 @@ integer COMMAND_SAFEWORD = 510;  // new for safeword
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer LOCALSETTING_SAVE = 2500;
 integer LOCALSETTING_REQUEST = 2501;
@@ -56,8 +56,8 @@ integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 
 integer g_iRemenu=FALSE;
 
@@ -187,7 +187,7 @@ Lock()
     llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + UNLOCK, NULL_KEY);
     llPlaySound("abdb1eaa-6160-b056-96d8-94f548a14dda", 1.0);
     llMessageLinked(LINK_SET, MENUNAME_REMOVE, g_sParentMenu + "|" + LOCK, NULL_KEY);
-    SetLockElementAlpha();//EB
+    SetLockElementAlpha();		//EB
 }
 
 Unlock()
@@ -211,10 +211,10 @@ default
         //        g_lOwnersName = llKey2Name(llGetOwner());   //NEVER used
         g_iListenChan = -1 - llRound(llFrand(9999999.0));
         //no more needed
-        //        llSleep(1.0);//giving time for others to reset before populating menu
+        //        llSleep(1.0);		//giving time for others to reset before populating menu
         //        llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + LOCK, NULL_KEY);
         
-        BuildLockElementList();//EB
+        BuildLockElementList();		//EB
         SetLockElementAlpha(); //EB
 
     }

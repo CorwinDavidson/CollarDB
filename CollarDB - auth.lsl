@@ -8,12 +8,12 @@
 key g_kWearer;
 //key owner;
 //string g_lOwnerName;
-list g_lOwners;//strided list in form key,name
+list g_lOwners;		//strided list in form key,name
 key g_kGroup = "";
 string g_sGroupName;
 integer g_iGroupEnabled = FALSE;
-list g_lSecOwners;//strided list in the form key,name
-list g_lBlackList;//list of blacklisted UUID
+list g_lSecOwners;		//strided list in the form key,name
+list g_lBlackList;		//list of blacklisted UUID
 string g_sTmpName; //used temporarily to store new owner or secowner name while retrieving key
 
 string  g_sWikiURL = "http://www.collardb.com/static/UserDocumentation";
@@ -44,7 +44,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;  // new for safeword
@@ -58,12 +58,12 @@ integer ATTACHMENT_RESPONSE = 601;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -71,11 +71,11 @@ integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
+integer ANIM_START = 7000;		//send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP = 7001;		//send this with the name of an anim in the string part of the message to stop the anim
 
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
@@ -112,7 +112,7 @@ integer g_kWearerlocksOut;
 
 integer g_iRemenu = FALSE;
 
-key g_kDialoger;//the person using the dialog.  needed in the sensor event when scanning for new owners to add
+key g_kDialoger;		//the person using the dialog.  needed in the sensor event when scanning for new owners to add
 
 Debug(string sStr)
 {
@@ -188,7 +188,7 @@ key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integ
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
     key kID = (key)(sOut + "-0000-0000-0000-000000000000");
@@ -597,7 +597,7 @@ default
             }
             else if (sCommand == "remowners")
             { //remove secowner, if in the list
-                g_sRequestType = "";//Nan: this used to be set to "remowners" but that NEVER gets filtered on elsewhere in the script.  Just clearing it now in case later filtering relies on it being cleared.  I hate this g_sRequestType variable with a passion
+                g_sRequestType = "";		//Nan: this used to be set to "remowners" but that NEVER gets filtered on elsewhere in the script.  Just clearing it now in case later filtering relies on it being cleared.  I hate this g_sRequestType variable with a passion
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //name of person concerned
@@ -654,7 +654,7 @@ default
             else if (sCommand == "remsecowner")
             { //remove secowner, if in the list
                 g_sRequestType = "";
-                //g_sRequestType = "remsecowner";//Nan: we never parse on g_sRequestType == g_sRemSecOwner, so this makes little sense
+                //g_sRequestType = "remsecowner";		//Nan: we never parse on g_sRequestType == g_sRemSecOwner, so this makes little sense
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //name of person concerned
@@ -704,7 +704,7 @@ default
             else if (sCommand == "remblacklist")
             { //remove blacklisted, if in the list
                 g_sRequestType = "";
-                //g_sRequestType = "remblacklist";//Nan: we never filter on g_sRequestType == "remblacklist", so this makes no sense.
+                //g_sRequestType = "remblacklist";		//Nan: we never filter on g_sRequestType == "remblacklist", so this makes no sense.
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //name of person concerned
@@ -1092,7 +1092,7 @@ default
                 {
                     iFoundAvi = TRUE;
                     NewPerson(llDetectedKey(i), llDetectedName(i), g_sRequestType);
-                    i = iNum_detected;//a clever way to jump out of the loop.  perhaps too clever?
+                    i = iNum_detected;		//a clever way to jump out of the loop.  perhaps too clever?
                 }
             }
             if(!iFoundAvi)
@@ -1183,7 +1183,7 @@ default
                 Debug(sBody);
                 if (isKey(sBody))
                 {
-                    NewPerson((key)sBody, g_sTmpName, g_sRequestType);//g_sRequestType will be owner, secowner, or blacklist
+                    NewPerson((key)sBody, g_sTmpName, g_sRequestType);		//g_sRequestType will be owner, secowner, or blacklist
                 }
                 else
                 {

@@ -120,7 +120,7 @@ integer g_bLeashedToAvi;
 list g_lLeashers;
 list g_lLengths = ["1", "2", "3", "4", "5", "8","10" , "15", "20", "25", "30"];
 //list g_lPartPoints; // DoLeash function- priority given to last item in list. so if list is ["collar", "handle"], and we've heard from the handle and particles are going there, we'll ignore any responses from "collar"
-// integer iLoop;//testing how it works with it a golable
+// integer iLoop;		//testing how it works with it a golable
 // ---------------------------------------------
 // ------ FUNCTION DEFINITIONS ------
 // Debug Messages - commenting all debug out saves over 3K mem on this script
@@ -141,7 +141,7 @@ turnToTarget(vector target)
         vector pointTo = target - llGetPos();
         //vector myEuler = llRot2Euler(llGetRot());
         //float  myAngle = PI_BY_TWO - myEuler.z;
-        float  turnAngle = llAtan2(pointTo.x, pointTo.y);// - myAngle;
+        float  turnAngle = llAtan2(pointTo.x, pointTo.y);		// - myAngle;
         //while (turnAngle < -PI) turnAngle += TWO_PI;
         //while (turnAngle >  PI) turnAngle -= TWO_PI;
         //if (turnAngle < -MAX_TURN_ANGLE) turnAngle = -MAX_TURN_ANGLE;
@@ -159,7 +159,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
     return (key)(sOut + "-0000-0000-0000-000000000000");
@@ -359,7 +359,7 @@ DoLeash(key kTarget, integer iRank, list lPoints)
     g_iTargetHandle = llTarget(g_vPos, g_fLength);
     if (g_vPos != ZERO_VECTOR)
     {
-        //turnToTarget(g_vPos);// only at target
+        //turnToTarget(g_vPos);		// only at target
         llMoveToTarget(g_vPos, 0.7);
     }
     g_iUnixTime = llGetUnixTime();
@@ -498,7 +498,7 @@ default
                     {
                         list lPoints;
                         if (llGetListLength(lParam) > 2) lPoints = llList2List(lParam, 2, -1);
-                        //debug("leash target is key");//could be a post, or could be we specified an av key
+                        //debug("leash target is key");		//could be a post, or could be we specified an av key
                         key kLeashTo = (key)g_sTmpName;
                         if( kLeashTo != g_kWearer ) LeashTo(kLeashTo, iAuth, lPoints);
                         //need to notify target how to unleash.  only do if:

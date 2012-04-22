@@ -6,21 +6,21 @@
 //on listen, send submenu link message
 
 list g_lMenuNames = ["Main", "Help/Debug", "AddOns"];
-list g_lMenus;//exists in parallel to g_lMenuNames, each entry containing a pipe-delimited string with the items for the corresponding menu
+list g_lMenus;		//exists in parallel to g_lMenuNames, each entry containing a pipe-delimited string with the items for the corresponding menu
 list g_lMenuPrompts = [
 "Pick an option.\n",
 "Click 'Guide' to receive a help notecard,\nClick 'ResetScripts' to reset the CollarDB scripts without losing your settings.\nClick any other button for a quick popup help about the chosen topic.\n",
 "Please choose your AddOn:\n"
 ];
 
-list g_lMenuIDs;//3-strided list of avatars given menus, their dialog ids, and the name of the menu they were given
+list g_lMenuIDs;		//3-strided list of avatars given menus, their dialog ids, and the name of the menu they were given
 integer g_iMenuStride = 3;
 
 //integer g_iListenChan = 1908789;
 //integer g_iListener;
 //integer g_iTimeOut = 60;
 
-integer g_iScriptCount;//when the scriptcount changes, rebuild menus
+integer g_iScriptCount;		//when the scriptcount changes, rebuild menus
 
 //MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
@@ -34,12 +34,12 @@ integer CHAT = 505;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
                             //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent when a token has no value in the httpdb
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -74,7 +74,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
      
@@ -181,7 +181,7 @@ default
 {
     state_entry()
     {
-        llSleep(1.0);//delay sending this message until we're fairly sure that other scripts have reset too, just in case
+        llSleep(1.0);		//delay sending this message until we're fairly sure that other scripts have reset too, just in case
         g_iScriptCount = llGetInventoryNumber(INVENTORY_SCRIPT);
         MenuInit();      
     }

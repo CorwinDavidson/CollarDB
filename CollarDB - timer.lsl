@@ -18,7 +18,7 @@ integer g_iLastTime;
 integer g_iFirstOnTime;
 integer g_iFirstRealTime;
 integer g_iLastRez;
-integer n;//for loops
+integer n;		//for loops
 string g_sMessage;
 integer MAX_TIME=0x7FFFFFFF;
 
@@ -96,7 +96,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 // added so when the sub is locked out they can use postions
@@ -106,12 +106,12 @@ integer COMMAND_WEARERLOCKEDOUT = 521;
 integer POPUP_HELP = 1001;
 
 // messages for storing and retrieving values from http db
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer LOCALSETTING_SAVE = 2500;
 integer LOCALSETTING_REQUEST = 2501;
@@ -127,17 +127,17 @@ integer MENUNAME_REMOVE = 3003;
 
 // messages for RLV commands
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version upon receiving this message..
 
 // messages for poses and couple anims
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
-integer CPLANIM_PERMREQUEST = 7002;//id should be av's key, str should be cmd name "hug", "kiss", etc
-integer CPLANIM_PERMRESPONSE = 7003;//str should be "1" for got perms or "0" for not.  id should be av's key
-integer CPLANIM_START = 7004;//str should be valid anim name.  id should be av
-integer CPLANIM_STOP = 7005;//str should be valid anim name.  id should be av
+integer ANIM_START = 7000;		//send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP = 7001;		//send this with the name of an anim in the string part of the message to stop the anim
+integer CPLANIM_PERMREQUEST = 7002;		//id should be av's key, str should be cmd name "hug", "kiss", etc
+integer CPLANIM_PERMRESPONSE = 7003;		//str should be "1" for got perms or "0" for not.  id should be av's key
+integer CPLANIM_START = 7004;		//str should be valid anim name.  id should be av
+integer CPLANIM_STOP = 7005;		//str should be valid anim name.  id should be av
 
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
@@ -207,7 +207,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
      
@@ -571,11 +571,11 @@ default
             }
             if(iNum==ATTACHMENT_FORWARD)
             {
-                llWhisper(g_iInterfaceChannel, g_sMessage);//need to wispear
+                llWhisper(g_iInterfaceChannel, g_sMessage);		//need to wispear
             }
             else if(iNum==TIMER_TOMESSAGE)
             {
-                llMessageLinked(LINK_WHAT, TIMER_FROMMESSAGE, g_sMessage, "");//inside script
+                llMessageLinked(LINK_WHAT, TIMER_FROMMESSAGE, g_sMessage, "");		//inside script
             }
         }
         else if(iNum == COMMAND_WEARERLOCKEDOUT && sStr == "menu")

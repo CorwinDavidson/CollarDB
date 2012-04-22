@@ -8,19 +8,19 @@
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 
-list g_lAvBuffer;//if this changes between report intervals then tell owners (if radar enabled)
-list g_lChatBuffer;//if this has anything in it at end of interval, then tell owners (if listen enabled)
-list g_lTPBuffer;//if this has anything in it at end of interval, then tell owners (if trace enabled)
+list g_lAvBuffer;		//if this changes between report intervals then tell owners (if radar enabled)
+list g_lChatBuffer;		//if this has anything in it at end of interval, then tell owners (if listen enabled)
+list g_lTPBuffer;		//if this has anything in it at end of interval, then tell owners (if trace enabled)
 
 string g_sOldAVBuffer; // AVs previously found, only send radar if this has changed
 integer g_iOldAVBufferCount = -1; // number of AVs previously found, only send radar if this has changed, setting to -1 at startup
 
 list g_lCmds = ["trace on","trace off", "radar on", "radar off", "listen on", "listen off"];
-integer g_iListenCap = 1500;//throw away old chat lines once we reach this many chars, to prevent stack/heap collisions
+integer g_iListenCap = 1500;		//throw away old chat lines once we reach this many chars, to prevent stack/heap collisions
 integer g_iListener;
 
 string g_sLoc;
-integer g_iFirstReport = TRUE;//if this is true when spy settings come in, then record current position in g_lTPBuffer and set to false
+integer g_iFirstReport = TRUE;		//if this is true when spy settings come in, then record current position in g_lTPBuffer and set to false
 integer g_iSensorRange = 8;
 integer g_iSensorRepeat = 120;
 
@@ -37,12 +37,12 @@ integer COMMAND_SAFEWORD = 510;  // new for safeword
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent when a token has no value in the httpdb
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -255,7 +255,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 

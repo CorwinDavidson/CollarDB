@@ -29,15 +29,15 @@ string sQueueUrl = "http://web.collardb.com/";
 key g_kQueueID;
 
 list g_lDefaults;
-list g_lRequestQueue;//requests are stuck here until we're done reading the notecard and web settings
+list g_lRequestQueue;		//requests are stuck here until we're done reading the notecard and web settings
 string g_sCard = "defaultsettings";
 integer g_iLine = 0;
 key g_kDataID;
-list g_lDeleteIDs;//so we do not throw 404 errors on them
+list g_lDeleteIDs;		//so we do not throw 404 errors on them
 
 
 list g_lDBCache;
-list g_lLocalCache;//stores settings that we dont' want to save to DB because they change so frequently
+list g_lLocalCache;		//stores settings that we dont' want to save to DB because they change so frequently
 key g_kAllID;
 string ALLTOKEN = "_all";
 
@@ -56,12 +56,12 @@ integer CHAT = 505;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent when a token has no value in the httpdb
 integer HTTPDB_REQUEST_NOCACHE = 2005;
 
 integer LOCALSETTING_SAVE = 2500;
@@ -87,7 +87,7 @@ key    g_kReqIDLoad;                          // request id
 //string dbprefix = "oc_";  //deprecated.  only appearance-related tokens should be prefixed now
 //on a per-plugin basis
 
-list g_sTokenIDs;//strided list of token names and their corresponding request ids, so that token names can be returned in link messages
+list g_sTokenIDs;		//strided list of token names and their corresponding request ids, so that token names can be returned in link messages
 
 integer g_iOnLine=TRUE; //are we syncing with http or not?
 
@@ -160,22 +160,22 @@ list DelCacheVal(list cache, string sToken)
 HTTPDBSave( string sName, string sValue )
 {
     llHTTPRequest( g_sHTTPDB + "db/" + sName, [HTTP_METHOD, "PUT"], sValue );
-    //llHTTPRequest( g_sHTTPDB + "db/" + sName+"?p=TRUE", [HTTP_METHOD, "POST"], sValue );//work aorund google error
-    llSleep(1.0);//sleep added to prevent hitting the sim's http throttle limit
+    //llHTTPRequest( g_sHTTPDB + "db/" + sName+"?p=TRUE", [HTTP_METHOD, "POST"], sValue );		//work aorund google error
+    llSleep(1.0);		//sleep added to prevent hitting the sim's http throttle limit
 }
 
 // Load named data from httpdb.
 HTTPDBLoad( string sName )
 {
     g_sTokenIDs += [sName, llHTTPRequest( g_sHTTPDB + "db/" + sName, [HTTP_METHOD, "GET"], "" )];
-    llSleep(1.0);//sleep added to prevent hitting the sim's http throttle limit
+    llSleep(1.0);		//sleep added to prevent hitting the sim's http throttle limit
 }
 
 HTTPDBDelete(string sName) {
     //httpdb_request( HTTPDB_DELETE, "DELETE", sName, "" );
     g_lDeleteIDs += llHTTPRequest(g_sHTTPDB + "db/" + sName, [HTTP_METHOD, "DELETE"], "");
-    //llHTTPRequest(g_sHTTPDB + "db/" + sName+"?d=TRUE", [HTTP_METHOD, "POST"], "");//work aorund google error
-    llSleep(1.0);//sleep added to prevent hitting the sim's http throttle limit
+    //llHTTPRequest(g_sHTTPDB + "db/" + sName+"?d=TRUE", [HTTP_METHOD, "POST"], "");		//work aorund google error
+    llSleep(1.0);		//sleep added to prevent hitting the sim's http throttle limit
 }
 
 CheckQueue()
@@ -247,7 +247,7 @@ init()
         state ready;
         return;
     }
-    g_lDefaults = [];//in case we just switched from the ready state, clean this now to avoid duplicates.
+    g_lDefaults = [];		//in case we just switched from the ready state, clean this now to avoid duplicates.
     if (llGetInventoryType(g_sCard) == INVENTORY_NOTECARD)
     {
         g_iLine = 0;
@@ -294,7 +294,7 @@ SendValues()
         llMessageLinked(LINK_SET, LOCALSETTING_RESPONSE, sToken + "=" + sValue, NULL_KEY);
         Debug("sent local: " + sToken + "=" + sValue);
     }
-    llMessageLinked(LINK_SET, HTTPDB_RESPONSE, "settings=sent", NULL_KEY);//tells scripts everything has be sentout
+    llMessageLinked(LINK_SET, HTTPDB_RESPONSE, "settings=sent", NULL_KEY);		//tells scripts everything has be sentout
 }
 
 // Serialize a list into a string that can later be deserialized
@@ -839,7 +839,7 @@ state ready
                 if (iStatus == 404)
                 {
                     Debug("404 on delete");
-                    return;//this is not an error
+                    return;		//this is not an error
                 }
             }
             Notify(g_kWearer, BASE_ERROR_MESSAGE+"ERROR:"+(string)iStatus+" b:"+sBody, TRUE);

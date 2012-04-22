@@ -15,7 +15,7 @@ integer g_iErrPass = 0;
 key g_kWearer;
 
 integer g_iEnabled = 1; // httpin is enabled
-integer g_iPubEnabled = 0;//anyone can control in SL
+integer g_iPubEnabled = 0;		//anyone can control in SL
 integer g_iWebMap = 0; // The user allows to publishlocations on the web interface, defaults to off!
 
 list g_lCallBacks;
@@ -36,12 +36,12 @@ integer RLV_CMD = 6000;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent when a token has no value in the httpdb
 integer HTTPDB_REQUEST_NOCACHE = 2005;
 
 integer LOCALSETTING_SAVE = 2500;
@@ -79,7 +79,7 @@ list g_lButtons;
 integer g_iRemenu=FALSE;
 
 
-string UPMENU = "^";//when your menu hears this, give the parent menu
+string UPMENU = "^";		//when your menu hears this, give the parent menu
 
 Debug(string sStr)
 {
@@ -94,7 +94,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -226,7 +226,7 @@ string RandomPass()
     integer n;
     for (n = 0; n < 4; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -496,13 +496,13 @@ default
             if (llGetSubString(sCmd, 0, 4) == "JSON:")
             {
                 string sJSON = llGetSubString(sCmd, 5, -1);
-                g_lCallBacks += [kID, llList2String(lPathInfo, 3), llGetUnixTime()];//write callback
+                g_lCallBacks += [kID, llList2String(lPathInfo, 3), llGetUnixTime()];		//write callback
                 llMessageLinked(LINK_SET, JSON_REQUEST, (string)iAuth + "|" + llList2String(lPathInfo, 2) + "|" + sJSON, kID);
                 llSetTimerEvent(2);
             }
             else
             {
-                llHTTPResponse(kID,200,JSONCallback("'"+StrReplace(sCmd, "'", "\\'")+"'", llList2String(lPathInfo, 3)));//need to escape the slash it self locally too.
+                llHTTPResponse(kID,200,JSONCallback("'"+StrReplace(sCmd, "'", "\\'")+"'", llList2String(lPathInfo, 3)));		//need to escape the slash it self locally too.
                 if(llGetSubString(sBody, 0, 5) == "rlvcmd")
                 {
                     llMessageLinked(LINK_SET, RLV_CMD, llGetSubString(sCmd, 6, -1), NULL_KEY);

@@ -4,7 +4,7 @@
 //3.004 - adding "accepttp" support.  No button, just automatically turned on for owner.
 //3.524+ - moving accepttp to the exception script.
 
-key g_kLMID;//store the request id here when we look up  a LM
+key g_kLMID;		//store the request id here when we look up  a LM
 
 key kMenuID;
 key lmkMenuID;
@@ -17,7 +17,7 @@ string g_sDBToken = "rlvtp";
 
 string g_sLatestRLVersionSupport = "1.15.1"; //the version which brings the latest used feature to check against
 string g_sDetectedRLVersion;
-list g_lSettings;//2-strided list in form of [option, param]
+list g_lSettings;		//2-strided list in form of [option, param]
 
 list g_lRLVcmds = [
     "tplm",
@@ -67,19 +67,19 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -87,15 +87,15 @@ integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version upon receiving this message.
 
 integer RLV_OFF = 6100; // send to inform plugins that RLV is disabled now, no message or key needed
 integer RLV_ON = 6101; // send to inform plugins that RLV is enabled now, no message or key needed
 
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
+integer ANIM_START = 7000;		//send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP = 7001;		//send this with the name of an anim in the string part of the message to stop the anim
 
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
@@ -130,7 +130,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -408,7 +408,7 @@ default
                 list items = llParseString2List(sStr, [","], []);
                 integer n;
                 integer iStop = llGetListLength(items);
-                integer iChange = FALSE;//set this to true if we see a setting that concerns us
+                integer iChange = FALSE;		//set this to true if we see a setting that concerns us
                 for (n = 0; n < iStop; n++)
                 {   //split off the parameters (anything after a : or =)
                     //and see if the thing being set concerns us
@@ -621,7 +621,7 @@ default
             //we just got back LM data from a "tp " command.  now do a rlv "tpto" there
             vector vGoTo = (vector)sData + llGetRegionCorner();
             string sCmd = "tpto:";
-            sCmd += llDumpList2String([vGoTo.x, vGoTo.y, vGoTo.z], "/");//format the destination in form x/y/z, as rlv requires
+            sCmd += llDumpList2String([vGoTo.x, vGoTo.y, vGoTo.z], "/");		//format the destination in form x/y/z, as rlv requires
             sCmd += "=force";
             llMessageLinked(LINK_SET, RLV_CMD, sCmd, "");
         }

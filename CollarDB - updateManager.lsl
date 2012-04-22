@@ -9,9 +9,9 @@ integer updatehandle;
 string newversion;
 list resetFirst = ["menu", "rlvmain", "anim/pose", "appearance"];
 list itemTypes;
-key g_kUpdater;// for linking preventing bad commands.
+key g_kUpdater;		// for linking preventing bad commands.
 
-integer checked = FALSE;//set this to true after checking version
+integer checked = FALSE;		//set this to true after checking version
 
 list childScripts; //3 strided list with format [id(of the prim), pin, (short)scriptname]
 
@@ -42,7 +42,7 @@ SafeResetOther(string scriptname)
 
 integer IsCollarDBScript(string name)
 {
-    name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);// we prefer " - "
+    name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 0);		// we prefer " - "
     if (name == "CollarDB")
     {
         return TRUE;
@@ -127,7 +127,7 @@ DeleteItems(list toDelete)
             fullScriptName = llList2String(toDelete, i);
             //shortScriptName = llGetSubString(fullScriptName, 0, llStringLength(fullScriptName) - 6);
             //this will allow scripts with other endings to be removed like - 3.520a and so on.
-            shortScriptName = (string) llList2List(llParseString2List(fullScriptName, [],  [" - ", "- ", " -", "-"]), 0, 2);// We want " - " but just in case of typo
+            shortScriptName = (string) llList2List(llParseString2List(fullScriptName, [],  [" - ", "- ", " -", "-"]), 0, 2);		// We want " - " but just in case of typo
             newScripts += [shortScriptName];
         }
         
@@ -137,7 +137,7 @@ DeleteItems(list toDelete)
         {
             fullScriptName = llGetInventoryName(type, i);
             //this will allow scripts with other endings to be removed like - 3.520a and so on.
-            shortScriptName = (string) llList2List(llParseString2List(fullScriptName, [],  [" - ", "- ", " -", "-"]), 0, 2);// We want " - " but just in case of typo
+            shortScriptName = (string) llList2List(llParseString2List(fullScriptName, [],  [" - ", "- ", " -", "-"]), 0, 2);		// We want " - " but just in case of typo
             oldScripts += [fullScriptName, shortScriptName];
         }
         
@@ -164,7 +164,7 @@ DeleteItems(list toDelete)
         for (i = 0; i < iStop; i++)
         {
             string delName = llList2String(toDelete, i);
-            SafeRemoveInventory(delName);//no need to check twice
+            SafeRemoveInventory(delName);		//no need to check twice
         }
     }
     integer index = llListFindList(itemTypes, [(string)iPageType]); // should always be 0
@@ -197,7 +197,7 @@ FinalizeUpdate()
     for(i = 0; i < scriptNumber; i ++)
     {
         fullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
-        shortScriptName = llList2String(llParseString2List(fullScriptName, [" - ", "- ", " -", "-"],[]), 1);//We want " - "
+        shortScriptName = llList2String(llParseString2List(fullScriptName, [" - ", "- ", " -", "-"],[]), 1);		//We want " - "
         //we are only interested in script that are meant to be copied into a child prim so has an @ in its name
         if (llSubStringIndex(fullScriptName, "@") != -1) 
         {
@@ -244,7 +244,7 @@ FinalizeUpdate()
                 primDesc = llList2String(llParseString2List(primDesc, ["~"], []), 0);
                 if(primDesc != "")
                 {
-                    scriptToPrim = llList2String(llParseString2List(fullScriptName, [" - ", "- ", " -", "-"], []) , 1);//We want " - "
+                    scriptToPrim = llList2String(llParseString2List(fullScriptName, [" - ", "- ", " -", "-"], []) , 1);		//We want " - "
                     scriptToPrim = llList2String(llParseString2List(scriptToPrim, ["@"], []), 1);
                     if ((llToLower(primDesc) == llToLower(scriptToPrim)) && (scriptToPrim != ""))
                     {
@@ -314,7 +314,7 @@ FinalizeUpdate()
     for (i = 0; i < iStop; i++)
     {
         fullScriptName = llGetInventoryName(INVENTORY_SCRIPT, i);
-        shortScriptName = llList2String(llParseString2List(fullScriptName, [" - ", "- ", " -", "-"],[]), 1);//We want " - "
+        shortScriptName = llList2String(llParseString2List(fullScriptName, [" - ", "- ", " -", "-"],[]), 1);		//We want " - "
         if (shortScriptName == resetScript )
         {
             SafeResetOther(fullScriptName);
@@ -331,7 +331,7 @@ default
         {
             debug("started with startParam 42.");
             updatehandle = llListen(updatechannel, "", "", "");
-            llSetTimerEvent(60);// die 
+            llSetTimerEvent(60);		// die 
         }
     }
     link_message(integer sender, integer auth, string str, key id)

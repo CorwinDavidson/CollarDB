@@ -13,11 +13,11 @@ integer SEND_IM = 1000;
 integer POPUP_HELP = 1001;
 integer UPDATE = 10001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -145,7 +145,7 @@ default
             if (sCommand == "text")
             {
                 //llSay(0, "got text command");
-                lParams = llDeleteSubList(lParams, 0, 0);//pop off the "text" command
+                lParams = llDeleteSubList(lParams, 0, 0);		//pop off the "text" command
                 string sNewText = llDumpList2String(lParams, " ");
                 if (g_iOn)
                 {

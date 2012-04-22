@@ -9,7 +9,7 @@ string UPMENU = "^";
 //string MORE = ">";
 key g_kAnimmenu;
 key g_kPart;
-string g_sSensorMode;//will be set to "chat" or "menu" later
+string g_sSensorMode;		//will be set to "chat" or "menu" later
 list g_lPartners;
 integer g_iMenuTimeOut = 60;
 
@@ -24,13 +24,13 @@ string CARD1 = "coupleanims";
 string CARD2 = "coupleanims_personal";
 string g_sNoteCard2Read;
 
-list g_lAnimCmds;//1-strided list of strings that will trigger
-list g_lAnimSettings;//4-strided list of subAnim|domAnim|offset|text, running parallel to g_lAnimCmds,
+list g_lAnimCmds;		//1-strided list of strings that will trigger
+list g_lAnimSettings;		//4-strided list of subAnim|domAnim|offset|text, running parallel to g_lAnimCmds,
 //such that g_lAnimCmds[0] corresponds to g_lAnimSettings[0:3], and g_lAnimCmds[1] corresponds to g_lAnimSettings[4:7], etc
 
-key g_kCardID1;//used to detect whether coupleanims card has changed
+key g_kCardID1;		//used to detect whether coupleanims card has changed
 key g_kCardID2;
-float g_fRange = 10.0;//only scan within this range for anim partners
+float g_fRange = 10.0;		//only scan within this range for anim partners
 
 vector UNIT_VECTOR = <1.0, 0.0, 0.0>;
 float g_fWalkingDistance = 1.0; // How close to try to get to the target point while walking, in meters
@@ -43,7 +43,7 @@ integer g_iCmdIndex;
 string g_sTmpName;
 key g_kPartner;
 string g_sPartnerName;
-float g_fTimeOut = 20.0;//duration of anim
+float g_fTimeOut = 20.0;		//duration of anim
 //i dont think this flag is needed at all
 integer g_iTargetID; // remember the walk target to delete
 string g_sDBToken = "coupletime";
@@ -57,19 +57,19 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -77,15 +77,15 @@ integer SUBMENU = 3002;
 integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
-integer CPLANIM_PERMREQUEST = 7002;//id should be av's key, str should be cmd name "hug", "kiss", etc
-integer CPLANIM_PERMRESPONSE = 7003;//str should be "1" for got perms or "0" for not.  id should be av's key
-integer CPLANIM_START = 7004;//str should be valid anim name.  id should be av
-integer CPLANIM_STOP = 7005;//str should be valid anim name.  id should be av
+integer ANIM_START = 7000;		//send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP = 7001;		//send this with the name of an anim in the string part of the message to stop the anim
+integer CPLANIM_PERMREQUEST = 7002;		//id should be av's key, str should be cmd name "hug", "kiss", etc
+integer CPLANIM_PERMRESPONSE = 7003;		//str should be "1" for got perms or "0" for not.  id should be av's key
+integer CPLANIM_START = 7004;		//str should be valid anim name.  id should be av
+integer CPLANIM_STOP = 7005;		//str should be valid anim name.  id should be av
 
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
@@ -106,7 +106,7 @@ key ShortKey()
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
 
@@ -130,7 +130,7 @@ PartnerMenu(key kID, list kAvs)
 CoupleAnimMenu(key kID)
 {
     string sPrompt = "Pick an animation to play.";
-    list lButtons = g_lAnimCmds;//we're limiting this to 9 couple anims then
+    list lButtons = g_lAnimCmds;		//we're limiting this to 9 couple anims then
     lButtons += [TIME_COUPLES, STOP_COUPLES];
     g_kAnimmenu=Dialog(kID, sPrompt, lButtons, [UPMENU],0);
 }
@@ -445,7 +445,7 @@ state ready
                 if (llGetListLength(lParams) > 1)
                 {
                     //we've been given a name of someone to kiss.  scan for it
-                    g_sTmpName = llDumpList2String(llList2List(lParams, 1, -1), " ");//this makes it so we support even full names in the command
+                    g_sTmpName = llDumpList2String(llList2List(lParams, 1, -1), " ");		//this makes it so we support even full names in the command
                     g_sSensorMode = "chat";
                     llSensor("", NULL_KEY, AGENT, g_fRange, PI);
                 }
@@ -621,7 +621,7 @@ state ready
             if (g_sSensorMode == "menu")
             {
                 g_lPartners = [];
-                list kAvs;//just used for menu building
+                list kAvs;		//just used for menu building
                 integer n;
                 for (n = 0; n < iNum; n++)
                 {

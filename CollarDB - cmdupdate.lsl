@@ -4,30 +4,30 @@
 string HTTPDB = "http://data.collardb.com/db/"; //db url
 key    reqid_load;                          // request id
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
 
-list tokenids;//strided list of token names and their corresponding request ids, so that token names can be returned in link messages
+list tokenids;		//strided list of token names and their corresponding request ids, so that token names can be returned in link messages
 
 // Save a value to httpdb with the specified name.
 httpdb_save( string name, string value )
 {
     llHTTPRequest( HTTPDB + name, [HTTP_METHOD, "PUT"], value );
-    llSleep(1.0);//sleep added to prevent hitting the sim's http throttle limit
+    llSleep(1.0);		//sleep added to prevent hitting the sim's http throttle limit
 }
 
 // Load named data from httpdb.
 httpdb_load( string name )
 {
     tokenids += [name, llHTTPRequest( HTTPDB + name, [HTTP_METHOD, "GET"], "" )];
-    llSleep(1.0);//sleep added to prevent hitting the sim's http throttle limit
+    llSleep(1.0);		//sleep added to prevent hitting the sim's http throttle limit
 }
 
 httpdb_delete(string name) {
     //httpdb_request( HTTPDB_DELETE, "DELETE", name, "" );
     llHTTPRequest(HTTPDB + name, [HTTP_METHOD, "DELETE"], "");
-    llSleep(1.0);//sleep added to prevent hitting the sim's http throttle limit
+    llSleep(1.0);		//sleep added to prevent hitting the sim's http throttle limit
 }
 
 default

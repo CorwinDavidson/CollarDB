@@ -8,7 +8,7 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+//integer CHAT = 505;		//deprecated
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;
@@ -17,12 +17,12 @@ integer COMMAND_RELAY_SAFEWORD = 511;
 //integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
+integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
 //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST = 2001;		//when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;		//the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;		//delete token from DB
+integer HTTPDB_EMPTY = 2004;		//sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -31,15 +31,15 @@ integer MENUNAME_REMOVE = 3003;
 
 integer RLV_CMD = 6000;
 integer RLVR_CMD = 6010;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_REFRESH = 6001;		//RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR = 6002;		//RLV plugins should clear their restriction lists upon receiving this message.
 integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version upon receiving this message..
 
 integer RLV_OFF = 6100; // send to inform plugins that RLV is disabled now, no message or key needed
 integer RLV_ON = 6101; // send to inform plugins that RLV is enabled now, no message or key needed
 
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
+integer ANIM_START = 7000;		//send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP = 7001;		//send this with the name of an anim in the string part of the message to stop the anim
 
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
@@ -53,9 +53,9 @@ string UPMENU = "^"; // string to identify the UPMENU button in the utility lBut
 //string SYNCBTN = "sync";
 string BLANK = " ";
 integer g_iTimeOut = 300;
-integer g_iReapeat = 5;//how often the timer will go off, in seconds
+integer g_iReapeat = 5;		//how often the timer will go off, in seconds
 
-list g_lMenus;//9-strided list in form listenChan, dialogid, listener, starttime, recipient, prompt, list buttons, utility buttons, currentpage
+list g_lMenus;		//9-strided list in form listenChan, dialogid, listener, starttime, recipient, prompt, list buttons, utility buttons, currentpage
 //where "list buttons" means the big list of choices presented to the user
 //and "page buttons" means utility buttons that will appear on every page, such as one saying "go up one level"
 //and "currentpage" is an integer meaning which page of the menu the user is currently viewing
@@ -130,7 +130,7 @@ Dialog(key kRecipient, string sPrompt, list lMenuItems, list lUtilityButtons, in
     //slice the menuitems by page
     if (iNumitems > iMyPageSize)
     {
-        iMyPageSize=iMyPageSize-2;//we'll use two slots for the MORE and PREV button, so shrink the page accordingly
+        iMyPageSize=iMyPageSize-2;		//we'll use two slots for the MORE and PREV button, so shrink the page accordingly
         iStart = iPage * iMyPageSize;
         integer iEnd = iStart + iMyPageSize - 1;
         //multi page menu

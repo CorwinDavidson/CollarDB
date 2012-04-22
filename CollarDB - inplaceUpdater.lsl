@@ -11,7 +11,7 @@ integer listenhandle;
 float version;
 string versionstring;
 
-key g_kCollar;//for linking to just one collar.
+key g_kCollar;		//for linking to just one collar.
 
 list offering;
 integer updatePin;
@@ -75,7 +75,7 @@ integer isUpdateManagerScript(string name)
     }
     else
     {
-        name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 1);//Should be " - " and we want it to be
+        name = llList2String(llParseString2List(name, [" - ", "- ", " -", "-"], []), 1);		//Should be " - " and we want it to be
         if (name == "updateManager")
         {
             return TRUE;
@@ -266,7 +266,7 @@ CopyUpdateManager(key id, integer updatePin_local)
         {
             updatetext(LINK_ROOT,name, <1,0,0>, 1);
             llRemoteLoadScriptPin(id, name, updatePin_local, TRUE, 42);
-            n = iStop;//end the loop
+            n = iStop;		//end the loop
         }
     }
 }
@@ -704,7 +704,7 @@ state inactive
 {
     state_entry()
     {
-        llSetLinkColor(g_link, <1,1,0>, ALL_SIDES);//yellow for inactive
+        llSetLinkColor(g_link, <1,1,0>, ALL_SIDES);		//yellow for inactive
         updatetext(LINK_ROOT,"Deactivated due to another updater close by\nRerez to reactiavte", <1,1,0>, 1);
     }
 
