@@ -131,20 +131,24 @@ ParentFolder() {
     else g_sCurrentFolder="";
 }
 
-key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
-{
-    // ShortKey: just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
+key ShortKey()
+{//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
     string sChars = "0123456789abcdef";
     integer iLength = 16;
-    string sRandPref;
+    string sOut;
     integer n;
     for (n = 0; n < 8; n++)
     {
-        integer iIndex = (integer)llFrand(16);    //yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
-        sRandPref += llGetSubString(sChars, iIndex, iIndex);
+        integer iIndex = (integer)llFrand(16);		//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
+        sOut += llGetSubString(sChars, iIndex, iIndex);
     }
-     
-    key kID = (key) (sRandPref + "-0000-0000-0000-000000000000");
+
+    return (key)(sOut + "-0000-0000-0000-000000000000");
+}
+
+key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
+{
+    key kID = ShortKey();
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
     return kID;
 } 
