@@ -264,30 +264,11 @@ string Strided2JSON(list lInput)
     {
         string sCurrVal = llList2String(lInput,c+1);
         if( llGetListEntryType(lInput,c+1) > 2 ) {
-            sCurrVal = "'" + Sanitize(sCurrVal) + "'";
+            sCurrVal = "'" + StrReplace(sCurrVal, "'", "\\'") + "'";
         }
         lOutput += [llList2String(lInput,c) + ": " + sCurrVal];
     }
     return "{" + llDumpList2String(lOutput, ",") + "}";
-}
-
-// Escape embedded single quotes
-string Sanitize(string sInput) {
-    string sOutput = (sInput);
-    integer iInputLen = llStringLength(sOutput);
-    integer iCurrPos = 0;
-    while( iCurrPos < iInputLen ) {
-        if( llGetSubString(sOutput,iCurrPos,iCurrPos) == "'" ) {
-            if( iCurrPos > 0 )
-                sOutput = llGetSubString(sOutput,0,iCurrPos-1) + "\\" + llGetSubString(sOutput,iCurrPos,-1);
-            else
-                sOutput = "\\" + sOutput;
-            iCurrPos++;
-            iInputLen++;
-        }
-        iCurrPos++;
-    }
-    return sOutput;
 }
 
 // wrap a jsonified object in a callback
