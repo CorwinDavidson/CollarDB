@@ -168,27 +168,9 @@ integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.c
     return llDeleteSubString(sHayStack, llStringLength(sNeedle), -1) == sNeedle;
 }
 
-string StrReplace(string sSrc, string from, string to)
-{//replaces all occurrences of 'from' with 'to' in 'sSrc'.
-    integer len = (~-(llStringLength(from)));
-    if(~len)
-    {
-        string  buffer = sSrc;
-        integer b_pos = -1;
-        integer to_len = (~-(llStringLength(to)));
-        @loop;//instead of a while loop, saves 5 bytes (and run faster).
-        integer to_pos = ~llSubStringIndex(buffer, from);
-        if(to_pos)
-        {
-            b_pos -= to_pos;
-            sSrc = llInsertString(llDeleteSubString(sSrc, b_pos, b_pos + len), b_pos, to);
-            b_pos += to_len;
-            buffer = llGetSubString(sSrc, (-~(b_pos)), 0x8000);
-            //buffer = llGetSubString(sSrc = llInsertString(llDeleteSubString(sSrc, b_pos -= to_pos, b_pos + len), b_pos, to), (-~(b_pos += to_len)), 0x8000);
-            jump loop;
-        }
-    }
-    return sSrc;
+string StringReplace(string sSrc, string sFrom, string sTo)
+{//replaces all occurrences of 'sFrom' with 'sTo' in 'sSrc'.
+	return llDumpList2String(llParseStringKeepNulls((sSrc = "") + sSrc, [sFrom], []), sTo);
 }
 
 PrettySay(string sText)
@@ -605,8 +587,8 @@ state ready
             string text = llList2String(g_lAnimSettings, g_iCmdIndex * 4 + 3);
             if (text != "")
             {
-                text = StrReplace(text, "_SELF_", FirstName(llKey2Name(g_kWearer)));
-                text = StrReplace(text, "_PARTNER_", FirstName(g_sPartnerName));
+                text = StringReplace(text, "_SELF_", FirstName(llKey2Name(g_kWearer)));
+                text = StringReplace(text, "_PARTNER_", FirstName(g_sPartnerName));
                 PrettySay(text);
             }
             llSetTimerEvent(g_fTimeOut);
