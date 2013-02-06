@@ -129,12 +129,9 @@ CamFocus(vector g_vCamPos, rotation g_rCamRot)
     }
 }
  
-rotation Slerp( rotation a, rotation b, float f ) {
-    float fAngleBetween = llAngleBetween(a, b);
-    if ( fAngleBetween > PI )
-        fAngleBetween = fAngleBetween - TWO_PI;
-    return a*llAxisAngle2Rot(llRot2Axis(b/a)*a, fAngleBetween*f);
-}//Written by Francis Chung, Taken from http://forums.secondlife.com/showthread.php?p=536622
+rotation slerp( rotation a, rotation b, float t ) {
+   return llAxisAngle2Rot( llRot2Axis(b /= a), t * llRot2Angle(b)) * a;
+}//Written collectively, Taken from http://forums-archive.secondlife.com/54/3b/50692/1.html
 
 LockCam()
 {
