@@ -409,14 +409,7 @@ TextureMenu(key kIn)
         else if (llGetSubString(sName, 0, 5) == "leash_")
         {
             sName = llDeleteSubString(sName, 0, 5);
-            if (llStringLength(sName) > 24)
-            {
-                Notify(kIn, "Omitting '" + sName + "' from texture menu because it is too long.  Please rename it.", TRUE);
-            }
-            else
-            {
-                lButtons += [sName];
-            }
+            lButtons += [sName];
         }
     }
     lButtons += ["noTexture", "noLeash"];

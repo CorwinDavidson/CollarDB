@@ -237,13 +237,7 @@ LengthMenu(key kIn)
     string sPrompt = "Set a leash length in meter:\nCurrent length is: " + (string)g_fLength + "m";
     g_kDialogID = Dialog(kIn, sPrompt, g_lLengths, [UPMENU], 0);
 }
-LeashToMenu(key kIn, list lLeashTo)
-{
-    // 11 limit removed - Dialog subsystem can handle paging
-    g_sCurrentMenu = "leashto";
-    string sPrompt = "Pick someone/thing to leash to.";
-    g_kDialogID = Dialog(kIn, sPrompt, lLeashTo, [UPMENU], 0);
-}
+
 
 SetLength(float fIn)
 {
@@ -831,15 +825,11 @@ default
             list lAVs; // just used for menu building
             for (iLoop = 0; iLoop < iSense; iLoop++)
             {
-                string g_sTmpName = llDetectedName(iLoop);
-                if(llStringLength(g_sTmpName) > 24)
-                {
-                    g_sTmpName = llGetSubString(g_sTmpName, 0, 23);
-                }
-                g_lLeashers += [llDetectedKey(iLoop), g_sTmpName];
-                lAVs += [g_sTmpName];
+                lAVs += [llDetectedKey(iLoop)];
             }
-            LeashToMenu(g_sMenuUser, lAVs);
+			g_sCurrentMenu = "leashto";
+			string sPrompt = "Pick someone/thing to leash to.";
+			g_kDialogID = Dialog(kIn, sPrompt, lLeashTo, [UPMENU], 0);
         }
         else if (g_sSensorMode == "chatleashto")
         {
@@ -868,39 +858,16 @@ default
         else if(g_sSensorMode == "post")
         {
             //debug("a"+(string)llGetFreeMemory( ));
-            list lButtons = g_lPostKeys = [];
+            list lButtons = [];
             string sPrompt = "Pick the object that you would like the sub to be leashed to.  If it's not in the list, have the sub move closer and try again.\n";
-            string sName;
-            integer iCounter = 0; //since some targets are filtered out, we cannot use iLoop
             for (iLoop = 0; iLoop < iSense; iLoop ++)
             {
-                //debug("b"+(string)llGetFreeMemory( ));
-                sName = llDetectedName(iLoop);
-                if(sName != "Object")
-                {
-                    iCounter++;
-                    //added to prevent errors due to 512 char limit in poup prompt text
-                    if (llStringLength(sName) > 44)
-                    {
-                        sName = llGetSubString(sName, 0, 40) + "...";
-                    }
-                    // Looping costs memory, even if no action performed in loop
-                    // jump out to save memory - prompt limit 512
-                    if (llStringLength(sPrompt + "\n" + (string)iCounter + " - " + sName) > 512)
-                    {
-                        jump out;
-                    }
-                    sPrompt += "\n" + (string)iCounter + " - " + sName;
-                    lButtons += (string)iCounter;
-                    g_lPostKeys += [llDetectedKey(iLoop)];
-                    //debug("c"+(string)llGetFreeMemory( ));
-                }
+                if(llDetectedName(iLoop) != "Object") lButtons += [llDetectedKey(iLoop)];
             }
             @out;
             g_sCurrentMenu = "post";
-            //debug("f"+(string)llGetFreeMemory( ));
+
             g_kDialogID = Dialog(g_sMenuUser, sPrompt, lButtons, [UPMENU], 0);
-            //debug("e"+(string)llGetFreeMemory( ));
         }
         else if (g_sSensorMode == "chatpost")
         {

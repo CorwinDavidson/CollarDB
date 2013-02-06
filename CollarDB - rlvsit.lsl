@@ -673,12 +673,12 @@ default
                     {
                         Menu(kAv);
                     }
-                    else
+                    else if ((key) sMessage)
                     {
                         //we heard a number for an object to sit on
-                        integer seatiNum = (integer)sMessage - 1;
+                        //integer seatiNum = (integer)sMessage - 1;
                         g_iReturnMenu = TRUE;
-                        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "sit:" + llList2String(g_lSitKeys, seatiNum) + "=force", kAv);
+                        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "sit:" + sMessage + "=force", kAv);
                     }                            
                 }                 
             }
@@ -689,33 +689,17 @@ default
     {
         g_lSitButtons = [];
         g_sSiTPrompt = "Pick the object on which you want the sub to sit.  If it's not in the list, have the sub move closer and try again.\n";
-        g_lSitKeys = [];
         //give g_sMenuUser a list of things to choose from
         integer n;
         for (n = 0; n < iNum; n ++)
         {
             //don't add things named "Object"
-            string sName = llDetectedName(n);
-            if (sName != "Object")
+            if (llDetectedName(n) != "Object")
             {
-                g_lSitButtons += [(string)(n + 1)];
-                if (llStringLength(sName) > 44)
-                {   //added to prevent errors due to 512 char limit in poup prompt text
-                    sName = llGetSubString(sName, 0, 40) + "...";
-                }
-                g_sSiTPrompt += "\n" + (string)(n + 1) + " - " + sName;
-                g_lSitKeys += [llDetectedKey(n)];
+				g_lSitButtons += [llDetectedKey(n)];
             }
         }
 
-        //prompt can only have 512 chars
-        while (llStringLength(g_sSiTPrompt) >= 512)
-        {
-            //pop the last item off the buttons, keys, and prompt
-            g_lSitButtons = llDeleteSubList(g_lSitButtons, -1, -1);
-            g_lSitKeys = llDeleteSubList(g_lSitKeys, -1, -1);
-            g_sSiTPrompt = llDumpList2String(llDeleteSubList(llParseString2List(g_sSiTPrompt, ["\n"], []), -1, -1), "\n");
-        }
         g_kSitID = Dialog(g_sMenuUser, g_sSiTPrompt, g_lSitButtons, [UPMENU], 0);
     }
 
