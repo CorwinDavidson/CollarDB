@@ -175,19 +175,6 @@ string StringReplace(string sSrc, string sFrom, string sTo)
 }
 
 //These TightListType functions allow serializing a list to a string, and deserializing it back, while preserving variable type information.  We use them so we can have a list of camera modes, where each mode is itself a list
-integer TightListTypeLength(string sInput)
-{
-    string sSeperators = llGetSubString(sInput,(0),6);
-    return ((llParseStringKeepNulls(llDeleteSubString(sInput,(0),5), [],[sInput=llGetSubString(sSeperators,(0),(0)),
-           llGetSubString(sSeperators,1,1),llGetSubString(sSeperators,2,2),llGetSubString(sSeperators,3,3),
-           llGetSubString(sSeperators,4,4),llGetSubString(sSeperators,5,5)]) != []) + (llSubStringIndex(sSeperators,llGetSubString(sSeperators,6,6)) < 6)) >> 1;
-}
- 
-integer TightListTypeEntryType(string sInput, integer iIndex)
-{
-    string sSeperators = llGetSubString(sInput,(0),6);
-    return llSubStringIndex(sSeperators, sInput) + ((sInput = llList2String(llList2List(sInput + llParseStringKeepNulls(llDeleteSubString(sInput,(0),5), [],[sInput=llGetSubString(sSeperators,(0),(0)), llGetSubString(sSeperators,1,1),llGetSubString(sSeperators,2,2),llGetSubString(sSeperators,3,3), llGetSubString(sSeperators,4,4),llGetSubString(sSeperators,5,5)]), (llSubStringIndex(sSeperators,llGetSubString(sSeperators,6,6)) < 6) << 1, -1),  iIndex << 1)) != "");
-}
  
 list TightListTypeParse(string sInput) {
     list lPartial;
@@ -216,32 +203,6 @@ list TightListTypeParse(string sInput) {
     return lPartial;
 }
  
-string TightListTypeDump(list lInput, string sSeperators) {//This function is dangerous
-    sSeperators += "|/?!@#$%^&*()_=:;~`'<>{}[],.\n\" qQxXzZ\\";
-    string sCumulator = (string)(lInput);
-    integer iCounter = (0);
-    do
-        if(~llSubStringIndex(sCumulator,llGetSubString(sSeperators,iCounter,iCounter)))
-            sSeperators = llDeleteSubString(sSeperators,iCounter,iCounter);
-        else
-            iCounter = -~iCounter;
-    while(iCounter<6);
-    sSeperators = llGetSubString(sSeperators,(0),5);
- 
-        sCumulator =  "";
- 
-    if((iCounter = (lInput != [])))
-    {
-        do
-        {
-            integer iType = ~-llGetListEntryType(lInput, iCounter = ~-iCounter);
- 
-            sCumulator = (sCumulator = llGetSubString(sSeperators,iType,iType)) + llList2String(lInput,iCounter) + sCumulator;
-        }while(iCounter);
-    }
-    return sSeperators + sCumulator;
-}
-
 Notify(key kID, string sMsg, integer iAlsoNotifyWearer) 
 {
     if (kID == g_kWearer) 
