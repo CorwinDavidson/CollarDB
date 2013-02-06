@@ -184,20 +184,6 @@ Debug(string sMsg)
     //llOwnerSay(llGetScriptName() + ": " + sMsg);
 }
 
-//===============================================================================
-//= parameters   :    string    sMsg    message string received
-//=
-//= return        :    integer TRUE/FALSE
-//=
-//= description  :    checks if a string begin with another string
-//=
-//===============================================================================
-
-integer StartsWith(string sHaystack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
-{
-    return (llDeleteSubString(sHaystack, llStringLength(sNeedle), -1) == sNeedle);
-}
-
 key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
 {
     key kID = llGenerateKey();
