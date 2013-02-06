@@ -398,31 +398,6 @@ Notify(key kID, string msg, integer alsoNotifyWearer)
 }
 
 //===============================================================================
-//= parameters   :    none
-//=
-//= return        :    key random uuid
-//=
-//= description  :    random key generator, not complety unique, but enough for use in dialogs
-//=
-//===============================================================================
-
-
-key ShortKey()
-{//just pick 8 random hex digits and pad the rest with 0.  Good enough for dialog uniqueness.
-    string chars = "0123456789abcdef";
-    integer length = 16;
-    string out;
-    integer n;
-    for (n = 0; n < 8; n++)
-    {
-        integer index = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
-        out += llGetSubString(chars, index, index);
-    }
-
-    return (key)(out + "-0000-0000-0000-000000000000");
-}
-
-//===============================================================================
 //= parameters   :    key   rcpt  recipient of the dialog
 //=                   string  prompt    dialog prompt
 //=                   list  choices    true dialog buttons
@@ -438,7 +413,7 @@ key ShortKey()
 
 key Dialog(key rcpt, string prompt, list choices, list utilitybuttons, integer page)
 {
-    key kID = ShortKey();
+    key kID = llGenerateKey();
     llMessageLinked(LINK_WHAT, DIALOG, (string)rcpt + "|" + prompt + "|" + (string)page + "|" + llDumpList2String(choices, "`") + "|" + llDumpList2String(utilitybuttons, "`"), kID);
     return kID;
 }
