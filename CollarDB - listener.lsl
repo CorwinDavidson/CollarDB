@@ -119,26 +119,7 @@ string AutoPrefix()
 
 string StringReplace(string sSrc, string sFrom, string sTo)
 {//replaces all occurrences of 'sFrom' with 'sTo' in 'sSrc'.
-    //Ilse: blame/applaud Strife Onizuka for this godawfully ugly though apparently optimized function
-    integer iLen = (~-(llStringLength(sFrom)));
-    if(~iLen)
-    {
-        string  sBuffer = sSrc;
-        integer iBufPos = -1;
-        integer iToLen = (~-(llStringLength(sTo)));
-        @loop;//instead of a while loop, saves 5 bytes (and run faster).
-        integer iToPos = ~llSubStringIndex(sBuffer, sFrom);
-        if(iToPos)
-        {
-            iBufPos -= iToPos;
-            sSrc = llInsertString(llDeleteSubString(sSrc, iBufPos, iBufPos + iLen), iBufPos, sTo);
-            iBufPos += iToLen;
-            sBuffer = llGetSubString(sSrc, (-~(iBufPos)), 0x8000);
-            //sBuffer = llGetSubString(sSrc = llInsertString(llDeleteSubString(sSrc, iBufPos -= iToPos, iBufPos + iLen), iBufPos, sTo), (-~(iBufPos += iToLen)), 0x8000);
-            jump loop;
-        }
-    }
-    return sSrc;
+	return llDumpList2String(llParseStringKeepNulls((sSrc = "") + sSrc, [sFrom], []), sTo);
 }
 
 integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
