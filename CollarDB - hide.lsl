@@ -53,8 +53,8 @@ integer DIALOG_TIMEOUT = -9002;
 
 //5000 block is reserved for IM slaves
 
-string HIDE = "Hide";
-string SHOW = "Show";
+string HIDE = "Hide ";
+string SHOW = "Show ";
 string UPMENU = "^";
 string SHOWN = "Shown";
 string HIDDEN = "Hidden";
@@ -183,7 +183,7 @@ ElementMenu(key kAv)
         {
             //element not found in settings list.  Assume it's currently shown
             //sPrompt += "\n" + element + " (" + SHOWN + ")";
-            g_lButtons += HIDE + " " + sElement;
+            g_lButtons += HIDE + sElement;
         }
         else
         {
@@ -192,17 +192,17 @@ ElementMenu(key kAv)
             {
                 //currently shown
                 //sPrompt += "\n" + element + " (" + SHOWN + ")";
-                g_lButtons += HIDE + " " + sElement;
+                g_lButtons += HIDE + sElement;
             }
             else
             {
                 //not currently shown
                 //sPrompt += "\n" + sElement + " (" + HIDDEN + ")";
-                g_lButtons += SHOW + " " + sElement;
+                g_lButtons += SHOW + sElement;
             }
         }
     }
-    g_lButtons += [SHOW + " " + ALL, HIDE + " " + ALL];
+    g_lButtons += [SHOW + ALL, HIDE + ALL];
     g_kDialogID=Dialog(kAv, sPrompt, g_lButtons, [UPMENU],0);
 }
 
@@ -442,7 +442,7 @@ default
                 else
                 {
                     //get "Hide" or "Show" and element name
-                    list lParams = llParseString2List(sMessage, [" "], []);
+                    list lParams = llParseString2List(sMessage, [], [HIDE,SHOW]);
                     string sCmd = llList2String(lParams, 0);
                     string sElement = llList2String(lParams, 1);
                     float fAlpha;
