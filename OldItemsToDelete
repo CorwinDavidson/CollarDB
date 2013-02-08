@@ -98,6 +98,7 @@ OpenCollar - settings*
 OpenCollar - subspy*
 OpenCollar - texture*
 OpenCollar - timer*
+OpenCollar - touch*
 OpenCollar - update*
 OpenCollar - updateManager
 OpenCollar - inplaceUpdater
@@ -109,3 +110,4 @@ brushedmetal-hshaded-contrasty
 brushedmetal-roundshaded
 brushedmetal-vshaded
 CollarDB - DBImport
+CollarDB - cmdupdate
