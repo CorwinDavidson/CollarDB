@@ -1,4 +1,4 @@
-﻿//CollarDB - dialog - 3.531
+//CollarDB - dialog - 3.531
 //an adaptation of Schmobag Hogfather's SchmoDialog script
 
 //MESSAGE MAP
@@ -165,7 +165,8 @@ integer RandomUniqueChannel()
 
 Dialog(key kRecipient, string sPrompt, list lMenuItems, list lUtilityButtons, integer iPage, key kID, integer iWithNums)
 {
-    string sThisPrompt = " (Timeout in "+ (string)g_iTimeOut +" seconds.)";
+    string sThisPrompt = " \n(Timeout in "+ (string)g_iTimeOut +" seconds.)";
+    string sButtonPrompt = "\n \n";
     list lButtons;
     list lCurrentItems;
     integer iNumitems = llGetListLength(lMenuItems);
@@ -178,7 +179,7 @@ Dialog(key kRecipient, string sPrompt, list lMenuItems, list lUtilityButtons, in
         iMyPageSize=iMyPageSize-2;//we'll use two slots for the MORE and PREV button, so shrink the page accordingly
         iStart = iPage * iMyPageSize;
         //multi page menu
-        sThisPrompt = sThisPrompt + " Page "+(string)(iPage+1)+"/"+(string)(((iNumitems-1)/iMyPageSize)+1);
+        sThisPrompt = " --- Page "+(string)(iPage+1)+"/"+(string)(((iNumitems-1)/iMyPageSize)+1);
     }
     else iStart = 0;
     integer iEnd = iStart + iMyPageSize - 1;
@@ -188,13 +189,14 @@ Dialog(key kRecipient, string sPrompt, list lMenuItems, list lUtilityButtons, in
             string sButton = llList2String(lMenuItems, iCur);
             if ((key)sButton) sButton = Key2Name((key)sButton);
             sButton = Integer2String(iCur, iWithNums) + " " + sButton;
+            sButtonPrompt = sButtonPrompt + sButton + "\n";
             sButton = TruncateString(sButton, 24);
             lButtons += [sButton];
         }
     }
     else if (iNumitems > iMyPageSize) lButtons = llList2List(lMenuItems, iStart, iEnd);
     else lButtons = lMenuItems;
-    
+    sThisPrompt = sButtonPrompt + sThisPrompt;
     // check promt lenghtes
     integer iPromptlen=GetStringBytes(sPrompt);
     if (iPromptlen>511)
@@ -365,13 +367,13 @@ default
 
             list lButtons = llParseString2List(llList2String(lParams, 3), ["`"], []);
             integer iDigits = ButtonDigits(lButtons);
-            list ubuttons = llParseString2List(llList2String(lParams, 4), ["`"], []);        
+            list uButtons = llParseString2List(llList2String(lParams, 4), ["`"], []);        
             
             //first clean out any strides already in place for that user.  prevents having lots of listens open if someone uses the menu several times while sat
             ClearUser(kRCPT);
             //now give the dialog and save the new stride
-            Dialog(kRCPT, sPrompt, lbuttons, ubuttons, iPage, kID, iDigits);
-            if (iDigits)
+            Dialog(kRCPT, sPrompt, lButtons, uButtons, iPage, kID, iDigits);
+/*            if (iDigits)
             {   
 				integer iLength = GetStringBytes(sPrompt);
                 string sOut = sPrompt;
@@ -395,6 +397,7 @@ default
                 }
                 Notify(kRCPT, sOut, FALSE);
             }
+*/			
         }
         else if (llGetSubString(sStr, 0, 10) == "remotemenu:")
         {
@@ -446,7 +449,7 @@ default
             key kAv = llList2Key(g_lMenus, iMenuIndex + 4);
             string sPrompt = llList2String(g_lMenus, iMenuIndex + 5);            
             list items = llParseString2List(llList2String(g_lMenus, iMenuIndex + 6), ["|"], []);
-            list ubuttons = llParseString2List(llList2String(g_lMenus, iMenuIndex + 7), ["|"], []);
+            list uButtons = llParseString2List(llList2String(g_lMenus, iMenuIndex + 7), ["|"], []);
             integer iPage = llList2Integer(g_lMenus, iMenuIndex + 8);    
             integer iDigits = llList2Integer(g_lMenus, iMenuIndex + 9);    
             g_lMenus = RemoveMenuStride(g_lMenus, iMenuIndex);       
@@ -456,12 +459,12 @@ default
                 Debug((string)iPage);
                 //increase the page num and give new menu
                 iPage++;
-                integer thisiPagesize = iPagesize - llGetListLength(ubuttons) - 2;
+                integer thisiPagesize = iPagesize - llGetListLength(uButtons) - 2;
                 if (iPage * thisiPagesize >= llGetListLength(items))
                 {
                     iPage = 0;
                 }
-                Dialog(kID, sPrompt, items, ubuttons, iPage, kMenuID, iDigits);
+                Dialog(kID, sPrompt, items, uButtons, iPage, kMenuID, iDigits);
             }
             else if (sMessage == PREV)
             {
@@ -471,22 +474,22 @@ default
 
                 if (iPage < 0)
                 {
-                    integer thisiPagesize = iPagesize - llGetListLength(ubuttons) - 2;
+                    integer thisiPagesize = iPagesize - llGetListLength(uButtons) - 2;
 
                     iPage = (llGetListLength(items)-1)/thisiPagesize;
                 }
-                Dialog(kID, sPrompt, items, ubuttons, iPage, kMenuID, iDigits);
+                Dialog(kID, sPrompt, items, uButtons, iPage, kMenuID, iDigits);
             }
             else if (sMessage == BLANK)
             
             {
                 //give the same menu back
-                Dialog(kID, sPrompt, items, ubuttons, iPage, kMenuID, iDigits);
+                Dialog(kID, sPrompt, items, uButtons, iPage, kMenuID, iDigits);
             }            
             else
             {   
                 string sAnswer;
-                integer iIndex = llListFindList(ubuttons, [sMessage]);
+                integer iIndex = llListFindList(uButtons, [sMessage]);
                 if (iDigits && !~iIndex)
                 {
                     integer iBIndex = (integer) llGetSubString(sMessage, 0, iDigits);
