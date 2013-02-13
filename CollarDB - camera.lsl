@@ -1,4 +1,4 @@
-﻿//CollarDB - camera - 3.520
+//CollarDB - camera - 3.520
 //allows dom to set different camera mode
 //responds to commands from modes list
 
@@ -129,7 +129,7 @@ CamFocus(vector g_vCamPos, rotation g_rCamRot)
     }
 }
  
-rotation slerp( rotation a, rotation b, float t ) {
+rotation Slerp( rotation a, rotation b, float t ) {
    return llAxisAngle2Rot( llRot2Axis(b /= a), t * llRot2Angle(b)) * a;
 }//Written collectively, Taken from http://forums-archive.secondlife.com/54/3b/50692/1.html
 
@@ -171,7 +171,7 @@ string Capitalize(string sIn)
 
 string StringReplace(string sSrc, string sFrom, string sTo)
 {//replaces all occurrences of 'sFrom' with 'sTo' in 'sSrc'.
-	return llDumpList2String(llParseStringKeepNulls((sSrc = "") + sSrc, [sFrom], []), sTo);
+    return llDumpList2String(llParseStringKeepNulls((sSrc = "") + sSrc, [sFrom], []), sTo);
 }
 
 //These TightListType functions allow serializing a list to a string, and deserializing it back, while preserving variable type information.  We use them so we can have a list of camera modes, where each mode is itself a list
