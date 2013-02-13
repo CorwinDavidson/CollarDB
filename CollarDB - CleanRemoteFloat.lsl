@@ -1,4 +1,4 @@
-﻿integer UPDATE = 10001;
+integer UPDATE = 10001;
 
 default
 {

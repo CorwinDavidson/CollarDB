@@ -1,4 +1,4 @@
-﻿//CollarDB - hovertext
+//CollarDB - hovertext
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "FloatText";
 
@@ -122,7 +122,7 @@ default
         TextDisplay("",FALSE);
         llMessageLinked(LINK_ROOT, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
     }
-
+    
     on_rez(integer start)
     {
         if(g_iOn && g_sText != "")
@@ -134,7 +134,7 @@ default
             TextDisplay("",FALSE); 
         }
     }
-
+    
     link_message(integer iSender, integer iNum, string sStr, key kID)
     {
         list lParams = llParseString2List(sStr, [" "], []);

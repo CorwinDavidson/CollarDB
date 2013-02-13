@@ -1,4 +1,4 @@
-﻿//CollarDB - appearance - 3.523
+//CollarDB - appearance - 3.523
 //handle appearance menu
 //handle saving position on detach, and restoring it on httpdb_response
 

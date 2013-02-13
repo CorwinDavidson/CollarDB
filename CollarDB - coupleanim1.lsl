@@ -1,4 +1,4 @@
-﻿//CollarDB - coupleanim1 - 3.522
+//CollarDB - coupleanim1 - 3.522
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //coupleanim1
 string g_sParentMenu = "Animations";

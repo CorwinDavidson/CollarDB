@@ -1,4 +1,4 @@
-﻿//CollarDB - remoteserver - 3.529
+//CollarDB - remoteserver - 3.529
 string g_sBROADCAST_URL = "http://web.collardb.com/lookup/";
 string g_sWEBINTERFACE_URL = "http://web.collardb.com/";
 string g_sWEBINTERFACE_PUBLIC_URL = "http://web.collardb.com/publichttp/?key=";

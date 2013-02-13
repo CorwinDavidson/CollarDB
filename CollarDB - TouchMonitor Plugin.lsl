@@ -1,4 +1,4 @@
-﻿// CollarDB - Touch Monitor Plugin
+// CollarDB - Touch Monitor Plugin
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "OpenCollar License" for details.
 // 
 // Version: 3.583

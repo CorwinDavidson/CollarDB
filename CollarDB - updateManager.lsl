@@ -1,4 +1,4 @@
-﻿//enter here the short script name of the script that manages resets/setting run of scripts
+//enter here the short script name of the script that manages resets/setting run of scripts
 string resetScript = "update";
 
 integer g_iItemPageSize = 20;

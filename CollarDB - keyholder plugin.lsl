@@ -1,4 +1,4 @@
-﻿// Keyholder Module - CollarDB Version 3.526+
+// Keyholder Module - CollarDB Version 3.526+
 // 
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //

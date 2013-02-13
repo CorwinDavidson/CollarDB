@@ -1,4 +1,4 @@
-﻿//CollarDB - rlvmisc - 3.522
+//CollarDB - rlvmisc - 3.522
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 string g_sParentMenu = "RLV";
 string g_sSubMenu = "Misc";

@@ -1,4 +1,4 @@
-﻿//CollarDB - auth - 3.530
+//CollarDB - auth - 3.530
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 //save owner, secowners, and group key
