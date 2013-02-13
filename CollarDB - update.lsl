@@ -1,4 +1,4 @@
-﻿//CollarDB - update
+//CollarDB - update
 //
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //on attach and on state_entry, http request for update
@@ -447,7 +447,7 @@ state reseted
             {
                 if (kID == g_kWearer)
                 {
-                    if (llGetAttached())
+/*                    if (llGetAttached())
                     {
                         if (g_iRemenu) llMessageLinked(LINK_ROOT, SUBMENU, g_sParentMenu, kID);
                         g_iRemenu = FALSE;
@@ -455,6 +455,7 @@ state reseted
                     }
                     else
                     {
+*/
                         string sVersion = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 1);
                         g_iUpdatersNearBy = 0;
                         g_iWillingUpdaters = 0;
@@ -463,7 +464,7 @@ state reseted
                         g_iUpdateHandle = llListen(g_iUpdateChan, "", "", "");
                         llWhisper(g_iUpdateChan, "UPDATE|" + sVersion);
                         llSetTimerEvent(10.0); //set a timer to close the g_iListener if no response
-                    }
+//                    }
                 }
                 else
                 {
