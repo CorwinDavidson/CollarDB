@@ -1,4 +1,4 @@
-﻿//CollarDB - rlvrelay
+//CollarDB - rlvrelay
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 integer RELAY_CHANNEL = -1812221819;
@@ -52,7 +52,7 @@ key g_kAuthMenuID;
 key g_kListMenuID;
 key g_kListID;
 
-integer g_iGarbageRate = 180; //garbage collection rate
+integer g_iGarbageRate = 60; //garbage collection rate
 
 list g_lSources=[];
 //list users=[];
