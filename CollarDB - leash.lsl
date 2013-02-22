@@ -81,11 +81,12 @@ string UNSTAY       = "UnStay";
 string ROT         = "Rotate";
 string UNROT       = "Don't Rotate";
 string L_LENGTH     = "Length";
-string GIVE_HOLDER  = "give Holder";
-string GIVE_POST    = "give Post";
+string GIVE_HOLDER  = "Give Holder";
+string GIVE_POST    = "Give Post";
 string REZ_POST     = "Rez Post";
 string L_POST       = "Post";
 string L_YANK       = "Yank";
+string L_BECKON       = "Beckon";
 
 // --- tokens for g_iSensorMode ---
 // - to remember what the sensor is tracking
@@ -219,7 +220,13 @@ LeashMenu(key kIn)
 
     list lButtons = [];
     if (kIn != g_kWearer)
+    {    
         lButtons += g_oButtons; // Only if not the wearer.
+        if (g_kLeashedTo != NULL_KEY)
+            lButtons += [L_YANK];
+        else
+            lButtons += [L_BECKON];
+    }
         
     lButtons += g_lButtons;
     
@@ -637,9 +644,11 @@ default
                     } 
                     else
                     {
+                        g_iReturnMenu = FALSE;
                         DisplayTargetMenu(kMessageID, iAuth, SENSORMODE_FIND_TARGET_FOR_FOLLOW_CHAT, sChattedTarget);
                     }
                 }
+                if (!g_iReturnMenu) return;
             }
             else if (sMesL == "unleash" || sMesL == "unfollow" || (sMesL == "toggleleash" && NULL_KEY != g_kLeashedTo))
             {
@@ -656,7 +665,7 @@ default
             }
             else if (sMesL == "rezpost")
             {
-                llRezObject("DB_Leash_Post", llGetPos() + (<1.0, 0, 0.5> * llGetRot()), ZERO_VECTOR, llEuler2Rot(<0, 90, 0> * DEG_TO_RAD), 0);
+                llRezObject("DB_Leash_Post", llGetPos() + (<1.0, 0, -0.3> * llGetRot()), ZERO_VECTOR, llEuler2Rot(<0, 90, 0> * DEG_TO_RAD), 0);
             }
             else if (sMesL == "yank" && kMessageID == g_kLeashedTo)
             {
@@ -746,7 +755,7 @@ default
                 {
                     DisplayTargetMenu(kMessageID, iAuth, SENSORMODE_FIND_TARGET_FOR_LEASH_CHAT, sChattedTarget);
                 }                
-
+                if (!g_iReturnMenu) return;
             }
             else if(sComm == "followtarget")
             {
@@ -754,6 +763,7 @@ default
                     return;
                     
                 DisplayTargetMenu(kMessageID, iAuth, SENSORMODE_FIND_TARGET_FOR_FOLLOW_MENU,"");
+                if (!g_iReturnMenu) return;
             }
             else if (sComm == "length")
             {
@@ -790,6 +800,7 @@ default
                 {
                     DisplayTargetMenu(kMessageID, iAuth, SENSORMODE_FIND_TARGET_FOR_POST_CHAT, sChattedTarget);
                 }
+                if (!g_iReturnMenu) return;
             }
             return;
         }
