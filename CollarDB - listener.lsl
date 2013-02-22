@@ -164,12 +164,12 @@ default
     {
         g_kWearer = llGetOwner();
         g_sPrefix = AutoPrefix();
-
+        llMessageLinked(LINK_SET, HTTPDB_REQUEST, "prefix=" + g_sPrefix, NULL_KEY);
         g_iHUDChan = GetOwnerChannel(g_kWearer, 1111); // persoalized channel for this sub
 
         //llInstantMessage(, "Prefix set to '" + g_sPrefix + "'.", g_kWearer);
         SetListeners();
-        //llMessageLinked(LINK_SET, HTTPDB_REQUEST, "prefix", NULL_KEY);
+        llMessageLinked(LINK_SET, HTTPDB_REQUEST, "prefix", NULL_KEY);
         //llMessageLinked(LINK_SET, HTTPDB_REQUEST, "channel", NULL_KEY);
     }
 
@@ -323,17 +323,18 @@ default
                 if (sCommand == "prefix")
                 {
                     string sNewPrefix = llList2String(lParams, 1);
-                    if (sNewPrefix == "auto")
+                    if (sNewPrefix == "auto" || sNewPrefix == "")
                     {
                         g_sPrefix = AutoPrefix();
                     }
-                    else if (sNewPrefix != "")
+                    else 
                     {
                         g_sPrefix = sNewPrefix;
                     }
                     SetListeners();
                     Notify(kID, "\n" + llKey2Name(g_kWearer) + "'s prefix is '" + g_sPrefix + "'.\nTouch the collar or say '" + g_sPrefix + "menu' for the main menu.\nSay '" + g_sPrefix + "help' for a list of chat commands.", FALSE);
                     llMessageLinked(LINK_SET, HTTPDB_SAVE, "prefix=" + g_sPrefix, NULL_KEY);
+                    llMessageLinked(LINK_SET, HTTPDB_REQUEST, "prefix", NULL_KEY);
                 }
                 else if (sCommand == "channel")
                 {
@@ -450,11 +451,12 @@ default
                 //                llOwnerSay("Your g_sSafeWord " + g_sSafeWord + " was loaded from the httpdb.");
             }
         }
-        //        else if (iNum == HTTPDB_EMPTY && sStr == "prefix")
-        //        {
-        //            SetListeners();
-        //            Notify(g_kWearer, "\nPrefix set to '" + g_sPrefix + "'.\nTouch the collar or say '" + g_sPrefix + "menu' for the main menu.\nSay '" + g_sPrefix + "help' for a list of chat commands.");
-        //        }
+        else if (iNum == HTTPDB_EMPTY && sStr == "prefix")
+        {
+            g_sPrefix = AutoPrefix();
+//            SetListeners();
+//            Notify(g_kWearer, "\nPrefix set to '" + g_sPrefix + "'.\nTouch the collar or say '" + g_sPrefix + "menu' for the main menu.\nSay '" + g_sPrefix + "help' for a list of chat commands.");
+        }
         else if (iNum == POPUP_HELP)
         {
             //replace _PREFIX_ with prefix, and _CHANNEL_ with (strin) channel
