@@ -90,7 +90,7 @@ string g_sSetOwner = "Add Owner";
 string g_sSetSecOwner = "Add Secowner";
 string g_sSetBlackList = "Add Blacklisted";
 string g_sSetGroup = "Set Group";
-string g_sReset = "Reset All";
+string g_sReset = "Runaway!";
 string g_sRemOwner = "Rem Owner";
 string g_sRemSecOwner = "Rem Secowner";
 string g_sRemBlackList = "Rem Blacklisted";
@@ -458,6 +458,7 @@ default
         //added for attachment auth
         g_iInterfaceChannel = (integer)("0x" + llGetSubString(g_kWearer,30,-1));
         if (g_iInterfaceChannel > 0) g_iInterfaceChannel = -g_iInterfaceChannel;
+        llMessageLinked(LINK_SET, HTTPDB_REQUEST, "prefix", NULL_KEY);
     }
 
     link_message(integer iSender, integer iNum, string sStr, key kID)
@@ -571,6 +572,7 @@ default
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //record owner name
+                if (llGetListLength(lParams) == 1) lParams += ["Resident"];
                 g_sTmpName = llDumpList2String(lParams, " ");
                 //sensor for the owner name to get the key or set the owner directly if it is the wearer
                 if(llToLower(g_sTmpName) == llToLower(llKey2Name(g_kWearer)))
@@ -589,6 +591,7 @@ default
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //name of person concerned
+                if (llGetListLength(lParams) == 1) lParams += ["Resident"];
                 g_sTmpName = llDumpList2String(lParams, " ");
                 if (g_sTmpName=="")
                 {
@@ -615,6 +618,7 @@ default
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //record owner name
+                if (llGetListLength(lParams) == 1) lParams += ["Resident"];
                 g_sTmpName = llDumpList2String(lParams, " ");
                 if (g_sTmpName=="")
                 {
@@ -646,6 +650,7 @@ default
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //name of person concerned
+                if (llGetListLength(lParams) == 1) lParams += ["Resident"];
                 g_sTmpName = llDumpList2String(lParams, " ");
                 if (g_sTmpName=="")
                 {
@@ -672,6 +677,7 @@ default
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //record blacklisted name
+                if (llGetListLength(lParams) == 1) lParams += ["Resident"];
                 g_sTmpName = llDumpList2String(lParams, " ");
                 if (g_sTmpName=="")
                 {
@@ -696,6 +702,7 @@ default
                 //pop the command off the param list, leaving only first and last name
                 lParams = llDeleteSubList(lParams, 0, 0);
                 //name of person concerned
+                if (llGetListLength(lParams) == 1) lParams += ["Resident"];
                 g_sTmpName = llDumpList2String(lParams, " ");
                 if (g_sTmpName=="")
                 {
@@ -1131,7 +1138,8 @@ default
         }
         else if(g_sRequestType == g_sOwnerScan || g_sRequestType == g_sSecOwnerScan || g_sRequestType == g_sBlackListScan)
         {
-            Notify(g_kDialoger, "Nobody is in 10m range to be shown, either move closer or use the chat command to add someone who is not with you at this moment or offline.",FALSE);
+            string sText = "No one is in the 10m range to be shown.  You may add yourself or move closer to the person you want to add and try again, or use the chat command to add someone who is not with you at this moment or offline.";
+            g_kSensorMenuID = Dialog(g_kDialoger, sText, [llKey2Name(g_kWearer)], [UPMENU], 0);
         }
     }
 
