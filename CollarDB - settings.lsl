@@ -191,12 +191,12 @@ DumpCache(string sWichCache)
     if (sWichCache == "local")
     {
         lCache=g_lLocalCache;
-        sOut = "Local Settings Cache:";
+        sOut = "Local Settings Cache: \n";
     }
     else
     {
         lCache=g_lDBCache;
-        sOut = "DB Settings Cache:";
+        sOut = "DB Settings Cache: \n";
     }
 
 
