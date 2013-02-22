@@ -151,8 +151,6 @@ integer StartsWith(string sHayStack, string sNeedle) {
 
 // Book keeping functions
 
-integer SIT_CHANNEL;
-
 list g_lOwners;
 
 list g_lSources=[];
@@ -230,8 +228,7 @@ AddRestriction(key kID, string sBehav)
         ApplyAdd(sBehav);
         if (sBehav=="unsit")
         {
-            g_iSitListener=llListen(SIT_CHANNEL,"",g_kWearer,"");
-            SendCommand("getsitid="+(string)SIT_CHANNEL);
+            g_kSitTarget = llList2Key(llGetObjectDetails(g_kWearer, [OBJECT_ROOT]),0);
             g_kSitter=kID;
         }
     }
@@ -360,7 +357,7 @@ default{
         //request setting from DB
         llSleep(1.0);
         llMessageLinked(LINK_SET, HTTPDB_REQUEST, "rlvon", NULL_KEY);
-        SIT_CHANNEL=9999 + llFloor(llFrand(9999999.0));
+
         // Ensure that menu script knows we're here.
         llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
     }
@@ -793,16 +790,6 @@ state checked {
         }
     }
 
-    listen(integer iChan, string sName, key kID, string sMsg)
-    {
-        if (iChan==SIT_CHANNEL)
-        {
-            g_kSitTarget=(key)sMsg;
-
-            llListenRemove(g_iSitListener);
-        }
-
-    }
 
     timer()
     {
