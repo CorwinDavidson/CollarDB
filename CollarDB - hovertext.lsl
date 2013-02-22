@@ -117,7 +117,7 @@ default
     state_entry()
     {
         GetFloatLink();
-        g_vColor = (vector)llList2String(llGetLinkPrimitiveParams(g_link,[PRIM_COLOR,1]),0);
+        g_vColor = (vector)llList2String(llGetLinkPrimitiveParams(g_link,[PRIM_COLOR,0]),0);
         g_kWearer = llGetOwner();
         TextDisplay("",FALSE);
         llMessageLinked(LINK_ROOT, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
@@ -250,7 +250,7 @@ default
 
         if (iChange & CHANGED_COLOR)
         {
-            g_vColor = (vector)llList2String(llGetLinkPrimitiveParams(g_link,[PRIM_COLOR,1]),0);
+            g_vColor = (vector)llList2String(llGetLinkPrimitiveParams(g_link,[PRIM_COLOR,0]),0);
             if (g_iOn)
             {
                 ShowText(g_sText);
