@@ -205,7 +205,7 @@ MainMenu(key kID)
     string sPrompt = "Pick an option.";
     list lButtons = g_lChildren;
 
-    if (g_iAllLocked)  //are all clothing and attachements locked?
+    if (g_iAllLocked)  //are all clothing and attachments locked?
     {
         sPrompt += "\n all clothes and attachments are currently locked.";
         //skip the LockClothing and the LockAttachment buttons
@@ -594,7 +594,7 @@ default
                 {
                     DolockAll(sStr, kID);
                     SaveLockAllFlag(1);
-                    Notify(kID, g_sWearerName+"'s clothing and attachements have been locked.", TRUE);
+                    Notify(kID, g_sWearerName+"'s clothing and attachments have been locked.", TRUE);
                 }
                 if (g_iRemenu) MainMenu(kID);   //redraw the menu if the lockall button was pressed
                 g_iRemenu = FALSE;
@@ -609,7 +609,7 @@ default
                 {
                     DolockAll(sStr, kID);
                     SaveLockAllFlag(0);
-                    Notify(kID, g_sWearerName+"'s clothing and attachements have been unlocked.", TRUE);
+                    Notify(kID, g_sWearerName+"'s clothing and attachments have been unlocked.", TRUE);
                 }
                 if (g_iRemenu) MainMenu(kID);   //redraw the menu if the unlockall button was pressed
                 g_iRemenu = FALSE;
