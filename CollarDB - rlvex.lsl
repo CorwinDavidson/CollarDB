@@ -747,6 +747,21 @@ default
                             Debug("SettingsIndex:"+(string)iIndex+" name:"+llList2String(g_lSettings, iIndex));
                             if (iIndex != -1)
                             {
+                                string sOut;
+                                integer n;
+                                integer iStop = llGetListLength(g_lRLVcmds);
+                                for (n = 0; n < iStop; n++)
+                                {
+                                    string cmd1 = llList2String(g_lRLVcmds, n);
+                                    //prefix all but the first value with a comma, so we have a comma-separated list
+                                    if (n)
+                                    {
+                                        sOut += ",";
+                                    }
+                                    sOut +=  cmd1 + ":" + sWho + "=y";
+                                }
+                                Debug(sOut);
+                                llMessageLinked(LINK_SET, COMMAND_NOAUTH, sOut, kID);                                                           
                                 g_lSettings = llDeleteSubList(g_lSettings, iIndex, iIndex + 1);
                                 iIndex = llListFindList(g_lNames, [sWho]);
                                 Debug("NamesIndex:"+(string)iIndex+" name:"+llList2String(g_lNames, iIndex));
@@ -1132,6 +1147,7 @@ default
         
         for(i = 0; i < iNum_detected; i++)
         {
+            sName = llDetectedName(i);
 			lButtons += [sName];
 			g_lScan += [(string)llDetectedKey(i) ,sName];               
         }
