@@ -548,6 +548,7 @@ default
                 }
                 Notify(g_kWearer, "Runaway finished, the collar will now reset!",FALSE);
                 // moved reset request from settings to here to allow noticifation of owners.
+                llMessageLinked(LINK_SET, COMMAND_OWNER, "clear", kID);
                 llMessageLinked(LINK_SET, COMMAND_OWNER, "resetscripts", kID);
                 llResetScript();
             }
