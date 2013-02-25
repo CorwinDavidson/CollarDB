@@ -86,14 +86,14 @@ integer WEARERLOCKOUT=620;
 
 string UPMENU = "^";
 
-string g_sSetOwner = "Add Owner";
-string g_sSetSecOwner = "Add Secowner";
-string g_sSetBlackList = "Add Blacklisted";
+string g_sSetOwner = "?Primary Owner";
+string g_sSetSecOwner = "?Secondary Owner";
+string g_sSetBlackList = "?Blacklisted";
 string g_sSetGroup = "Set Group";
 string g_sReset = "Runaway!";
-string g_sRemOwner = "Rem Owner";
-string g_sRemSecOwner = "Rem Secowner";
-string g_sRemBlackList = "Rem Blacklisted";
+string g_sRemOwner = "?Primary Owner";
+string g_sRemSecOwner = "?Secondary Owner";
+string g_sRemBlackList = "?Blacklisted";
 string g_sUnsetGroup = "Unset Group";
 string g_sListOwners = "List Owners";
 string g_sSetOpenAccess = "SetOpenAccess";
