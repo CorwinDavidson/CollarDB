@@ -226,6 +226,13 @@ default
             if (g_iLocked) Notify(kID, "Locked.", FALSE);
             else Notify(kID, "Unlocked.", FALSE);
         }
+        else if ((sStr == "reset" || sStr == "runaway") && ((iNum == COMMAND_WEARER || iNum == COMMAND_OWNER ) && (kID==g_kWearer)))
+        {
+                llOwnerSay(llGetScriptName() + " - > UNLOCK");
+                g_iRemenu = FALSE;
+                Unlock();
+                llOwnerSay("Your collar has been unlocked.");
+        }
         else if ((sStr == "lock" || sStr == "unlock") && iNum >= COMMAND_OWNER && iNum <=COMMAND_WEARER)
         {
             if (sStr == "lock"){
