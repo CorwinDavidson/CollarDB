@@ -767,6 +767,7 @@ default
                                 Debug("NamesIndex:"+(string)iIndex+" name:"+llList2String(g_lNames, iIndex));
                                 g_lNames = llDeleteSubList(g_lNames, iIndex, iIndex + 1);//should remove the name from this list too
                                 iChange = iChange | 2;
+                                g_iReturnMenu = FALSE;
                             }
                         }
                     }
