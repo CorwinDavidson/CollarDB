@@ -11,12 +11,12 @@ integer COMMAND_WEARER = 503;
 
 string g_sResetScripts = "resetscripts";
 
-integer HTTPDB_SAVE = 2000;		//scripts send messages on this channel to have settings saved to httpdb
-								//str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;	//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;	//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;	//delete token from DB
-integer HTTPDB_EMPTY = 2004;	//sent by httpdb script when a token has no value in the db
+integer HTTPDB_SAVE = 2000;        //scripts send messages on this channel to have settings saved to httpdb
+                                //str must be in form of "token=value"
+integer HTTPDB_REQUEST = 2001;    //when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE = 2002;    //the httpdb script will send responses on this channel
+integer HTTPDB_DELETE = 2003;    //delete token from DB
+integer HTTPDB_EMPTY = 2004;    //sent by httpdb script when a token has no value in the db
 
 integer MENUNAME_REQUEST = 3000;
 integer MENUNAME_RESPONSE = 3001;
@@ -30,7 +30,7 @@ integer DIALOG_TIMEOUT = -9002;
 string g_sDBToken = "updatemethod";     //valid values are "replace" and "inplace"
 string g_sUpdateMethod = "inplace";
 
-integer g_iUpdateChildPin = 4711;		//not used?
+integer g_iUpdateChildPin = 4711;        //not used?
 
 string g_sParentMenu = "Help/Debug";
 string g_sSubMenu1 = "Update";
@@ -53,7 +53,7 @@ integer g_iUpdateBeta = FALSE;
 
 list g_lResetFirst = ["menu", "rlvmain", "anim", "appearance"];
 
-integer g_iChecked = FALSE;		//set this to true after checking version
+integer g_iChecked = FALSE;        //set this to true after checking version
 
 key g_kUpdater; // key of avi who asked for the update
 integer g_iUpdatersNearBy = -1;
@@ -447,7 +447,7 @@ state reseted
             {
                 if (kID == g_kWearer)
                 {
-/*                    if (llGetAttached())
+                    if (llGetAttached())
                     {
                         if (g_iRemenu) llMessageLinked(LINK_ROOT, SUBMENU, g_sParentMenu, kID);
                         g_iRemenu = FALSE;
@@ -455,7 +455,7 @@ state reseted
                     }
                     else
                     {
-*/
+
                         string sVersion = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 1);
                         g_iUpdatersNearBy = 0;
                         g_iWillingUpdaters = 0;
@@ -464,7 +464,7 @@ state reseted
                         g_iUpdateHandle = llListen(g_iUpdateChan, "", "", "");
                         llWhisper(g_iUpdateChan, "UPDATE|" + sVersion);
                         llSetTimerEvent(10.0); //set a timer to close the g_iListener if no response
-//                    }
+                    }
                 }
                 else
                 {
