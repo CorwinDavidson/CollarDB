@@ -62,6 +62,7 @@ subsit 2
 Seraglio
 Temple
 Leash Holder
+OC_Leash_Post
 OpenCollar - httpdb*
 OpenCollar - macros*
 OpenCollar - anim/pose*
@@ -98,7 +99,6 @@ OpenCollar - settings*
 OpenCollar - subspy*
 OpenCollar - texture*
 OpenCollar - timer*
-OpenCollar - touch*
 OpenCollar - update*
 OpenCollar - updateManager
 OpenCollar - inplaceUpdater
@@ -110,4 +110,4 @@ brushedmetal-hshaded-contrasty
 brushedmetal-roundshaded
 brushedmetal-vshaded
 CollarDB - DBImport
-CollarDB - cmdupdate
+CollarDB - Bootstrap

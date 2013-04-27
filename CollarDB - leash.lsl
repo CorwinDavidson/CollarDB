@@ -331,7 +331,7 @@ SayLeashed(key kTarget,key kCmdGiver, integer iAuth)
 SayUnleash(key kTarget, key kCmdGiver, integer iAuth)
 {
     string sTarget = llKey2Name(g_kLeashedTo);
-    string sCmdGiver = llKey2Name(kTarget);
+    string sCmdGiver = llKey2Name(kCmdGiver);
     string sWearMess;
     string sCmdMess;
     string sTargetMess;
