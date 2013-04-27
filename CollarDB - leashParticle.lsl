@@ -64,6 +64,14 @@ list g_lColors;
 key g_kHTTPID;
 string g_sHTTPDB_Url = "http://data.collardb.com/";
 
+// Textures in Notecard for Non Full Perm textures
+key g_ktexcardID;
+string g_noteName = "";
+integer g_noteLine;
+list g_textures = [];
+list g_read = [];
+
+
 // ----- collar -----
 //string g_sWearerName;
 key g_kWearer;
@@ -286,7 +294,14 @@ SetTexture(string sIn, key kIn)
         g_bInvisibleLeash = FALSE;
     }
     debug("particleTexture= " + sIn);
-    g_sParticleTextureID = llGetInventoryKey(sIn);
+    if(llListFindList(g_textures,[sIn]) != -1)
+    {
+        g_sParticleTextureID = llList2Key(g_textures,llListFindList(g_textures,[sIn])+1);
+    }
+    else
+    {
+        g_sParticleTextureID = llGetInventoryKey(sIn);
+    }
     debug("particleTextureID= " + (string)g_sParticleTextureID);
     if (kIn)
     {
@@ -411,6 +426,12 @@ TextureMenu(key kIn)
             sName = llDeleteSubString(sName, 0, 5);
             lButtons += [sName];
         }
+        integer iNoteTex = llGetListLength(g_textures);
+        for (iLoop=0;iLoop<iNoteTex;iLoop=iLoop+2)
+        {
+            string sName = llList2String(g_textures,iLoop);
+            lButtons += [sName];
+        }        
     }
     lButtons += ["noTexture", "noLeash"];
     g_sCurrentMenu = L_TEXTURE;
@@ -432,10 +453,52 @@ integer isInSimOrJustOutside(vector v)
     return TRUE;
 }
 
+integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
+{
+    return llDeleteSubString(sHayStack, llStringLength(sNeedle), -1) == sNeedle;
+}
+
+loadNoteCards(string param)
+{
+    if (g_noteName != "" &&  param == "EOF")
+    {
+        g_read += [g_noteName];
+        g_textures = llListSort(g_textures,2,TRUE);
+    }
+        
+    if (g_noteName == "" &&  param == "")
+    {
+        g_read = [];
+        g_textures = [];
+    }
+        
+    if ((g_noteName != "" &&  param == "EOF") || (g_noteName == "" &&  param == ""))
+    {
+        integer iNumNote = llGetInventoryNumber(INVENTORY_NOTECARD);
+        integer n;
+        for (n=0;n<iNumNote;n++)
+        {
+            string sName = llGetInventoryName(INVENTORY_NOTECARD,n);
+            if (StartsWith(llToLower(sName),"~cdblt_"))
+            {
+                if (llListFindList(g_read,[sName]) == -1)
+                {
+                    n=iNumNote;                
+                    g_noteName = sName;
+                    g_noteLine = 0;
+                    g_ktexcardID = llGetNotecardLine(g_noteName, g_noteLine);
+                }
+            }
+            
+        }    
+    }
+}
+
 default
 {
     state_entry()
     {
+        loadNoteCards("");
         StopParticles(TRUE);
         FindLinkedPrims();
         SetTexture(g_sParticleTexture, NULLKEY);
@@ -630,6 +693,10 @@ default
                         SetTexture(sButton, g_sMenuUser);
                     }
                     else if (sButton == "noLeash")
+                    {
+                        SetTexture(sButton, g_sMenuUser);
+                    }
+                    else if(llListFindList(g_textures,[sButton]) != -1)
                     {
                         SetTexture(sButton, g_sMenuUser);
                     }
@@ -936,4 +1003,30 @@ default
             }
         }
     }
+    
+        dataserver(key query_id, string data)
+    {
+        if (query_id == g_ktexcardID)
+        {
+            if (data == EOF)
+                loadNoteCards("EOF");
+            else
+            {
+                list temp = llParseString2List(data,[",",":","|","="],[]);
+                g_textures += [llList2String(temp,0),llList2Key(temp,1)];
+                // bump line number for reporting purposes and in preparation for reading next line
+                ++g_noteLine;
+                g_ktexcardID = llGetNotecardLine(g_noteName, g_noteLine);
+            }
+        }
+    }
+    
+    changed(integer change)
+    {
+        if(change & CHANGED_INVENTORY)
+        {
+            loadNoteCards("");
+        }
+    }
+    
 }

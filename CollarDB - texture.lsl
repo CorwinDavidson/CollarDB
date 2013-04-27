@@ -21,6 +21,13 @@ list g_lNewButtons;//is this used? 2010/01/14 Starship
 key g_kElementID;
 key g_ktextureID;
 
+// Textures in Notecard for Non Full Perm textures
+key g_ktexcardID;
+string g_noteName = "";
+integer g_noteLine;
+list g_textures = [];
+list g_read = [];
+
 integer g_iAppLock = FALSE;
 string g_sAppLockToken = "AppLock";
 
@@ -92,6 +99,12 @@ TextureMenu(key kID, integer iPage)
     for (n=0;n<iNumTex;n++)
     {
         string sName = llGetInventoryName(INVENTORY_TEXTURE,n);
+        lButtons += [sName];
+    }
+    integer iNoteTex = llGetListLength(g_textures);
+    for (n=0;n<iNoteTex;n=n+2)
+    {
+        string sName = llList2String(g_textures,n);
         lButtons += [sName];
     }
     g_ktextureID = Dialog(kID, sPrompt, lButtons, [UPMENU], iPage);
@@ -187,10 +200,48 @@ SetElementTexture(string sElement, key kTex)
     llMessageLinked(LINK_SET, HTTPDB_SAVE, g_sDBToken + "=" + llDumpList2String(g_lTextures, "~"), NULL_KEY);
 }
 
+loadNoteCards(string param)
+{
+    if (g_noteName != "" &&  param == "EOF")
+    {
+        g_read += [g_noteName];
+        g_textures = llListSort(g_textures,2,TRUE);
+    }
+        
+    if (g_noteName == "" &&  param == "")
+    {
+        g_read = [];
+        g_textures = [];
+    }
+        
+    if ((g_noteName != "" &&  param == "EOF") || (g_noteName == "" &&  param == ""))
+    {
+        integer iNumNote = llGetInventoryNumber(INVENTORY_NOTECARD);
+        integer n;
+        for (n=0;n<iNumNote;n++)
+        {
+            string sName = llGetInventoryName(INVENTORY_NOTECARD,n);
+            if (StartsWith(llToLower(sName),"~cdbt_"))
+            {
+                if (llListFindList(g_read,[sName]) == -1)
+                {
+                    n=iNumNote;                
+                    g_noteName = sName;
+                    g_noteLine = 0;
+                    g_ktexcardID = llGetNotecardLine(g_noteName, g_noteLine);
+                }
+            }
+            
+        }    
+    }
+}
+
+
 default
 {
     state_entry()
     {
+        loadNoteCards("");
         g_kWearer = llGetOwner();
         //get dbprefix from object desc, so that it doesn't need to be hard coded, and scripts between differently-primmed collars can be identical
         string sPrefix = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 2);
@@ -345,7 +396,15 @@ default
                     else
                     {
                         //got a texture name
-                        string sTex = (string)llGetInventoryKey(sMessage);
+                        string sTex;
+                        if (llListFindList(g_textures,[sMessage]) != -1)
+                        {
+                            sTex = llList2String(g_textures,llListFindList(g_textures,[sMessage]) + 1);
+                        }
+                        else
+                        {
+                            sTex = (string)llGetInventoryKey(sMessage);
+                        }
                         //loop through links, setting texture if element type matches what we're changing
                         //root prim is 1, so start at 2
                         SetElementTexture(s_CurrentElement, (key)sTex);
@@ -353,6 +412,31 @@ default
                     }
                 }
             }
+        }
+    }
+    
+    dataserver(key query_id, string data)
+    {
+        if (query_id == g_ktexcardID)
+        {
+            if (data == EOF)
+                loadNoteCards("EOF");
+            else
+            {
+                list temp = llParseString2List(data,[",",":","|","="],[]);
+                g_textures += [llList2String(temp,0),llList2Key(temp,1)];
+                // bump line number for reporting purposes and in preparation for reading next line
+                ++g_noteLine;
+                g_ktexcardID = llGetNotecardLine(g_noteName, g_noteLine);
+            }
+        }
+    }
+    
+    changed(integer change)
+    {
+        if(change & CHANGED_INVENTORY)
+        {
+            loadNoteCards("");
         }
     }
 
