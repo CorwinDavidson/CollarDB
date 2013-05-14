@@ -129,26 +129,9 @@ NotifyOwners(string sMsg)
     }
 }
 
-
-key ShortKey()
-{
-    string sChars = "0123456789abcdef";
-    integer iLength = 16;
-    string sOut;
-    integer n;
-    for (n = 0; n < 8; n++)
-    {
-        integer iIndex = (integer)llFrand(16);
-        sOut += llGetSubString(sChars, iIndex, iIndex);
-    }
-
-    return (key)(sOut + "-0000-0000-0000-000000000000");
-}
-
-
 key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
 {
-    key kID = ShortKey();
+    key kID = llGenerateKey();
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
     return kID;
 }
