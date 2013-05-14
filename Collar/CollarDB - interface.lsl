@@ -1,5 +1,4 @@
-//CollarDB - dialog - 3.531
-//an adaptation of Schmobag Hogfather's SchmoDialog script
+//CollarDB - interface
 
 //MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
@@ -8,13 +7,12 @@ integer COMMAND_SECOWNER = 501;
 integer COMMAND_GROUP = 502;
 integer COMMAND_WEARER = 503;
 integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
+
 integer COMMAND_OBJECT = 506;
 integer COMMAND_RLV_RELAY = 507;
 integer COMMAND_SAFEWORD = 510;
 integer COMMAND_RELAY_SAFEWORD = 511;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP = 1001;
 
 integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
@@ -45,27 +43,152 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
+
+string UPMENU = "^"; 
+
+// -- MENU GLOBALS --
+list g_lMenuNames = ["Main", "Help/Debug", "AddOns"];
+list g_lMenus;   //exists in parallel to g_lMenuNames, each entry containing a pipe-delimited string with the items for the corresponding menu
+list g_lMenuPrompts = [
+"Pick an option.\n",
+"Click 'Guide' to receive a help notecard,\nClick 'ResetScripts' to reset the CollarDB scripts without losing your settings.\nClick any other button for a quick popup help about the chosen topic.\n",
+"Please choose your AddOn:\n"
+];
+
+list g_lMenuIDs;   //3-strided list of avatars given menus, their dialog ids, and the name of the menu they were given
+integer g_iMenuStride = 3;
+integer g_iScriptCount;   //when the scriptcount changes, rebuild menus
+
+string GIVECARD = "Guide";
+string HELPCARD = "CollarDB Guide";
+string REFRESH_MENU = "Fix Menus";
+string RESET_MENU = "ResetScripts";
+// -- MENU GLOBALS --
+
+// -- DIALOG GLOBALS --
 integer iPagesize = 12;
 string MORE = ">";
 string PREV = "<";
-string UPMENU = "^"; // string to identify the UPMENU button in the utility lButtons
-//string SWAPBTN = "swap";
-//string SYNCBTN = "sync";
 string BLANK = " ";
 integer g_iTimeOut = 300;
-integer g_iReapeat = 5;//how often the timer will go off, in seconds
+integer g_iReapeat = 5;  //how often the timer will go off, in seconds
 
-list g_lMenus;//10-strided list in form listenChan, dialogid, listener, starttime, recipient, prompt, list buttons, utility buttons, currentpage, button digits
+list g_lMenus;  //10-strided list in form listenChan, dialogid, listener, starttime, recipient, prompt, list buttons, utility buttons, currentpage, button digits
 //where "list buttons" means the big list of choices presented to the user
 //and "page buttons" means utility buttons that will appear on every page, such as one saying "go up one level"
 //and "currentpage" is an integer meaning which page of the menu the user is currently viewing
 
 list g_lRemoteMenus;
-
 integer g_iStrideLength = 10;
-
 key g_kWearer;
+// -- DIALOG GLOBALS --
 
+
+Debug(string text)
+{
+    //llOwnerSay(llGetScriptName() + ": " + text);
+}
+
+// -- MENU FUNCTIONS --
+key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
+{
+    key kID = llGenerateKey();
+    llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
+    return kID;
+}
+
+Menu(string sName, key kID)
+{
+    integer iMenuIndex = llListFindList(g_lMenuNames, [sName]);
+    Debug((string)iMenuIndex);    
+    if (iMenuIndex != -1)
+    {
+        list lItems = llParseString2List(llList2String(g_lMenus, iMenuIndex), ["|"], []);
+
+        string sPrompt = llList2String(g_lMenuPrompts, iMenuIndex);
+        
+        list lUtility = [];
+        
+        if (sName != "Main")
+        {
+            lUtility = [UPMENU];
+        }
+        
+        key kMenuID = Dialog(kID, sPrompt, lItems, lUtility, 0);
+        
+        integer iIndex = llListFindList(g_lMenuIDs, [kID]);
+        if (~iIndex)
+        {
+            //we've alread given a menu to this user.  overwrite their entry
+            g_lMenuIDs = llListReplaceList(g_lMenuIDs, [kID, kMenuID, sName], iIndex, iIndex + g_iMenuStride - 1);
+        }
+        else
+        {
+            //we've not already given this user a menu. append to list
+            g_lMenuIDs += [kID, kMenuID, sName];
+        }
+    }
+}
+
+integer KeyIsAv(key kID)
+{
+    return llGetAgentSize(kID) != ZERO_VECTOR;
+}
+
+MenuInit()
+{
+    g_lMenus = ["","",""];
+    integer n;
+    integer iStop = llGetListLength(g_lMenuNames);
+    for (n = 0; n < iStop; n++)
+    {
+        string sName = llList2String(g_lMenuNames, n);
+        if (sName != "Main")
+        {
+            //make each submenu appear in Main
+            HandleMenuResponse("Main|" + sName);
+            
+            //request children of each submenu
+            llMessageLinked(LINK_SET, MENUNAME_REQUEST, sName, NULL_KEY);            
+        }
+    }
+    //give the help menu GIVECARD and REFRESH_MENU buttons    
+    HandleMenuResponse("Help/Debug|" + GIVECARD);
+    HandleMenuResponse("Help/Debug|" + REFRESH_MENU);
+    HandleMenuResponse("Help/Debug|" + RESET_MENU);       
+    
+    llMessageLinked(LINK_SET, MENUNAME_REQUEST, "Main", ""); 
+}
+
+HandleMenuResponse(string entry)
+{
+    list lParams = llParseString2List(entry, ["|"], []);
+    string sName = llList2String(lParams, 0);
+    integer iMenuIndex = llListFindList(g_lMenuNames, [sName]);
+    if (iMenuIndex != -1)
+    {             
+        Debug("we handle " + sName);
+        string g_sSubMenu = llList2String(lParams, 1);
+        //only add submenu if not already present
+        Debug("adding button " + g_sSubMenu);
+        list lGuts = llParseString2List(llList2String(g_lMenus, iMenuIndex), ["|"], []);
+        Debug("existing buttons for " + sName + " are " + llDumpList2String(lGuts, ","));
+        if (llListFindList(lGuts, [g_sSubMenu]) == -1)
+        {
+            lGuts += [g_sSubMenu];
+            lGuts = llListSort(lGuts, 1, TRUE);
+            g_lMenus = llListReplaceList(g_lMenus, [llDumpList2String(lGuts, "|")], iMenuIndex, iMenuIndex);
+        }
+    }    
+    else
+    {
+        Debug("we don't handle " + sName);
+    }
+}
+// -- MENU FUNCTIONS --
+
+
+// -- DIALOG FUNCTIONS -- 
 string Key2Name(key kId)
 {
     string sOut = llGetDisplayName(kId);
@@ -89,7 +212,7 @@ integer GetStringBytes(string sStr) { // from SL wiki
     integer i = 0;
     integer j;
     integer l = llStringLength(sStr);
-	list lAtoms = llParseStringKeepNulls(sStr, ["%"], []);
+     list lAtoms = llParseStringKeepNulls(sStr, ["%"], []);
     return l - 2 * llGetListLength(lAtoms) + 2;
 
 /* too slow!
@@ -312,35 +435,34 @@ ClearUser(key kRCPT)
     while (~iIndex)
     {
         Debug("removed stride for " + (string)kRCPT);
-		g_lMenus = RemoveMenuStride(g_lMenus, iIndex -4);
+          g_lMenus = RemoveMenuStride(g_lMenus, iIndex -4);
         //g_lMenus = llDeleteSubList(g_lMenus, iIndex - 4, iIndex - 5 + g_iStrideLength);
         iIndex = llListFindList(g_lMenus, [kRCPT]);
     }
     Debug(llDumpList2String(g_lMenus, ","));
 }
 
-Debug(string sStr)
-{
-//    llOwnerSay(llGetScriptName() + ": " + sStr);
-}
-
 integer InSim(key id)
 {
     return llKey2Name(id) != "";
 }
+// -- DIALOG FUNCTIONS -- 
 
 default
 {    
     state_entry()
     {
         g_kWearer=llGetOwner();
+        llSleep(1.0);   //delay sending this message until we're fairly sure that other scripts have reset too, just in case
+        g_iScriptCount = llGetInventoryNumber(INVENTORY_SCRIPT);
+        MenuInit();  
     }
 
-    on_rez(integer iParam)
+    touch_start(integer iNum)
     {
-        llResetScript();
+        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "menu", llDetectedKey(0));
     }
-
+    
     link_message(integer iSender, integer iNum, string sStr, key kID)
     {
         if (iNum == DIALOG)
@@ -373,31 +495,6 @@ default
             ClearUser(kRCPT);
             //now give the dialog and save the new stride
             Dialog(kRCPT, sPrompt, lButtons, uButtons, iPage, kID, iDigits);
-/*            if (iDigits)
-            {   
-				integer iLength = GetStringBytes(sPrompt);
-                string sOut = sPrompt;
-                integer iNb = llGetListLength(lButtons);
-                integer iCount;
-                string sLine;
-                for (iCount = 0; iCount < iNb; iCount++)
-                {
-                    string sButton = llList2String(lButtons, iCount);
-                    if ((key)sButton) sButton = Key2Name((key)sButton);
-                    sLine = "\n"+Integer2String(iCount, iDigits) + " " + sButton;
-                    //if (GetStringBytes(sOut+sLine) >= 1024)
-					iLength += GetStringBytes(sLine);
-					if (iLength >= 1024)
-                    {
-                        Notify(kRCPT, sOut, FALSE);
-						iLength = 0;
-                        sOut = "";
-                    }
-                    sOut += sLine;
-                }
-                Notify(kRCPT, sOut, FALSE);
-            }
-*/			
         }
         else if (llGetSubString(sStr, 0, 10) == "remotemenu:")
         {
@@ -437,6 +534,123 @@ default
                     llMessageLinked(LINK_SET, DIALOG_TIMEOUT, "", llGetSubString(sCmd, 8, -1));
                 }
             }
+        }
+        else if (iNum >= COMMAND_OWNER && iNum <= COMMAND_WEARER)
+        {
+            list lParams = llParseString2List(sStr, [" "], []);
+            string sCmd = llList2String(lParams, 0);
+            string sValue = llToLower(llList2String(lParams, 1));
+            if (sStr == "menu")
+            {
+                Menu("Main", kID);
+            }
+            else if (sStr == "help")
+            {
+                llGiveInventory(kID, HELPCARD);                
+            }
+            if (sStr == "addons")
+            {
+                Menu("AddOns", kID);
+            }
+            if (sStr == "debug")
+            {
+               Menu("Help/Debug", kID);
+            }
+            else if (sCmd == "menuto")
+            {
+                key kAv = (key)llList2String(lParams, 1);
+                if (KeyIsAv(kAv))
+                {
+                    Menu("Main", kAv);
+                }
+            }
+            else if (sCmd == "refreshmenu")
+            {
+                llDialog(kID, "Rebuilding menu.  This may take several seconds.", [], -341321);
+                //MenuInit();
+                llResetScript();
+            }
+        }
+        else if (iNum == MENUNAME_RESPONSE)
+        {
+            //sStr will be in form of "parent|menuname"
+            //ignore unless parent is in our list of menu names
+            HandleMenuResponse(sStr);
+        }
+        else if (iNum == MENUNAME_REMOVE)
+        {
+            //sStr should be in form of parentmenu|childmenu
+            list lParams = llParseString2List(sStr, ["|"], []);
+            string parent = llList2String(lParams, 0);
+            string child = llList2String(lParams, 1);
+            integer iMenuIndex = llListFindList(g_lMenuNames, [parent]);
+            if (iMenuIndex != -1)
+            {
+                list lGuts = llParseString2List(llList2String(g_lMenus, iMenuIndex), ["|"], []);
+                integer gutiIndex = llListFindList(lGuts, [child]);
+                //only remove if it's there
+                if (gutiIndex != -1)        
+                {
+                    lGuts = llDeleteSubList(lGuts, gutiIndex, gutiIndex);
+                    g_lMenus = llListReplaceList(g_lMenus, [llDumpList2String(lGuts, "|")], iMenuIndex, iMenuIndex);                    
+                }        
+            }
+        }
+        else if (iNum == SUBMENU)
+        {
+            if (llListFindList(g_lMenuNames, [sStr]) != -1)
+            {
+                Menu(sStr, kID);
+            }
+        }
+        else if (iNum == DIALOG_RESPONSE)
+        {
+            integer iMenuIndex = llListFindList(g_lMenuIDs, [kID]);
+            if (iMenuIndex != -1)
+            {
+                //got a menu response meant for us.  pull out values
+                list lMenuParams = llParseString2List(sStr, ["|"], []);
+                key kAv = (key)llList2String(lMenuParams, 0);          
+                string sMessage = llList2String(lMenuParams, 1);                                         
+                integer iPage = (integer)llList2String(lMenuParams, 2);
+                
+                //remove stride from g_lMenuIDs
+                //we have to subtract from the index because the dialog id comes in the middle of the stride
+                g_lMenuIDs = llDeleteSubList(g_lMenuIDs, iMenuIndex - 1, iMenuIndex - 2 + g_iMenuStride);                
+                
+                //process response
+                if (sMessage == UPMENU)
+                {
+                    Menu("Main", kAv);
+                }
+                else
+                {
+                    if (sMessage == GIVECARD)
+                    {
+                        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "help", kAv);
+                        Menu("Help/Debug", kAv);
+                    }
+                    else if (sMessage == REFRESH_MENU)
+                    {//send a command telling other plugins to rebuild their menus
+                        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "refreshmenu", kAv);
+                    }
+                    else if (sMessage == RESET_MENU)
+                    {//send a command to reset scripts
+                        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "resetscripts", kAv);
+                    }
+                    else
+                    {
+                        llMessageLinked(LINK_SET, SUBMENU, sMessage, kAv);
+                    }
+                }
+            }
+        }
+        else if (iNum == DIALOG_TIMEOUT)
+        {
+            integer iMenuIndex = llListFindList(g_lMenuIDs, [kID]);
+            //remove stride from g_lMenuIDs
+            //we have to subtract from the index because the dialog id comes in the middle of the stride
+            g_lMenuIDs = llDeleteSubList(g_lMenuIDs, iMenuIndex - 1, iMenuIndex - 2 + g_iMenuStride);                        
         }
     }
     
@@ -498,6 +712,22 @@ default
                 else sAnswer = sMessage;
                 llMessageLinked(LINK_SET, DIALOG_RESPONSE, (string)kAv + "|" + sAnswer + "|" + (string)iPage, kMenuID);
             }  
+        }
+    }
+
+    on_rez(integer iParam)
+    {
+        llResetScript();
+    }
+    
+    changed(integer iChange)
+    {
+        if (iChange & CHANGED_INVENTORY)
+        {
+            if (llGetInventoryNumber(INVENTORY_SCRIPT) != g_iScriptCount)
+            {//a script has been added or removed.  Reset to rebuild menu
+                llResetScript();
+            }
         }
     }
     
