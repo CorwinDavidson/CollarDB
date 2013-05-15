@@ -24,8 +24,12 @@ integer COMMAND_WEARERLOCKEDOUT = 521;      // added so when the sub is locked o
 
 integer ATTACHMENT_REQUEST      = 600;      // added for attachment auth (garvin)
 integer ATTACHMENT_RESPONSE     = 601;      // added for attachment auth (garvin)
-
-integer WEARERLOCKOUT           =620;
+integer RESERVED_CODE           = 602;          
+integer RESERVED_CODE           = 603;      
+integer ATTACHMENT_FORWARD      = 610;      // MESSAGE MAP CONFLICT
+integer COLLAR_INT_REQ          = 610;      // MESSAGE MAP CONFLICT
+integer COLLAR_INT_REP          = 611;
+integer WEARERLOCKOUT           = 620;
 
 integer SEND_IM                 = 1000;     // deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP              = 1001;      
