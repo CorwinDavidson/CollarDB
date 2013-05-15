@@ -31,6 +31,12 @@ integer COLLAR_INT_REQ          = 610;      // MESSAGE MAP CONFLICT
 integer COLLAR_INT_REP          = 611;
 integer WEARERLOCKOUT           = 620;
 
+integer ATTACHMENT_COMMAND      = 602;      // CUFFS
+integer ATTACHMENT_FORWARD      = 610;      // CUFFS
+//these can change
+integer TIMER_TOMESSAGE         =609;      // CUFFS
+integer TIMER_FROMMESSAGE       =610;      // CUFFS
+
 integer SEND_IM                 = 1000;     // deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
 integer POPUP_HELP              = 1001;      
 
