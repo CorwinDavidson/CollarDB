@@ -1,4 +1,4 @@
-//CollarDB - appearance - 3.523
+//CollarDB - appearance
 //handle appearance menu
 //handle saving position on detach, and restoring it on httpdb_response
 
@@ -11,22 +11,26 @@ integer g_iMenuStride = 3;
 string POSMENU = "Position";
 string ROTMENU = "Rotation";
 string SIZEMENU = "Size";
+string TEXTUREMENU = "Textures";
+string COLORMENU = "Colors";
+string HIDEMENU = "Hide/Show";
+string ELEMENTMENU;
 
-list g_lLocalButtons = ["Position", "Rotation", "Size"]; //[POSMENU, ROTMENU];
+list g_lLocalButtons = [POSMENU, ROTMENU, SIZEMENU, TEXTUREMENU , COLORMENU, HIDEMENU]; //[POSMENU, ROTMENU];
+list g_lRemoteButtons;
 list g_lButtons;
+
 float g_fSmallNudge=0.0005;
 float g_fMediumNudge=0.005;
 float g_fLargeNudge=0.05;
+
 float g_fNudge=0.005; // g_fMediumNudge;
 float g_fRotNudge;
 
 // SizeScale
-
 list SIZEMENU_BUTTONS = [ "-1%", "-2%", "-5%", "-10%", "+1%", "+2%", "+5%", "+10%", "100%" ]; // buttons for menu
 list g_lSizeFactors = [-1, -2, -5, -10, 1, 2, 5, 10, -1000]; // actual size factors
-list g_lPrimStartSizes; // area for initial prim sizes (stored on rez)
 integer g_iScaleFactor = 100; // the size on rez is always regarded as 100% to preven problem when scaling an item +10% and than - 10 %, which would actuall lead to 99% of the original size
-integer g_iSizedByScript = FALSE; // prevent reseting of the script when the item has been chnged by the script
 
 string TICKED = "(*)";
 string UNTICKED = "( )";
@@ -34,6 +38,56 @@ string UNTICKED = "( )";
 string APPLOCK = "Lock Appearance";
 integer g_iAppLock = FALSE;
 string g_sAppLockToken = "AppLock";
+
+// Integrated Alpha / Color / Texture
+
+list g_lHideElements = [];
+list g_lAlphaSettings = [];
+string g_sAlphaDBToken = "elementalpha";
+
+list g_lColorElements = [];
+list g_lColorSettings = [];
+string g_sColorDBToken = "colorsettings";
+list g_lCategories = ["Blues", "Browns", "Grays", "Greens", "Purples", "Reds", "Yellows"];
+
+list g_lTextureElements = [];
+list g_lTextureSettings = [];
+string g_sTextureDBToken = "textures";
+
+
+string g_sCurrentElement = "";
+string g_sCurrentCategory = "";
+
+string HIDE = "Hide ";
+string SHOW = "Show ";
+string SHOWN = "Shown";
+string HIDDEN = "Hidden";
+string ALL = "All";
+string g_sType = "";
+key g_kDialogID;
+
+
+key g_kUser;
+key g_kHTTPID;
+
+list g_lColors;
+integer g_iStridelength = 2;
+integer g_iPage = 0;
+integer g_iMenuPage;
+integer g_iPagesize = 10;
+integer g_iLength;
+list g_lNewButtons;
+
+string g_sHTTPDB_Url = "http://data.collardb.com/"; //defaul OC url, can be changed in defaultsettings notecard and wil be send by settings script if changed
+
+// Textures in Notecard for Non Full Perm textures
+key g_ktexcardID;
+string g_noteName = "";
+integer g_noteLine;
+list g_textures = [];
+list g_read = [];
+
+// Integrated Alpha / Color / Texture
 
 //MESSAGE MAP
 integer COMMAND_NOAUTH = 0;
@@ -72,6 +126,14 @@ integer CPLANIM_PERMRESPONSE = 7003;//str should be "1" for got perms or "0" for
 integer CPLANIM_START = 7004;//str should be valid anim name.  id should be av
 integer CPLANIM_STOP = 7005;//str should be valid anim name.  id should be av
 
+integer APPEARANCE_ALPHA = -8000;
+integer APPEARANCE_COLOR = -8001;
+integer APPEARANCE_TEXTURE = -8002;
+integer APPEARANCE_POSITION = -8003;
+integer APPEARANCE_ROTATION = -8004;
+integer APPEARANCE_SIZE = -8005;
+integer APPEARANCE_SIZE_FACTOR = -8105;
+
 integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
@@ -81,6 +143,214 @@ string UPMENU = "^";
 
 key g_kWearer;
 integer g_iRemenu;
+
+// Integrated Alpha / Color / Texture
+
+BuildElementList()
+{
+    g_lColorElements = [];
+    g_lTextureElements = [];
+    g_lHideElements = [];
+    
+    integer n;
+    integer iLinkCount = llGetNumberOfPrims();
+
+    //root prim is 1, so start at 2
+    for (n = 2; n <= iLinkCount; n++)
+    {
+        list lElement = llParseString2List(ElementType(n),["|"],[]);
+        string sElement = llList2String(lElement,0);
+        if (!(~(integer)llListFindList(g_lColorElements, [sElement])) && !(~(integer)llListFindList(lElement, ["nocolor"])))
+            g_lColorElements += [sElement];
+        if (!(~(integer)llListFindList(g_lTextureElements, [sElement])) && !(~(integer)llListFindList(lElement, ["notexture"])))
+            g_lTextureElements += [sElement];
+        if (!(~(integer)llListFindList(g_lHideElements, [sElement])) && !(~(integer)llListFindList(lElement, ["nohide"])))
+            g_lHideElements += [sElement];
+    }
+    g_lColorElements = llListSort(g_lColorElements, 1, TRUE);
+    g_lTextureElements = llListSort(g_lTextureElements, 1, TRUE);    
+    g_lHideElements = llListSort(g_lHideElements, 1, TRUE);
+}
+
+ElementMenu(key kAv,list lElements)
+{
+    g_sCurrentElement = "";
+    string sPrompt = "Pick which part of the collar you would like to " + g_sType;
+    g_lButtons = [];
+
+    if (g_sType == "hide or show")
+    {
+        integer n;
+        integer iStop = llGetListLength(lElements);
+        for (n = 0; n < iStop; n++)
+        {
+            string sElement = llList2String(lElements, n);
+            integer iIndex = llListFindList(g_lAlphaSettings, [sElement]);
+            if (iIndex == -1)
+            {
+                g_lButtons += HIDE + sElement;
+            }
+            else
+            {
+                float fAlpha = (float)llList2String(g_lAlphaSettings, iIndex + 1);
+                if (fAlpha)
+                {
+                    g_lButtons += HIDE + sElement;
+                }
+                else
+                {
+                    g_lButtons += SHOW + sElement;
+                }
+            }
+        }
+        g_lButtons += [SHOW + ALL, HIDE + ALL];    
+    }
+    else
+    {
+        g_lButtons = llListSort(lElements, 1, TRUE);
+    }
+    key kMenuID = Dialog(kAv, sPrompt, g_lButtons, [UPMENU], 0);
+    MenuIDAdd(kAv, kMenuID, ELEMENTMENU);    
+}
+
+CategoryMenu(key kAv)
+{
+    //give kAv a dialog with a list of color cards
+    string sPrompt = "Pick a Color.";
+    key kMenuID = Dialog(kAv, sPrompt, g_lCategories, [UPMENU],0);
+    MenuIDAdd(kAv, kMenuID, COLORMENU);
+}
+
+ColorMenu(key kAv)
+{
+    string sPrompt = "Pick a Color.";
+    list g_lButtons = llList2ListStrided(g_lColors,0,-1,2);
+    key kMenuID = Dialog(kAv, sPrompt, g_lButtons, [UPMENU],0);
+    MenuIDAdd(kAv, kMenuID, COLORMENU);
+}
+
+TextureMenu(key kAv, integer iPage)
+{
+    //create a list
+    list lButtons;
+    string sPrompt = "Choose the texture to apply.";
+
+    integer iNumTex = llGetInventoryNumber(INVENTORY_TEXTURE);
+    integer n;
+    for (n=0;n<iNumTex;n++)
+    {
+        string sName = llGetInventoryName(INVENTORY_TEXTURE,n);
+        lButtons += [sName];
+    }
+    integer iNoteTex = llGetListLength(g_textures);
+    for (n=0;n<iNoteTex;n=n+2)
+    {
+        string sName = llList2String(g_textures,n);
+        lButtons += [sName];
+    }
+    key kMenuID = Dialog(kAv, sPrompt, lButtons, [UPMENU], iPage);
+    MenuIDAdd(kAv, kMenuID, TEXTUREMENU);
+}
+
+string ElementType(integer linkiNumber)
+{
+    // return a strided list representing primname|nocolor|notexture|nohide
+    string sDesc = (string)llGetObjectDetails(llGetLinkKey(linkiNumber), [OBJECT_DESC]);
+    //each prim should have <elementname> in its description, plus "nocolor" or "notexture", if you want the prim to
+    //not appear in the color or texture menus
+    list lParams = llParseString2List(sDesc, ["~"], []);
+    string type = llList2String(lParams, 0) + "|";
+    if (sDesc == "" || sDesc == " " || sDesc == "(No Description)")
+    {
+        type += "nocolor|notexture|nohide";
+    }
+    else if ((~(integer)llListFindList(lParams, ["nocolor"])) || (~(integer)llListFindList(lParams, ["notexture"])) || (~(integer)llListFindList(lParams, ["nohide"])))
+    {
+        if (~(integer)llListFindList(lParams, ["nocolor"]))
+        {
+            type += "nocolor|";
+        }
+        else
+        {
+            type += "|";
+        }
+        if (~(integer)llListFindList(lParams, ["notexture"]))
+        {
+            type += "notexture|";
+        }
+        else
+        {
+            type += "|";
+        }        
+        if (~(integer)llListFindList(lParams, ["nohide"]))
+        {
+            type += "nohide|";
+        }
+        else
+        {
+            type += "|";
+        }                
+    }        
+    
+    return type;
+}
+
+MenuIDAdd(key kAv, key kMenuID, string sMenu)
+{
+    integer iMenuIndex = llListFindList(g_lMenuIDs, [kAv]);
+    list lAddMe = [kAv, kMenuID, sMenu];
+    if (iMenuIndex == -1)
+    {
+        g_lMenuIDs += lAddMe;
+    }
+    else
+    {
+        g_lMenuIDs = llListReplaceList(g_lMenuIDs, lAddMe, iMenuIndex, iMenuIndex + g_iMenuStride - 1);
+    }
+}
+
+integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
+{
+    return llDeleteSubString(sHayStack, llStringLength(sNeedle), -1) == sNeedle;
+}
+
+loadNoteCards(string param)
+{
+    if (g_noteName != "" &&  param == "EOF")
+    {
+        g_read += [g_noteName];
+        g_textures = llListSort(g_textures,2,TRUE);
+    }
+        
+    if (g_noteName == "" &&  param == "")
+    {
+        g_read = [];
+        g_textures = [];
+    }
+        
+    if ((g_noteName != "" &&  param == "EOF") || (g_noteName == "" &&  param == ""))
+    {
+        integer iNumNote = llGetInventoryNumber(INVENTORY_NOTECARD);
+        integer n;
+        for (n=0;n<iNumNote;n++)
+        {
+            string sName = llGetInventoryName(INVENTORY_NOTECARD,n);
+            if (StartsWith(llToLower(sName),"~cdbt_"))
+            {
+                if (llListFindList(g_read,[sName]) == -1)
+                {
+                    n=iNumNote;                
+                    g_noteName = sName;
+                    g_noteLine = 0;
+                    g_ktexcardID = llGetNotecardLine(g_noteName, g_noteLine);
+                }
+            }
+            
+        }    
+    }
+}
+
+// Integrated Alpha / Color / Texture
 
 key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
 {
@@ -105,186 +375,12 @@ Debug(string sStr)
     //llOwnerSay(llGetScriptName() + ": " + sStr);
 }
 
-integer MinMaxUnscaled(vector vSize, float fScale)
-{
-    if (fScale < 1.0)
-    {
-        if (vSize.x <= 0.01)
-            return TRUE;
-        if (vSize.y <= 0.01)
-            return TRUE;
-        if (vSize.z <= 0.01)
-            return TRUE;
-    }
-    else
-    {
-        if (vSize.x >= 10.0)
-            return TRUE;
-        if (vSize.x >= 10.0)
-            return TRUE;
-        if (vSize.x >= 10.0)
-            return TRUE;
-    }
-    return FALSE;
-}
-
-integer MinMaxScaled(vector vSize, float fScale)
-{
-    if (fScale < 1.0)
-    {
-        if (vSize.x < 0.01)
-            return TRUE;
-        if (vSize.y < 0.01)
-            return TRUE;
-        if (vSize.z < 0.01)
-            return TRUE;
-    }
-    else
-    {
-        if (vSize.x > 10.0)
-            return TRUE;
-        if (vSize.x > 10.0)
-            return TRUE;
-        if (vSize.x > 10.0)
-            return TRUE;
-    }
-    return FALSE;
-}
-
-
-Store_StartScaleLoop()
-{
-    g_lPrimStartSizes = [];
-    integer iPrimIndex;
-    vector vPrimScale;
-    list lPrimParams;
-    if (llGetNumberOfPrims()<2) 
-    {
-        vPrimScale = llGetScale();
-        g_lPrimStartSizes += vPrimScale.x;
-    }
-    else
-    {
-        for (iPrimIndex = 1; iPrimIndex <= llGetNumberOfPrims(); iPrimIndex++ )
-        {
-            lPrimParams = llGetLinkPrimitiveParams( iPrimIndex, [PRIM_SIZE, PRIM_POSITION]);
-            g_lPrimStartSizes += lPrimParams;
-        }
-    }
-    g_iScaleFactor = 100;
-}
-
-ScalePrimLoop(integer iScale, integer iRezSize, key kAV)
-{
-    integer iPrimIndex;
-    float fScale = iScale / 100.0;
-    list lPrimParams; 
-    vector vPrimScale;
-    vector vPrimPos;
-    vector vSize;
-    if (llGetNumberOfPrims()<2) 
-    {
-        vSize = llList2Vector(g_lPrimStartSizes,0);
-        if (MinMaxUnscaled(llGetScale(), fScale) || !iRezSize)
-        {
-            Notify(kAV, "Prims already on minimum or maximum size, the object cannot be scaled as you requested.", TRUE);
-            return;
-        }
-        else if (MinMaxScaled(fScale * vSize, fScale) || !iRezSize)
-        {
-            Notify(kAV, "Prims would extend minimum or maximum size, the object cannot be scaled as you requested.", TRUE);
-            return;
-        }
-        else
-        {
-            llSetScale(fScale * vSize); // not linked prim
-        }
-    }
-    else
-    {
-        if  (!iRezSize)
-        {
-            // first some checking
-            for (iPrimIndex = 1; iPrimIndex <= llGetNumberOfPrims(); iPrimIndex++ )
-            {
-                lPrimParams = llGetLinkPrimitiveParams( iPrimIndex, [PRIM_SIZE, PRIM_POSITION]);
-                vPrimScale = llList2Vector(g_lPrimStartSizes, (iPrimIndex  - 1)*2);
-
-                if (MinMaxUnscaled(llList2Vector(lPrimParams,0), fScale))
-                {
-                    Notify(kAV, "Prims already on minimum or maximum size, the object cannot be scaled as you requested.", TRUE);
-                    return;
-                }
-                else if (MinMaxScaled(fScale * vPrimScale, fScale))
-                {
-                    Notify(kAV, "Prims would extend minimum or maximum size, the object cannot be scaled as you requested.", TRUE);
-                    return;
-                }
-            }
-        }
-        Notify(kAV, "Scaling started, please wait ...", TRUE);
-        g_iSizedByScript = TRUE;
-        for (iPrimIndex = 1; iPrimIndex <= llGetNumberOfPrims(); iPrimIndex++ )
-        {
-//            lPrimParams = llGetLinkPrimitiveParams(iPrimIndex, [PRIM_SIZE, PRIM_POSITION]);
-            vPrimScale = fScale * llList2Vector(g_lPrimStartSizes, (iPrimIndex - 1)*2);
-            vPrimPos = fScale * (llList2Vector(g_lPrimStartSizes, (iPrimIndex - 1)*2+1) - llGetPos());
-            if (iPrimIndex == 1) 
-            {
-                llSetLinkPrimitiveParamsFast(iPrimIndex, [PRIM_SIZE, vPrimScale]);
-            }
-            else 
-            {
-                llSetLinkPrimitiveParamsFast(iPrimIndex, [PRIM_SIZE, vPrimScale, PRIM_POSITION, vPrimPos/llGetRootRotation()]);
-            }
-        }
-        g_iScaleFactor = iScale;
-        g_iSizedByScript = TRUE;
-        Notify(kAV, "Scaling finished, the collar is now on "+ (string)g_iScaleFactor +"% of the rez size.", TRUE);
-    }
-}
-
-
-ForceUpdate()
-{
-    //workaround for https://jira.secondlife.com/browse/VWR-1168
-    llSetText(".", <1,1,1>, 1.0);
-    llSetText("", <1,1,1>, 1.0);
-}
-
-AdjustPos(vector vDelta)
-{
-    if (llGetAttached())
-    {
-        llSetPos(llGetLocalPos() + vDelta);
-        ForceUpdate();
-    }
-}
-
-AdjustRot(vector vDelta)
-{
-    if (llGetAttached())
-    {
-        llSetLocalRot(llGetLocalRot() * llEuler2Rot(vDelta));
-        ForceUpdate();
-    }
-}
-
 RotMenu(key kAv)
 {
     string sPrompt = "Adjust the collar rotation.";
     list lMyButtons = ["tilt up", "right", "tilt left", "tilt down", "left", "tilt right"];// ria change
     key kMenuID = Dialog(kAv, sPrompt, lMyButtons, [UPMENU], 0);
-    integer iMenuIndex = llListFindList(g_lMenuIDs, [kAv]);
-    list lAddMe = [kAv, kMenuID, ROTMENU];
-    if (iMenuIndex == -1)
-    {
-        g_lMenuIDs += lAddMe;
-    }
-    else
-    {
-        g_lMenuIDs = llListReplaceList(g_lMenuIDs, lAddMe, iMenuIndex, iMenuIndex + g_iMenuStride - 1);
-    }
+    MenuIDAdd(kAv, kMenuID, ROTMENU);
 }
 
 PosMenu(key kAv)
@@ -299,33 +395,14 @@ PosMenu(key kAv)
     else sPrompt += "Large.";
     
     key kMenuID = Dialog(kAv, sPrompt, lMyButtons, [UPMENU], 0);
-    integer iMenuIndex = llListFindList(g_lMenuIDs, [kAv]);
-    list lAddMe = [kAv, kMenuID, POSMENU];
-    if (iMenuIndex == -1)
-    {
-        g_lMenuIDs += lAddMe;
-    }
-    else
-    {
-        g_lMenuIDs = llListReplaceList(g_lMenuIDs, lAddMe, iMenuIndex, iMenuIndex + g_iMenuStride - 1);    
-    }
+    MenuIDAdd(kAv, kMenuID, POSMENU);
 }
 
 SizeMenu(key kAv)
 {
     string sPrompt = "Adjust the collar scale. It is based on the size the collar has on rezzing. You can change back to this size by using '100%'.\nCurrent size: " + (string)g_iScaleFactor + "%\n\nATTENTION! May break the design of collars. Make a copy of the collar before using!";
     key kMenuID = Dialog(kAv, sPrompt, SIZEMENU_BUTTONS, [UPMENU], 0);
-    integer iMenuIndex = llListFindList(g_lMenuIDs, [kAv]);
-    list lAddMe = [kAv, kMenuID, SIZEMENU];
-    if (iMenuIndex == -1)
-    {
-        g_lMenuIDs += lAddMe;
-    }
-    else
-    {
-        g_lMenuIDs = llListReplaceList(g_lMenuIDs, lAddMe, iMenuIndex, iMenuIndex + g_iMenuStride - 1);
-    }
-        Debug("FreeMem: " + (string)llGetFreeMemory());
+    MenuIDAdd(kAv, kMenuID, SIZEMENU);    
 }
 
 DoMenu(key kAv)
@@ -342,19 +419,10 @@ DoMenu(key kAv)
         sPrompt = "Which aspect of the appearance would you like to modify? Owners can lock the appearance of the collar, so it cannot be changed at all.\n";
     
         lMyButtons = [UNTICKED + APPLOCK];
-        lMyButtons += llListSort(g_lLocalButtons + g_lButtons, 1, TRUE);
+        lMyButtons += llListSort(g_lLocalButtons + g_lRemoteButtons, 1, TRUE);
     }
     key kMenuID = Dialog(kAv, sPrompt, lMyButtons, [UPMENU], 0);
-    integer iMenuIndex = llListFindList(g_lMenuIDs, [kAv]);
-    list lAddMe = [kAv, kMenuID, g_sSubMenu];
-    if (iMenuIndex == -1)
-    {
-        g_lMenuIDs += lAddMe;
-    }
-    else
-    {
-        g_lMenuIDs = llListReplaceList(g_lMenuIDs, lAddMe, iMenuIndex, iMenuIndex + g_iMenuStride - 1);    
-    }    
+    MenuIDAdd(kAv, kMenuID, g_sSubMenu);   
 }
 
 string GetDBPrefix()
@@ -368,10 +436,21 @@ default
     {
         g_kWearer = llGetOwner();       
         g_fRotNudge = PI / 32.0;//have to do this here since we can't divide in a global var declaration   
-
-        Store_StartScaleLoop();
         
-        Debug("FreeMem: " + (string)llGetFreeMemory());
+        BuildElementList();
+        
+//        Store_StartScaleLoop();
+        string sPrefix = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 2);
+        if (sPrefix != "")
+        {
+            g_sAlphaDBToken = sPrefix + g_sAlphaDBToken;
+            g_sColorDBToken = sPrefix + g_sColorDBToken;
+            g_sTextureDBToken = sPrefix + g_sTextureDBToken;                        
+        }
+        
+        loadNoteCards("");                
+        
+        Debug((string)(llGetFreeMemory() / 1024) + " KB Free");
     }
     
     on_rez(integer iParam)
@@ -381,6 +460,11 @@ default
 
     link_message(integer iSender, integer iNum, string sStr, key kID)
     {
+        if (iNum == APPEARANCE_SIZE_FACTOR)
+        {
+            g_iScaleFactor = (integer)sStr;
+            return;
+        }
         if (iNum == SUBMENU && sStr == g_sSubMenu)
         {
             //someone asked for our menu
@@ -389,8 +473,7 @@ default
             llMessageLinked(LINK_SET, COMMAND_NOAUTH, "appearance",kID);
         }
         else if (iNum == MENUNAME_REQUEST && sStr == g_sParentMenu)
-        {
-            
+        {         
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu, NULL_KEY);
         }
         else if (iNum == MENUNAME_RESPONSE)
@@ -399,9 +482,9 @@ default
             if (llList2String(lParts, 0) == g_sSubMenu)
             {//someone wants to stick something in our menu
                 string button = llList2String(lParts, 1);
-                if (llListFindList(g_lButtons, [button]) == -1)
+                if (llListFindList(g_lRemoteButtons, [button]) == -1)
                 {
-                    g_lButtons = llListSort(g_lButtons + [button], 1, TRUE);
+                    g_lRemoteButtons = llListSort(g_lRemoteButtons + [button], 1, TRUE);
                 }
             }
         }
@@ -413,6 +496,7 @@ default
             if (sStr == "refreshmenu")
             {
                 g_lButtons = [];
+                g_lRemoteButtons = [];
                 llMessageLinked(LINK_SET, MENUNAME_REQUEST, g_sSubMenu, NULL_KEY);
             }
             else if (sStr == "appearance")
@@ -548,8 +632,29 @@ default
                         {
                             SizeMenu(kAv);
                         }
+                        else if (sMessage == COLORMENU)
+                        {
+                            g_sCurrentElement = "";
+                            ELEMENTMENU = COLORMENU;
+                            g_sType = "color";
+                            ElementMenu(kAv, g_lColorElements);
+                        }
+                        else if (sMessage == HIDEMENU)
+                        {
+                            g_sCurrentElement = "";
+                            ELEMENTMENU = HIDEMENU;
+                            g_sType = "hide or show";
+                            ElementMenu(kAv, g_lHideElements);
+                        }
+                        else if (sMessage == TEXTUREMENU)
+                        {
+                            g_sCurrentElement = "";
+                            ELEMENTMENU = TEXTUREMENU;
+                            g_sType = "texture";
+                            ElementMenu(kAv, g_lTextureElements);
+                        }                        
                     }
-                    else if (~llListFindList(g_lButtons, [sMessage]))
+                    else if (~llListFindList(g_lRemoteButtons, [sMessage]))
                     {
                         //we got a submenu selection
                         llMessageLinked(LINK_SET, SUBMENU, sMessage, kAv);
@@ -564,31 +669,34 @@ default
                     }
                     else if (llGetAttached())
                     {
+                        vector vNudge = <0,0,0>;
                         if (sMessage == "left")
                         {
-                            AdjustPos(<g_fNudge, 0, 0>);
+                            vNudge.x = g_fNudge;
                         }
                         else if (sMessage == "up")
                         {
-                            AdjustPos(<0, g_fNudge, 0>);                
+                            vNudge.y = g_fNudge;                
                         }
                         else if (sMessage == "forward")
                         {
-                            AdjustPos(<0, 0, g_fNudge>);                
+                            vNudge.z = g_fNudge;                
                         }            
                         else if (sMessage == "right")
                         {
-                            AdjustPos(<-g_fNudge, 0, 0>);                
+                            vNudge.x = -g_fNudge;                
                         }            
                         else if (sMessage == "down")
                         {
-                            AdjustPos(<0, -g_fNudge, 0>);                    
+                            vNudge.y = -g_fNudge;                    
                         }            
                         else if (sMessage == "backward")
                         {
-                            AdjustPos(<0, 0, -g_fNudge>);                
+                            vNudge.z = -g_fNudge;                
                         }                            
-                        else if (sMessage == "Nudge: S")
+                        llMessageLinked(LINK_SET, APPEARANCE_POSITION, (string)vNudge, kAv);                        
+                        
+                        if (sMessage == "Nudge: S")
                         {
                             g_fNudge=g_fSmallNudge;
                         }
@@ -599,7 +707,7 @@ default
                         else if (sMessage == "Nudge: L")
                         {
                             g_fNudge=g_fLargeNudge;                
-                        }
+                        }                        
                     }
                     else
                     {
@@ -616,30 +724,32 @@ default
                     }
                     else if (llGetAttached())
                     {
+                        vector vNudge = <0,0,0>;
                         if (sMessage == "tilt up")
                         {
-                            AdjustRot(<g_fRotNudge, 0, 0>);
+                            vNudge.x = g_fRotNudge;
                         }
                         else if (sMessage == "right")
                         {
-                            AdjustRot(<0, g_fRotNudge, 0>);                
+                            vNudge.y = g_fRotNudge;                
                         }
                         else if (sMessage == "tilt left")
                         {
-                            AdjustRot(<0, 0, g_fRotNudge>);                
+                            vNudge.z = g_fRotNudge;               
                         }            
                         else if (sMessage == "tilt down")
                         {
-                            AdjustRot(<-g_fRotNudge, 0, 0>);                
+                            vNudge.x = -g_fRotNudge;                
                         }            
                         else if (sMessage == "left")
                         {
-                            AdjustRot(<0, -g_fRotNudge, 0>);                    
+                            vNudge.y = -g_fRotNudge;                  
                         }            
                         else if (sMessage == "tilt right")
                         {
-                            AdjustRot(<0, 0, -g_fRotNudge>);                
-                        }                        
+                            vNudge.z = -g_fRotNudge;               
+                        }
+                        llMessageLinked(LINK_SET, APPEARANCE_ROTATION, (string)vNudge, kAv);                        
                     }
                     else
                     {
@@ -669,17 +779,160 @@ default
                                 }
                                 else
                                 {
-                                    ScalePrimLoop(100, TRUE, kAv);
+                                    llMessageLinked(LINK_SET, APPEARANCE_SIZE, "100§" + (string)TRUE, kAv);
                                 }
                             }
                             else
                             {
-                                ScalePrimLoop(g_iScaleFactor + iSizeFactor, FALSE, kAv);
+                                llMessageLinked(LINK_SET, APPEARANCE_SIZE, (string)(g_iScaleFactor + iSizeFactor) + "§" + (string)FALSE, kAv);
                             }
                         }
                         SizeMenu(kAv);
                     }
                 }
+                else if (sMenuType == COLORMENU)
+                {
+                    if (sMessage == UPMENU)
+                    {
+                        if (g_sCurrentElement == "")
+                        {
+                            //main menu
+                            llMessageLinked(LINK_SET, SUBMENU, g_sParentMenu, kAv);
+                        }
+                        else if (g_sCurrentCategory == "")
+                        {
+                            g_sCurrentElement = "";
+                            ELEMENTMENU = COLORMENU;
+                            g_sType = "color";
+                            ElementMenu(kAv, g_lColorElements);
+                        }
+                        else
+                        {
+                            g_sCurrentCategory = "";
+                            CategoryMenu(kAv);
+                        }
+                    }
+                    else if (g_sCurrentElement == "")
+                    {
+                        g_sCurrentElement = sMessage;
+                        g_iPage = 0;
+                        g_sCurrentCategory = "";
+                        CategoryMenu(kAv);
+                    }
+
+                    else if (g_sCurrentCategory == "")
+                    {
+                        g_lColors = [];
+                        g_sCurrentCategory = sMessage;
+                        g_iPage = 0;
+                        g_kUser = kAv;
+                        string sUrl = g_sHTTPDB_Url + "static/colors-" + g_sCurrentCategory + ".txt";
+                        g_kHTTPID = llHTTPRequest(sUrl, [HTTP_METHOD, "GET"], "");
+                    }
+                    else if (~(integer)llListFindList(g_lColors, [sMessage]))
+                    {
+                        integer iIndex = llListFindList(g_lColors, [sMessage]);
+                        vector vColor = (vector)llList2String(g_lColors, iIndex + 1);
+                        llMessageLinked(LINK_SET, APPEARANCE_COLOR, g_sCurrentElement + "§" + (string)vColor  + "§" + (string)TRUE, kAv);
+                        ColorMenu(kAv);
+                    }
+                
+                }
+                else if (sMenuType == HIDEMENU)
+                {
+                    if (sMessage == UPMENU)
+                    {
+                        if (g_sCurrentElement == "")
+                        {
+                            //main menu
+                            llMessageLinked(LINK_SET, SUBMENU, g_sParentMenu, kAv);
+                        }
+                        else
+                        {
+                            g_sCurrentElement = "";
+                            ELEMENTMENU = HIDEMENU;
+                            g_sType = "hide or show";
+                            ElementMenu(kAv, g_lHideElements);                            
+                        }
+                    }
+                    else
+                    {
+                        //get "Hide" or "Show" and element name
+                        list lParams = llParseString2List(sMessage, [], [HIDE,SHOW]);
+                        string sCmd = llList2String(lParams, 0);
+                        string sElement = llList2String(lParams, 1);
+                        float fAlpha;
+                        if (sCmd == HIDE)
+                        {
+                            fAlpha = 0.0;
+                        }
+                        else if (sCmd == SHOW)
+                        {
+                            fAlpha = 1.0;
+                        }
+
+                        if (sElement == ALL)
+                        {
+                            if (sCmd == SHOW)
+                            {
+                                llMessageLinked(LINK_SET, APPEARANCE_ALPHA, "ALL§1.0§" + (string)TRUE, kAv);
+                            }
+                            else if (sCmd == HIDE)
+                            {
+                                llMessageLinked(LINK_SET, APPEARANCE_ALPHA, "ALL§0.0§" + (string)TRUE, kAv);
+                            }
+                        }
+                        else if (sElement != "")//ignore empty element strings since they won't work anyway
+                        {
+                            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, sElement +"§" + (string)fAlpha + "§" + (string)TRUE, kAv);
+                        }
+                        //SaveAlphaSettings();
+                        g_sCurrentElement = "";
+                        ELEMENTMENU = HIDEMENU;
+                        g_sType = "hide or show";
+                        ElementMenu(kAv, g_lHideElements);
+                    }
+                }
+                else if (sMenuType == TEXTUREMENU)
+                {
+                    if (sMessage == UPMENU)
+                    {
+                        if (g_sCurrentElement == "")
+                        {
+                            //main menu
+                            llMessageLinked(LINK_SET, SUBMENU, g_sParentMenu, kAv);
+                        }
+                        else if (g_sCurrentCategory == "")
+                        {
+                            g_sCurrentElement = "";
+                            ELEMENTMENU = TEXTUREMENU;
+                            g_sType = "texture";
+                            ElementMenu(kAv, g_lTextureElements);
+                        }
+                    }
+                    else if (g_sCurrentElement == "")
+                    {
+                        g_sCurrentElement = sMessage;
+                        TextureMenu(kAv, iPage);
+                    }
+                    else
+                    {
+                        //got a texture name
+                        string sTex;
+                        if (llListFindList(g_textures,[sMessage]) != -1)
+                        {
+                            sTex = llList2String(g_textures,llListFindList(g_textures,[sMessage]) + 1);
+                        }
+                        else
+                        {
+                            sTex = (string)llGetInventoryKey(sMessage);
+                        }
+                        //loop through links, setting texture if element type matches what we're changing
+                        //root prim is 1, so start at 2
+                        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sCurrentElement +"§" + sTex + "§" + (string)TRUE, kAv);
+                        TextureMenu(kAv, iPage);
+                    }                            
+                }                
             }            
         }
         else if (iNum == DIALOG_TIMEOUT)
@@ -694,33 +947,45 @@ default
         }
     } 
     
-    changed(integer iChange)
+    http_response(key kID, integer iStatus, list lMeta, string sBody)
     {
-        if (iChange & (CHANGED_SCALE))
+        if (kID == g_kHTTPID)
         {
-            if (g_iSizedByScript)
-            // the item had ben rescaled by the script, do NOT reset the script and store new positions
+            if (iStatus == 200)
             {
-                // ignore the event and trigger timer to reset flag. needed as we got the event twice after scaling
-                llSetTimerEvent(0.5);
-            }
-            else
-            // it was a user change, so we have to store the basic values again
-            {
-                    Store_StartScaleLoop();
+                //we'll have gotten several lines like "Chartreuse|<0.54118, 0.98431, 0.09020>"
+                //parse that into 2-strided list of colorname, colorvector
+                g_lColors = llParseString2List(sBody, ["\n", "|"], []);
+                g_lColors = llListSort(g_lColors, 2, TRUE);
+                ColorMenu(g_kUser);
             }
         }
-        if (iChange & (CHANGED_SHAPE | CHANGED_LINK))
+    }
+
+   dataserver(key query_id, string data)
+    {
+        if (query_id == g_ktexcardID)
         {
-            Store_StartScaleLoop();
+            if (data == EOF)
+                loadNoteCards("EOF");
+            else
+            {
+                list temp = llParseString2List(data,[",",":","|","="],[]);
+                g_textures += [llList2String(temp,0),llList2Key(temp,1)];
+                // bump line number for reporting purposes and in preparation for reading next line
+                ++g_noteLine;
+                g_ktexcardID = llGetNotecardLine(g_noteName, g_noteLine);
+            }
         }
     }
     
-    timer()
+   
+    changed(integer iChange)
     {
-        // the timer is needed as the changed_size even is triggered twice
-        llSetTimerEvent(0);
-        if (g_iSizedByScript)
-            g_iSizedByScript = FALSE;
+        if(iChange & CHANGED_INVENTORY)
+        {
+            loadNoteCards("");
+        }        
     }
+    
 }
