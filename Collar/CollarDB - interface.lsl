@@ -73,7 +73,7 @@ string BLANK = " ";
 integer g_iTimeOut = 300;
 integer g_iReapeat = 5;  //how often the timer will go off, in seconds
 
-list g_lMenus;  //10-strided list in form listenChan, dialogid, listener, starttime, recipient, prompt, list buttons, utility buttons, currentpage, button digits
+list g_lDialogs;  //10-strided list in form listenChan, dialogid, listener, starttime, recipient, prompt, list buttons, utility buttons, currentpage, button digits
 //where "list buttons" means the big list of choices presented to the user
 //and "page buttons" means utility buttons that will appear on every page, such as one saying "go up one level"
 //and "currentpage" is an integer meaning which page of the menu the user is currently viewing
@@ -90,7 +90,7 @@ Debug(string text)
 }
 
 // -- MENU FUNCTIONS --
-key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
+key MenuDialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
 {
     key kID = llGenerateKey();
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
@@ -114,7 +114,7 @@ Menu(string sName, key kID)
             lUtility = [UPMENU];
         }
         
-        key kMenuID = Dialog(kID, sPrompt, lItems, lUtility, 0);
+        key kMenuID = MenuDialog(kID, sPrompt, lItems, lUtility, 0);
         
         integer iIndex = llListFindList(g_lMenuIDs, [kID]);
         if (~iIndex)
@@ -279,7 +279,7 @@ integer ButtonDigits(list lIn)
 integer RandomUniqueChannel()
 {
     integer iOut = llRound(llFrand(10000000)) + 100000;
-    if (~llListFindList(g_lMenus, [iOut]))
+    if (~llListFindList(g_lDialogs, [iOut]))
     {
         iOut = RandomUniqueChannel();
     }
@@ -362,7 +362,7 @@ Dialog(key kRecipient, string sPrompt, list lMenuItems, list lUtilityButtons, in
         llDialog(kRecipient, sThisPrompt, PrettyButtons(lButtons, lUtilityButtons,[]), iChan);
     }    
     integer ts = llGetUnixTime() + g_iTimeOut;
-    g_lMenus += [iChan, kID, g_iListener, ts, kRecipient, sPrompt, llDumpList2String(lMenuItems, "|"), llDumpList2String(lUtilityButtons, "|"), iPage,iWithNums];
+    g_lDialogs += [iChan, kID, g_iListener, ts, kRecipient, sPrompt, llDumpList2String(lMenuItems, "|"), llDumpList2String(lUtilityButtons, "|"), iPage,iWithNums];
 }
 
 list PrettyButtons(list lOptions, list lUtilityButtons, list iPagebuttons)
@@ -411,19 +411,19 @@ CleanList()
     //Debug("cleaning list");
     //loop through menus and remove any whose timeouts are in the past
     //start at end of list and loop down so that indices don't get messed up as we remove items
-    integer iLength = llGetListLength(g_lMenus);
+    integer iLength = llGetListLength(g_lDialogs);
     integer n;
     integer iNow = llGetUnixTime();
     for (n = iLength - g_iStrideLength; n >= 0; n -= g_iStrideLength)
     {
-        integer iDieTime = llList2Integer(g_lMenus, n + 3);
+        integer iDieTime = llList2Integer(g_lDialogs, n + 3);
         //Debug("dietime: " + (string)iDieTime);
         if (iNow > iDieTime)
         {
             Debug("menu timeout");                
-            key kID = llList2Key(g_lMenus, n + 1);
+            key kID = llList2Key(g_lDialogs, n + 1);
             llMessageLinked(LINK_SET, DIALOG_TIMEOUT, "", kID);
-            g_lMenus = RemoveMenuStride(g_lMenus, n);
+            g_lDialogs = RemoveMenuStride(g_lDialogs, n);
         }            
     } 
 }
@@ -431,15 +431,15 @@ CleanList()
 ClearUser(key kRCPT)
 {
     //find any strides belonging to user and remove them
-    integer iIndex = llListFindList(g_lMenus, [kRCPT]);
+    integer iIndex = llListFindList(g_lDialogs, [kRCPT]);
     while (~iIndex)
     {
         Debug("removed stride for " + (string)kRCPT);
-          g_lMenus = RemoveMenuStride(g_lMenus, iIndex -4);
-        //g_lMenus = llDeleteSubList(g_lMenus, iIndex - 4, iIndex - 5 + g_iStrideLength);
-        iIndex = llListFindList(g_lMenus, [kRCPT]);
+          g_lDialogs = RemoveMenuStride(g_lDialogs, iIndex -4);
+        //g_lDialogs = llDeleteSubList(g_lDialogs, iIndex - 4, iIndex - 5 + g_iStrideLength);
+        iIndex = llListFindList(g_lDialogs, [kRCPT]);
     }
-    Debug(llDumpList2String(g_lMenus, ","));
+    Debug(llDumpList2String(g_lDialogs, ","));
 }
 
 integer InSim(key id)
@@ -656,17 +656,17 @@ default
     
     listen(integer iChan, string sName, key kID, string sMessage)
     {
-        integer iMenuIndex = llListFindList(g_lMenus, [iChan]);
+        integer iMenuIndex = llListFindList(g_lDialogs, [iChan]);
         if (~iMenuIndex)
         {
-            key kMenuID = llList2Key(g_lMenus, iMenuIndex + 1);
-            key kAv = llList2Key(g_lMenus, iMenuIndex + 4);
-            string sPrompt = llList2String(g_lMenus, iMenuIndex + 5);            
-            list items = llParseString2List(llList2String(g_lMenus, iMenuIndex + 6), ["|"], []);
-            list uButtons = llParseString2List(llList2String(g_lMenus, iMenuIndex + 7), ["|"], []);
-            integer iPage = llList2Integer(g_lMenus, iMenuIndex + 8);    
-            integer iDigits = llList2Integer(g_lMenus, iMenuIndex + 9);    
-            g_lMenus = RemoveMenuStride(g_lMenus, iMenuIndex);       
+            key kMenuID = llList2Key(g_lDialogs, iMenuIndex + 1);
+            key kAv = llList2Key(g_lDialogs, iMenuIndex + 4);
+            string sPrompt = llList2String(g_lDialogs, iMenuIndex + 5);            
+            list items = llParseString2List(llList2String(g_lDialogs, iMenuIndex + 6), ["|"], []);
+            list uButtons = llParseString2List(llList2String(g_lDialogs, iMenuIndex + 7), ["|"], []);
+            integer iPage = llList2Integer(g_lDialogs, iMenuIndex + 8);    
+            integer iDigits = llList2Integer(g_lDialogs, iMenuIndex + 9);    
+            g_lDialogs = RemoveMenuStride(g_lDialogs, iMenuIndex);       
                    
             if (sMessage == MORE)
             {
@@ -737,7 +737,7 @@ default
         
         //if list is empty after that, then stop timer
         
-        if (!llGetListLength(g_lMenus))
+        if (!llGetListLength(g_lDialogs))
         {
             Debug("no active dialogs, stopping timer");
             llSetTimerEvent(0.0);
