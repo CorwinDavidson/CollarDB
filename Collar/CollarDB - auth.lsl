@@ -1,4 +1,4 @@
-//CollarDB - auth - 3.530
+﻿//CollarDB - auth - 3.530
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
 //save owner, secowners, and group key
@@ -86,14 +86,14 @@ integer WEARERLOCKOUT=620;
 
 string UPMENU = "^";
 
-string g_sSetOwner = "?Primary Owner";
-string g_sSetSecOwner = "?Secondary Owner";
-string g_sSetBlackList = "?Blacklisted";
+string g_sSetOwner = "✚Primary Owner";
+string g_sSetSecOwner = "✚Secondary Owner";
+string g_sSetBlackList = "✚Blacklisted";
 string g_sSetGroup = "Set Group";
 string g_sReset = "Runaway!";
-string g_sRemOwner = "?Primary Owner";
-string g_sRemSecOwner = "?Secondary Owner";
-string g_sRemBlackList = "?Blacklisted";
+string g_sRemOwner = "✘Primary Owner";
+string g_sRemSecOwner = "✘Secondary Owner";
+string g_sRemBlackList = "✘Blacklisted";
 string g_sUnsetGroup = "Unset Group";
 string g_sListOwners = "List Owners";
 string g_sSetOpenAccess = "SetOpenAccess";

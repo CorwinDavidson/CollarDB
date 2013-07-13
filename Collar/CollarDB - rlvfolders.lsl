@@ -1,4 +1,4 @@
-//CollarDB - rlvfolders - 3.520
+﻿//CollarDB - rlvfolders - 3.520
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 //give 4 menus:
     //Folder
@@ -154,9 +154,9 @@ QueryFolders()
 string lockFolderButton(integer iLockState, integer iLockNum, integer iAuth)
 {
     string sOut;
-    if ((iLockState >> (4 + iLockNum)) & 0x1) sOut = "?";
-    else if ((iLockState >> iLockNum) & 0x1) sOut = "?";
-    else sOut = "?";
+    if ((iLockState >> (4 + iLockNum)) & 0x1) sOut = "☔";
+    else if ((iLockState >> iLockNum) & 0x1) sOut = "✔";
+    else sOut = "✘";
     if (iLockNum == 0) sOut += LOCK_ATTACH;
     else if (iLockNum == 1) sOut += LOCK_DETACH;
     else if (iLockNum == 2) sOut += LOCK_ATTACH_ALL;
@@ -168,8 +168,8 @@ string lockFolderButton(integer iLockState, integer iLockNum, integer iAuth)
 string lockUnsharedButton(integer iLockNum, integer iAuth)
 {
     string sOut;
-    if ((g_iUnsharedLocks >> iLockNum) & 0x1) sOut = "?";
-    else sOut = "?";
+    if ((g_iUnsharedLocks >> iLockNum) & 0x1) sOut = "✔";
+    else sOut = "✘";
     if (iLockNum == 1) sOut += "Lk Unsh Wear";
     else if  (iLockNum == 0) sOut += "Lk Unsh Remove";
     if (iAuth > COMMAND_GROUP) sOut = "("+sOut+")";
@@ -225,15 +225,15 @@ string folderIcon(integer iState)
     string sOut = "";
     integer iStateThis = iState / 10;
     integer iStateSub = iState % 10;
-    if  (iStateThis==0) sOut += "?"; //?";
-    else if (iStateThis==1) sOut += "?";
-    else if (iStateThis==2) sOut += "?";
-    else if (iStateThis==3) sOut += "?";
+    if  (iStateThis==0) sOut += "⬚"; //▪";
+    else if (iStateThis==1) sOut += "◻";
+    else if (iStateThis==2) sOut += "◩";
+    else if (iStateThis==3) sOut += "◼";
 //    sOut += "/";
-    if (iStateSub==0) sOut += "?"; //?";
-    else if (iStateSub==1) sOut += "?";
-    else if (iStateSub==2) sOut += "?";
-    else if (iStateSub==3) sOut += "?";
+    if (iStateSub==0) sOut += "⬚"; //▪";
+    else if (iStateSub==1) sOut += "◻";
+    else if (iStateSub==2) sOut += "◩";
+    else if (iStateSub==3) sOut += "◼";
     return sOut;
 }
     

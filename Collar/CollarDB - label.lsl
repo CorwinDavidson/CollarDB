@@ -1,4 +1,4 @@
-//CollarDB - label - 3.526
+﻿//CollarDB - label - 3.526
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 string g_sParentMenu = "AddOns";
 string g_sSubMenu = "Label";
