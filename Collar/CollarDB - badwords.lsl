@@ -7,41 +7,38 @@ list g_lBadWords;
 string g_sPenance = "pet is very sorry for her mistake";
 integer g_iListener;
 
-//MESSAGE MAP
-integer COMMAND_NOAUTH = 0;
-integer COMMAND_OWNER = 500;
-integer COMMAND_SECOWNER = 501;
-integer COMMAND_GROUP = 502;
-integer COMMAND_WEARER = 503;
-integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
-integer COMMAND_SAFEWORD = 510;  // new for safeword
+//      MESSAGE MAP
+integer COMMAND_NOAUTH          = 0xCDB000;
+integer COMMAND_OWNER           = 0xCDB500;
+integer COMMAND_SECOWNER        = 0xCDB501;
+integer COMMAND_GROUP           = 0xCDB502;
+integer COMMAND_WEARER          = 0xCDB503;
+integer COMMAND_EVERYONE        = 0xCDB504;
+integer CHAT                    = 0xCDB505;     // DEPRECATED
+integer COMMAND_SAFEWORD        = 0xCDB510;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
-integer POPUP_HELP = 1001;
+integer POPUP_HELP              = -0xCDB001;      
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
-//str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer HTTPDB_SAVE             = 0xCDB200;     // scripts send messages on this channel to have settings saved to httpdb
+                                                // str must be in form of "token=value"
+integer HTTPDB_REQUEST          = 0xCDB201;     // when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE         = 0xCDB202;     // the httpdb script will send responses on this channel
+integer HTTPDB_DELETE           = 0xCDB203;     // delete token from DB
+integer HTTPDB_EMPTY            = 0xCDB204;     // sent by httpdb script when a token has no value in the db
 
-integer MENUNAME_REQUEST = 3000;
-integer MENUNAME_RESPONSE = 3001;
-integer SUBMENU = 3002;
-integer MENUNAME_REMOVE = 3003;
+integer MENUNAME_REQUEST        = 0xCDB300;
+integer MENUNAME_RESPONSE       = 0xCDB301;
+integer SUBMENU                 = 0xCDB302;
+integer MENUNAME_REMOVE         = 0xCDB303;
 
-integer RLV_CMD = 6000;
+integer RLV_CMD                 = 0xCDB600;
 
-integer ANIM_START = 7000;
-integer ANIM_STOP = 7001;
+integer ANIM_START              = 0xCDB700;     // send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP               = 0xCDB701;     // send this with the name of an anim in the string part of the message to stop the anim
 
-integer DIALOG = -9000;
-integer DIALOG_RESPONSE = -9001;
-integer DIALOG_TIMEOUT = -9002;
-
-//5000 block is reserved for IM slaves
+integer DIALOG                  = -0xCDB900;
+integer DIALOG_RESPONSE         = -0xCDB901;
+integer DIALOG_TIMEOUT          = -0xCDB902;
 
 key g_kWearer;
 

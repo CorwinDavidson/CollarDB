@@ -41,40 +41,37 @@ list g_lLocalCache;//stores settings that we dont' want to save to DB because th
 key g_kAllID;
 string ALLTOKEN = "_all";
 
-//MESSAGE MAP
-integer JSON_REQUEST = 201;
-integer JSON_RESPONSE = 202;
+//      MESSAGE MAP
+integer JSON_REQUEST            = 0xCDB281;
+integer JSON_RESPONSE           = 0xCDB282;
 
-integer COMMAND_NOAUTH = 0;
-integer COMMAND_OWNER = 500;
-integer COMMAND_SECOWNER = 501;
-integer COMMAND_GROUP = 502;
-integer COMMAND_WEARER = 503;
-integer COMMAND_EVERYONE = 504;
-integer CHAT = 505;
+integer COMMAND_NOAUTH          = 0xCDB000;
+integer COMMAND_OWNER           = 0xCDB500;
+integer COMMAND_SECOWNER        = 0xCDB501;
+integer COMMAND_GROUP           = 0xCDB502;
+integer COMMAND_WEARER          = 0xCDB503;
+integer COMMAND_EVERYONE        = 0xCDB504;
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
-integer POPUP_HELP = 1001;
+integer POPUP_HELP              = -0xCDB001;      
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
-//str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent when a token has no value in the httpdb
-integer HTTPDB_REQUEST_NOCACHE = 2005;
+integer HTTPDB_SAVE             = 0xCDB200;     // scripts send messages on this channel to have settings saved to httpdb
+                                                // str must be in form of "token=value"
+integer HTTPDB_REQUEST          = 0xCDB201;     // when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE         = 0xCDB202;     // the httpdb script will send responses on this channel
+integer HTTPDB_DELETE           = 0xCDB203;     // delete token from DB
+integer HTTPDB_EMPTY            = 0xCDB204;     // sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST_NOCACHE  = 0xCDB205;
 
-integer LOCALSETTING_SAVE = 2500;
-integer LOCALSETTING_REQUEST = 2501;
-integer LOCALSETTING_RESPONSE = 2502;
-integer LOCALSETTING_DELETE = 2503;
-integer LOCALSETTING_EMPTY = 2504;
+integer LOCALSETTING_SAVE       = 0xCDB250;
+integer LOCALSETTING_REQUEST    = 0xCDB251;
+integer LOCALSETTING_RESPONSE   = 0xCDB252;
+integer LOCALSETTING_DELETE     = 0xCDB253;
+integer LOCALSETTING_EMPTY      = 0xCDB254;
 
-integer MENUNAME_REQUEST = 3000;
-integer MENUNAME_RESPONSE = 3001;
-integer SUBMENU = 3002;
-integer MENUNAME_REMOVE = 3003;
-
+integer MENUNAME_REQUEST        = 0xCDB300;
+integer MENUNAME_RESPONSE       = 0xCDB301;
+integer SUBMENU                 = 0xCDB302;
+integer MENUNAME_REMOVE         = 0xCDB303;
 
 string WIKI ="Online Guide";
 string WIKI_URL = "http://www.collardb.com/static/UserDocumentation";

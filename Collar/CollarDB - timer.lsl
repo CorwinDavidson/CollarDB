@@ -22,11 +22,10 @@ integer n;//for loops
 string g_sMessage;
 integer MAX_TIME=0x7FFFFFFF;
 
-integer ATTACHMENT_COMMAND = 602;
-integer ATTACHMENT_FORWARD = 610;
+integer ATTACHMENT_FORWARD      = -0xCDB609;
 //these can change
-integer TIMER_TOMESSAGE=609;
-integer TIMER_FROMMESSAGE=610;
+integer TIMER_TOMESSAGE         = -0xCDB109;      
+integer TIMER_FROMMESSAGE       = -0xCDB110; 
 integer REAL_TIME=1;
 integer REAL_TIME_EXACT=5;
 integer ON_TIME=3;
@@ -88,65 +87,55 @@ key g_kMenuWho;
 
 list lButtons;
 
-//OpenCollae MESSAGE MAP
-// messages for authenticating users
-integer COMMAND_NOAUTH = 0;
-integer COMMAND_OWNER = 500;
-integer COMMAND_SECOWNER = 501;
-integer COMMAND_GROUP = 502;
-integer COMMAND_WEARER = 503;
-integer COMMAND_EVERYONE = 504;
-//integer CHAT = 505;//deprecated
-integer COMMAND_OBJECT = 506;
-integer COMMAND_RLV_RELAY = 507;
-// added so when the sub is locked out they can use postions
-integer COMMAND_WEARERLOCKEDOUT = 521;
+//      MESSAGE MAP
+integer COMMAND_NOAUTH          = 0xCDB000;
+integer COMMAND_OWNER           = 0xCDB500;
+integer COMMAND_SECOWNER        = 0xCDB501;
+integer COMMAND_GROUP           = 0xCDB502;
+integer COMMAND_WEARER          = 0xCDB503;
+integer COMMAND_EVERYONE        = 0xCDB504;
+integer COMMAND_OBJECT          = 0xCDB506;
+integer COMMAND_RLV_RELAY       = 0xCDB507;
+integer COMMAND_WEARERLOCKEDOUT = 0xCDB521;     // added so when the sub is locked out they can use postions
 
-//integer SEND_IM = 1000; deprecated.  each script should send its own IMs now.  This is to reduce even the tiny bt of lag caused by having IM slave scripts
-integer POPUP_HELP = 1001;
+integer HTTPDB_SAVE             = 0xCDB200;     // scripts send messages on this channel to have settings saved to httpdb
+                                                // str must be in form of "token=value"
+integer HTTPDB_REQUEST          = 0xCDB201;     // when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE         = 0xCDB202;     // the httpdb script will send responses on this channel
+integer HTTPDB_DELETE           = 0xCDB203;     // delete token from DB
+integer HTTPDB_EMPTY            = 0xCDB204;     // sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST_NOCACHE  = 0xCDB205;
 
-// messages for storing and retrieving values from http db
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
-//str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer LOCALSETTING_SAVE       = 0xCDB250;
+integer LOCALSETTING_REQUEST    = 0xCDB251;
+integer LOCALSETTING_RESPONSE   = 0xCDB252;
+integer LOCALSETTING_DELETE     = 0xCDB253;
+integer LOCALSETTING_EMPTY      = 0xCDB254;
 
-integer LOCALSETTING_SAVE = 2500;
-integer LOCALSETTING_REQUEST = 2501;
-integer LOCALSETTING_RESPONSE = 2502;
-integer LOCALSETTING_DELETE = 2503;
-integer LOCALSETTING_EMPTY = 2504;
+integer MENUNAME_REQUEST        = 0xCDB300;
+integer MENUNAME_RESPONSE       = 0xCDB301;
+integer SUBMENU                 = 0xCDB302;
+integer MENUNAME_REMOVE         = 0xCDB303;
 
-// messages for creating OC menu structure
-integer MENUNAME_REQUEST = 3000;
-integer MENUNAME_RESPONSE = 3001;
-integer SUBMENU = 3002;
-integer MENUNAME_REMOVE = 3003;
+integer RLV_CMD                 = 0xCDB600;
+integer RLV_REFRESH             = 0xCDB601;     // RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLV_CLEAR               = 0xCDB602;     // RLV plugins should clear their restriction lists upon receiving this message.
+integer RLV_VERSION             = 0xCDB603;     // RLV Plugins can recieve the used rl viewer version upon receiving this message.
 
-// messages for RLV commands
-integer RLV_CMD = 6000;
-integer RLV_REFRESH = 6001;//RLV plugins should reinstate their restrictions upon receiving this message.
-integer RLV_CLEAR = 6002;//RLV plugins should clear their restriction lists upon receiving this message.
-integer RLV_VERSION = 6003; //RLV Plugins can recieve the used rl viewer version upon receiving this message..
+integer ANIM_START              = 0xCDB700;     // send this with the name of an anim in the string part of the message to play the anim
+integer ANIM_STOP               = 0xCDB701;     // send this with the name of an anim in the string part of the message to stop the anim
+integer CPLANIM_PERMREQUEST     = 0xCDB702;     // id should be av's key, str should be cmd name "hug", "kiss", etc
+integer CPLANIM_PERMRESPONSE    = 0xCDB703;     // str should be "1" for got perms or "0" for not.  id should be av's key
+integer CPLANIM_START           = 0xCDB704;     // str should be valid anim name.  id should be av
+integer CPLANIM_STOP            = 0xCDB705;     // str should be valid anim name.  id should be av
 
-// messages for poses and couple anims
-integer ANIM_START = 7000;//send this with the name of an anim in the string part of the message to play the anim
-integer ANIM_STOP = 7001;//send this with the name of an anim in the string part of the message to stop the anim
-integer CPLANIM_PERMREQUEST = 7002;//id should be av's key, str should be cmd name "hug", "kiss", etc
-integer CPLANIM_PERMRESPONSE = 7003;//str should be "1" for got perms or "0" for not.  id should be av's key
-integer CPLANIM_START = 7004;//str should be valid anim name.  id should be av
-integer CPLANIM_STOP = 7005;//str should be valid anim name.  id should be av
+integer DIALOG                  = -0xCDB900;
+integer DIALOG_RESPONSE         = -0xCDB901;
+integer DIALOG_TIMEOUT          = -0xCDB902;
 
-integer DIALOG = -9000;
-integer DIALOG_RESPONSE = -9001;
-integer DIALOG_TIMEOUT = -9002;
+integer TIMER_EVENT             = -0xCDB100;    // str = "start" or "end". For start, either "online" or "realtime".
 
-// Added by WhiteFire
-integer TIMER_EVENT = -10000; // str = "start" or "end". For start, either "online" or "realtime".
-
-integer WEARERLOCKOUT=620;
+integer WEARERLOCKOUT           = -0xCDB199;
 
 
 // menu option to go one step back in menustructure

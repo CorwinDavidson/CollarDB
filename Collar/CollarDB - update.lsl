@@ -4,28 +4,29 @@
 //on attach and on state_entry, http request for update
 
 key g_kWearer;
-
-integer COMMAND_NOAUTH = 0;
-integer COMMAND_OWNER = 500;
-integer COMMAND_WEARER = 503;
-
 string g_sResetScripts = "resetscripts";
 
-integer HTTPDB_SAVE = 2000;        //scripts send messages on this channel to have settings saved to httpdb
-                                //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;    //when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;    //the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;    //delete token from DB
-integer HTTPDB_EMPTY = 2004;    //sent by httpdb script when a token has no value in the db
+//      MESSAGE MAP
+integer COMMAND_NOAUTH          = 0xCDB000;
+integer COMMAND_OWNER           = 0xCDB500;
+integer COMMAND_WEARER          = 0xCDB503;
 
-integer MENUNAME_REQUEST = 3000;
-integer MENUNAME_RESPONSE = 3001;
-integer SUBMENU = 3002;
-integer UPDATE = 10001;
+integer HTTPDB_SAVE             = 0xCDB200;     // scripts send messages on this channel to have settings saved to httpdb
+                                                // str must be in form of "token=value"
+integer HTTPDB_REQUEST          = 0xCDB201;     // when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE         = 0xCDB202;     // the httpdb script will send responses on this channel
+integer HTTPDB_DELETE           = 0xCDB203;     // delete token from DB
+integer HTTPDB_EMPTY            = 0xCDB204;     // sent by httpdb script when a token has no value in the db
 
-integer DIALOG = -9000;
-integer DIALOG_RESPONSE = -9001;
-integer DIALOG_TIMEOUT = -9002;
+integer MENUNAME_REQUEST        = 0xCDB300;
+integer MENUNAME_RESPONSE       = 0xCDB301;
+integer SUBMENU                 = 0xCDB302;
+
+integer DIALOG                  = -0xCDB900;
+integer DIALOG_RESPONSE         = -0xCDB901;
+integer DIALOG_TIMEOUT          = -0xCDB902;
+
+integer UPDATE                  = 0xCDB999;
 
 string g_sDBToken = "updatemethod";     //valid values are "replace" and "inplace"
 string g_sUpdateMethod = "inplace";

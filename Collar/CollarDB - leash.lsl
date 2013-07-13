@@ -2,24 +2,6 @@
 //leash script for the Open Collar Project (c)
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.  See "CollarDB License" for details.
 
-// -------------------------------
-// Original leash scripting & ongoing updates
-// Author: Nandana Singh
-// Date: Oct. 18, 2008
-// -------------------------------
-// Rewrite & various updates
-// Author: Lulu Pink
-// -------------------------------
-// Various updates
-// Author: Garvin Twine
-// -------------------------------
-// Edited & Added integration for particle-system to OC Settings & Dialog Subsystems (3.421)
-// Author: Joy Stipe
-// -------------------------------
-//April 2010 splitting of the particle part into its own script April 2010
-// Author: Garvin Twine
-// -------------------------------
-
 // ------ TOKEN DEFINITIONS ------
 // ---- Immutable ----
 // - Should be constant across collars, so not prefixed
@@ -28,38 +10,42 @@ string TOK_LENGTH   = "leashlength";
 string TOK_ROT = "leashrot";
 string TOK_DEST     = "leashedto"; // format: uuid,rank
 // --- channel tokens ---
-// - MESSAGE MAP
-integer COMMAND_NOAUTH      = 0;
-integer COMMAND_OWNER       = 500;
-integer COMMAND_SECOWNER    = 501;
-integer COMMAND_GROUP       = 502;
-integer COMMAND_WEARER      = 503;
-integer COMMAND_EVERYONE    = 504;
-integer COMMAND_SAFEWORD    = 510;
-integer POPUP_HELP          = 1001;
-// -- SETTINGS (HTTPDB / LOCAL)
-// - Setting strings must be in the format: "token=value"
-integer HTTPDB_SAVE             = 2000; // to have settings saved to httpdb
-integer HTTPDB_REQUEST          = 2001; // send requests for settings on this channel
-integer HTTPDB_RESPONSE         = 2002; // responses received on this channel
-integer HTTPDB_DELETE           = 2003; // delete token from DB
-integer HTTPDB_EMPTY            = 2004; // returned when a token has no value in the httpdb
-integer LOCALSETTING_SAVE       = 2500;
-integer LOCALSETTING_REQUEST    = 2501;
-integer LOCALSETTING_RESPONSE   = 2502;
-integer LOCALSETTING_DELETE     = 2503;
-integer LOCALSETTING_EMPTY      = 2504;
-// -- MENU/DIALOG
-integer MENUNAME_REQUEST    = 3000;
-integer MENUNAME_RESPONSE   = 3001;
-integer SUBMENU_CHANNEL     = 3002;
-integer MENUNAME_REMOVE     = 3003;
+//      MESSAGE MAP
+integer COMMAND_NOAUTH          = 0xCDB000;
+integer COMMAND_OWNER           = 0xCDB500;
+integer COMMAND_SECOWNER        = 0xCDB501;
+integer COMMAND_GROUP           = 0xCDB502;
+integer COMMAND_WEARER          = 0xCDB503;
+integer COMMAND_EVERYONE        = 0xCDB504;
+integer COMMAND_SAFEWORD        = 0xCDB510;
 
-integer RLV_CMD = 6000;
+integer POPUP_HELP              = -0xCDB001;      
 
-integer DIALOG              = -9000;
-integer DIALOG_RESPONSE     = -9001;
-integer DIALOG_TIMEOUT      = -9002;
+integer HTTPDB_SAVE             = 0xCDB200;     // scripts send messages on this channel to have settings saved to httpdb
+                                                // str must be in form of "token=value"
+integer HTTPDB_REQUEST          = 0xCDB201;     // when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE         = 0xCDB202;     // the httpdb script will send responses on this channel
+integer HTTPDB_DELETE           = 0xCDB203;     // delete token from DB
+integer HTTPDB_EMPTY            = 0xCDB204;     // sent by httpdb script when a token has no value in the db
+
+integer LOCALSETTING_SAVE       = 0xCDB250;
+integer LOCALSETTING_REQUEST    = 0xCDB251;
+integer LOCALSETTING_RESPONSE   = 0xCDB252;
+integer LOCALSETTING_DELETE     = 0xCDB253;
+integer LOCALSETTING_EMPTY      = 0xCDB254;
+
+integer MENUNAME_REQUEST        = 0xCDB300;
+integer MENUNAME_RESPONSE       = 0xCDB301;
+integer SUBMENU                 = 0xCDB302;
+integer MENUNAME_REMOVE         = 0xCDB303;
+
+integer RLV_CMD                 = 0xCDB600;
+
+integer DIALOG                  = -0xCDB900;
+integer DIALOG_RESPONSE         = -0xCDB901;
+integer DIALOG_TIMEOUT          = -0xCDB902;
+
+
 integer LOCKMEISTER         = -8888;
 
 integer COMMAND_PARTICLE = 20000;
@@ -841,11 +827,11 @@ default
         {
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, PARENTMENU + "|" + SUBMENU, NULL_KEY);
         }
-        else if (iAuth == SUBMENU_CHANNEL && sMessage == UPMENU)
+        else if (iAuth == SUBMENU && sMessage == UPMENU)
         {
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, PARENTMENU + "|" + SUBMENU, NULL_KEY);
         }
-        else if (iAuth == SUBMENU_CHANNEL && sMessage == SUBMENU)
+        else if (iAuth == SUBMENU && sMessage == SUBMENU)
         {
             LeashMenu(kMessageID);
         }
@@ -934,7 +920,7 @@ default
                     }
                     else
                     {
-                        llMessageLinked(LINK_SET, SUBMENU_CHANNEL, PARENTMENU, kAV);
+                        llMessageLinked(LINK_SET, SUBMENU, PARENTMENU, kAV);
                         return;
                     }
                 }                

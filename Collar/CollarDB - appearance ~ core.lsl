@@ -1,24 +1,27 @@
-integer COMMAND_NOAUTH = 0;
-integer COMMAND_OWNER = 500;
-integer COMMAND_SECOWNER = 501;
-integer COMMAND_GROUP = 502;
-integer COMMAND_WEARER = 503;
-integer COMMAND_EVERYONE = 504;
+//CollarDB - appearance ~ core
 
-integer HTTPDB_SAVE = 2000;//scripts send messages on this channel to have settings saved to httpdb
-                            //str must be in form of "token=value"
-integer HTTPDB_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer HTTPDB_RESPONSE = 2002;//the httpdb script will send responses on this channel
-integer HTTPDB_DELETE = 2003;//delete token from DB
-integer HTTPDB_EMPTY = 2004;//sent by httpdb script when a token has no value in the db
+integer COMMAND_NOAUTH          = 0xCDB000;
+integer COMMAND_OWNER           = 0xCDB500;
+integer COMMAND_SECOWNER        = 0xCDB501;
+integer COMMAND_GROUP           = 0xCDB502;
+integer COMMAND_WEARER          = 0xCDB503;
+integer COMMAND_EVERYONE        = 0xCDB504;
 
-integer APPEARANCE_ALPHA = -8000;
-integer APPEARANCE_COLOR = -8001;
-integer APPEARANCE_TEXTURE = -8002;
-integer APPEARANCE_POSITION = -8003;
-integer APPEARANCE_ROTATION = -8004;
-integer APPEARANCE_SIZE = -8005;
-integer APPEARANCE_SIZE_FACTOR = -8105;
+integer HTTPDB_SAVE             = 0xCDB200;     // scripts send messages on this channel to have settings saved to httpdb
+                                                // str must be in form of "token=value"
+integer HTTPDB_REQUEST          = 0xCDB201;     // when startup, scripts send requests for settings on this channel
+integer HTTPDB_RESPONSE         = 0xCDB202;     // the httpdb script will send responses on this channel
+integer HTTPDB_DELETE           = 0xCDB203;     // delete token from DB
+integer HTTPDB_EMPTY            = 0xCDB204;     // sent by httpdb script when a token has no value in the db
+integer HTTPDB_REQUEST_NOCACHE  = 0xCDB205;
+
+integer APPEARANCE_ALPHA        = -0xCDB800;
+integer APPEARANCE_COLOR        = -0xCDB801;
+integer APPEARANCE_TEXTURE      = -0xCDB802;
+integer APPEARANCE_POSITION     = -0xCDB803;
+integer APPEARANCE_ROTATION     = -0xCDB804;
+integer APPEARANCE_SIZE         = -0xCDB805;
+integer APPEARANCE_SIZE_FACTOR  = -0xCDB815;
 
 float MIN_SIZE = .01;
 float MAX_SIZE = 10;
