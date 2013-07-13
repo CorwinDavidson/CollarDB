@@ -2,10 +2,7 @@
 //Licensed under the GPLv2, with the additional requirement that these scripts remain "full perms" in Second Life.
 //See "CollarDB License" for details.
 
-key g_kLMID;//store the request id here when we look up  a LM
-
-key kMenuID;
-key lmkMenuID;
+integer debug = FALSE;
 
 list g_lOwners;
 
@@ -30,13 +27,13 @@ list g_lRLVcmds_tp = [ //4-strided list in form of [rlvCommand, Pretty Command, 
     "showminimap", "Minimap", "Mini Map", FALSE,
     "showloc", "ShowLoc", "Current Location", FALSE
         ];
-		
+        
 list g_lSettings_talk;//2-strided list in form of [option, param]
 list g_lRLVcmds_talk = [ //4-strided list in form of [rlvCommand, Pretty Command, Description, Bool Force]
     "sendchat", "Chat", "Ability to Send Chat", FALSE,
-    "chatshout", "Chat", "Ability to Shout Chat", FALSE,
+    "chatshout", "Shouting", "Ability to Shout Chat", FALSE,
     "chatnormal", "Normal", "Ability to Speak Without Whispering", FALSE,
-	"startim", "StartIM", "Ability to Start IM Sessions", FALSE,
+    "startim", "StartIM", "Ability to Start IM Sessions", FALSE,
     "sendim", "SendIM", "Ability to Send IM", FALSE,
     "recvchat", "RcvChat", "Ability to Receive Chat", FALSE,
     "recvim", "RcvChat", "Ability to Receive IM", FALSE,
@@ -66,7 +63,7 @@ list g_lRLVcmds_sit = [
     "sit", "SitNow", "Force Sit", TRUE,
     "forceunsit", "StandNow", "Force Stand", TRUE
         ];
-		
+        
 float g_fScanRange = 20.0;//range we'll scan for scripted objects when doing a force-sit
 key g_sMenuUser;//used to remember who to give the menu to after scanning
 list g_lSitButtons;
@@ -88,9 +85,12 @@ string DESTINATIONS = "Destinations";
 
 key kMenuID;
 key g_kSitID;
-integer g_iReturnMenu = FALSE;
+key lmkMenuID;
 
-integer g_iRLVOn=FALSE; // make sure the rlv only gets activated 
+key g_kLMID;//store the request id here when we look up  a LM
+
+integer g_iReturnMenu = FALSE;
+integer g_iRLVOn=TRUE; // make sure the rlv only gets activated 
 
 string UPMENU = "^";
 
@@ -136,9 +136,10 @@ integer DIALOG = -9000;
 integer DIALOG_RESPONSE = -9001;
 integer DIALOG_TIMEOUT = -9002;
 
-integer RandomChannel()
+
+Debug(string sMsg)
 {
-    return llRound(llFrand(10000000)) + 100000;
+   // llOwnerSay(llGetScriptName() + ": " + sMsg);
 }
 
 Notify(key kID, string sMsg, integer iAlsoNotifyWearer) {
@@ -193,7 +194,7 @@ Menu(key kID, list lRLVcmds, list lSettings, string sCurrMenu)
     integer iShowChatNormal  = FALSE;
     integer iShowChatShout   = FALSE;
     integer iShowEmote       = FALSE;
-    if (llList2String(g_lSettings_talk, (llListFindList(g_lSettings_talk, ["sendchat"])+1)) == "n"){
+    if (llList2String(lSettings, (llListFindList(lSettings, ["sendchat"])+1)) == "n"){
         //Debug("hide chatshout and chatnormal");
         iShowEmote = TRUE;
     }
@@ -201,7 +202,7 @@ Menu(key kID, list lRLVcmds, list lSettings, string sCurrMenu)
         //Debug("show chatnormal");
         iShowChatNormal = TRUE;
 
-        if (llList2String(g_lSettings_talk, (llListFindList(g_lSettings_talk, ["chatnormal"])+1)) == "n"){
+        if (llList2String(lSettings, (llListFindList(lSettings, ["chatnormal"])+1)) == "n"){
             //Debug("hide chatshout");
         }
         else {
@@ -222,10 +223,10 @@ Menu(key kID, list lRLVcmds, list lSettings, string sCurrMenu)
         integer iImmediate = llList2Integer(lRLVcmds, n+3);        
         integer iIndex = llListFindList(lSettings, [sCmd]);
 
-		if ((sCmd == "chatnormal" && !iShowChatNormal) || (sCmd == "chatshout" && !iShowChatShout) || (sCmd == "emote" && !iShowEmote))
+        if ((sCmd == "chatnormal" && !iShowChatNormal) || (sCmd == "chatshout" && !iShowChatShout) || (sCmd == "emote" && !iShowEmote))
         {
-			//Debug("skipping: "+llList2String(g_lRLVcmds_talk, n));
-		}
+            //Debug("skipping: "+llList2String(g_lRLVcmds_talk, n));
+        }
         else if (!iImmediate)
         {
             if (iIndex == -1)
@@ -234,39 +235,39 @@ Menu(key kID, list lRLVcmds, list lSettings, string sCurrMenu)
                 if (sPretty=="Emote"){
                     //When sendchat='n' then emote defaults to short mode (rem), so you allow long emotes(add)......
                     lButtons += [TURNON + " " + sPretty];
-					sPrompt += "\n" + sPretty + " = Short (" + sDesc + ")";
+                    sPrompt += "\n" + sPretty + " = Short (" + sDesc + ")";
                 }
                 else
-                {				
-					lButtons += [TURNOFF + " " + sPretty];
-					sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
-				}
+                {                
+                    lButtons += [TURNOFF + " " + sPretty];
+                    sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
+                }
             }
             else
             {
                 //else this cmd is set, then show in prompt, and make button do opposite
                 //get value of setting
-                string sValue = llList2String(g_lSettings_sit, iIndex + 1);
-				
+                string sValue = llList2String(lSettings, iIndex + 1);
+                
                 if (sValue == "y" || (sPretty=="Emote" && sValue == "add"))
                 {
                     lButtons += [TURNOFF + " " + sPretty];
-					if (sPretty=="Emote") {
-						sPrompt += "\n" + sPretty + " = Long (" + sDesc + ")";
-					}
-					else {
-						sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
-					}
+                    if (sPretty=="Emote") {
+                        sPrompt += "\n" + sPretty + " = Long (" + sDesc + ")";
+                    }
+                    else {
+                        sPrompt += "\n" + sPretty + " = Enabled (" + sDesc + ")";
+                    }
                 }
                 else if (sValue == "n" || (sPretty=="Emote" && sValue == "rem"))
                 {
                     lButtons += [TURNON + " " + sPretty];
-					if (sPretty=="Emote") {
-						sPrompt += "\n" + sPretty + " = Short (" + sDesc + ")";
-					}
-					else {
-						sPrompt += "\n" + sPretty + " = Disabled (" + sDesc + ")";
-					}					
+                    if (sPretty=="Emote") {
+                        sPrompt += "\n" + sPretty + " = Short (" + sDesc + ")";
+                    }
+                    else {
+                        sPrompt += "\n" + sPretty + " = Disabled (" + sDesc + ")";
+                    }                    
                 }
             }
         }
@@ -276,9 +277,9 @@ Menu(key kID, list lRLVcmds, list lSettings, string sCurrMenu)
             sPrompt += "\n" + sPretty + " = " + sDesc;
         }        
     }
-	
-	if (sCurrMenu == "map/tp")
-		lButtons += [DESTINATIONS];
+    
+    if (sCurrMenu == "map/tp")
+        lButtons += [DESTINATIONS];
 
     //give an Allow All button
     lButtons += [TURNON + " All"];
@@ -309,8 +310,7 @@ list UpdateSettings(list lSettings)
     integer iSettingsLength = llGetListLength(lSettings);
     if (iSettingsLength > 0)
     {
-        list lTempSettings;
-		string sOut;
+        string sOut;
         integer n;
         list lNewList;
         for (n = 0; n < iSettingsLength; n = n + 2)
@@ -329,14 +329,14 @@ list UpdateSettings(list lSettings)
                     sValue = "rem";
                 }
             }
-			
+            
             lNewList += [sToken + "=" + sValue];
             if (sValue!="y")
             {
                 lTempSettings+=[sToken, sValue];
             }
         }
-		sOut = llDumpList2String(lNewList, ",");
+        sOut = llDumpList2String(lNewList, ",");
         //output that string to viewer
         llMessageLinked(LINK_SET, RLV_CMD, sOut, NULL_KEY);
     }
@@ -363,9 +363,10 @@ list ClearSettings(string sDBToken)
     return lSettings;
 }
 
-list RLVCmdSet(integer auth, list lSettings, string sRLVCmd, string sParam, integer iForce)
+list RLVCmdSet(integer iAuth, list lSettings, string sRLVCmd, string sParam, integer iForce)
 {
-    if (auth == COMMAND_WEARER)
+
+    if (iAuth == COMMAND_WEARER)
     {
         Notify(g_kWearer,"Sorry, but RLV commands may only be given by owner, secowner, or group (if set).",FALSE);
         return lSettings;
@@ -377,14 +378,19 @@ list RLVCmdSet(integer auth, list lSettings, string sRLVCmd, string sParam, inte
         
         if (sRLVCmd == "unsit" && sParam == "force")
         {
-            integer iIndex = llListFindList(g_lSettings_sit, ["unsit"]); // Check for ability to unsit
+            integer iIndex = llListFindList(lSettings, ["unsit"]); // Check for ability to unsit
         
             if (iIndex>=0)
-                if (llList2String(g_lSettings_sit, iIndex + 1) != "n")
+                if (llList2String(lSettings, iIndex + 1) != "n")
                     iIndex=-1;
 
             if (iIndex!=-1) // If standing is disabled
                 sNewRLVCmd="unsit=y," + sNewRLVCmd + ",unsit=n";
+        }
+        else if (sRLVCmd == "sit") 
+        {
+            if ((key)sParam)
+                sNewRLVCmd=sRLVCmd + ":" + sParam + "=force";
         }
 
         llMessageLinked(LINK_SET, RLV_CMD, sNewRLVCmd, NULL_KEY);    
@@ -411,7 +417,7 @@ default
 {
     state_entry()
     {
-		g_kWearer = llGetOwner();
+        g_kWearer = llGetOwner();
         llSetTimerEvent(0.0);
                 
         llOwnerSay((string)(llGetFreeMemory() / 1024) + " KB Free");
@@ -428,8 +434,8 @@ default
         {
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu_misc, NULL_KEY);
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu_sit, NULL_KEY);
-			llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu_talk, NULL_KEY);
-			llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu_tp, NULL_KEY);
+            llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu_talk, NULL_KEY);
+            llMessageLinked(LINK_SET, MENUNAME_RESPONSE, g_sParentMenu + "|" + g_sSubMenu_tp, NULL_KEY);
         }
         else if (iNum == SUBMENU && sStr == g_sSubMenu_misc)
         {
@@ -439,15 +445,15 @@ default
         {
             Menu(kID, g_lRLVcmds_sit, g_lSettings_sit, llToLower(g_sSubMenu_sit));
         }
-        else if (iNum == SUBMENU && sStr == g_sSubMenu_sit)
+        else if (iNum == SUBMENU && sStr == g_sSubMenu_talk)
         {
             Menu(kID, g_lRLVcmds_talk, g_lSettings_talk, llToLower(g_sSubMenu_talk));
         }
-		else if (iNum == SUBMENU && sStr == g_sSubMenu_tp)
+        else if (iNum == SUBMENU && sStr == g_sSubMenu_tp)
         {
             Menu(kID, g_lRLVcmds_tp, g_lSettings_tp, llToLower(g_sSubMenu_tp));
         }
-		else if (iNum >= COMMAND_OWNER && iNum <= COMMAND_WEARER)
+        else if (iNum >= COMMAND_OWNER && iNum <= COMMAND_WEARER)
         {
             //added for chat command for direct menu acceess
             if (llToLower(sStr) == llToLower(g_sSubMenu_misc))
@@ -469,7 +475,7 @@ default
             {
                 Menu(kID, g_lRLVcmds_tp, g_lSettings_tp, llToLower(g_sSubMenu_tp));
                 return;
-            }			
+            }            
             else if (llToLower(sStr) == "sitnow")
             {
                 if (!g_iRLVOn)
@@ -511,7 +517,7 @@ default
                 {
                     LandmarkMenu(kID);
                 }
-				return;
+                return;
             }
 
             list lItems = llParseString2List(sStr, [","], []);
@@ -520,8 +526,9 @@ default
             integer iStop = llGetListLength(lItems);
             integer iChange_misc = FALSE;   //set this to true if we see a setting that concerns us
             integer iChange_sit = FALSE;    //set this to true if we see a setting that concerns us
-			integer iChange_talk = FALSE;    //set this to true if we see a setting that concerns us
-			integer iChange_tp = FALSE;    //set this to true if we see a setting that concerns us
+            integer iChange_talk = FALSE;    //set this to true if we see a setting that concerns us
+            integer iChange_tp = FALSE;    //set this to true if we see a setting that concerns us
+
             for (n = 0; n < iStop; n++)
             {
                 //split off the parameters (anything after a : or =)
@@ -530,10 +537,11 @@ default
                 list lParams = llParseString2List(sThisItem, ["=", ":"], []);
                 string sRLVCmd = llList2String(lParams, 0);
                 string sParam = llList2String(lParams, 1);
-				if (sRLVCmd == "tpto")
-				{
-					llMessageLinked(LINK_SET, RLV_CMD, sThisItem, NULL_KEY);
-				}				
+
+                if (sRLVCmd == "tpto")
+                {
+                    llMessageLinked(LINK_SET, RLV_CMD, sThisItem, NULL_KEY);
+                }                
                 if (llListFindList(g_lRLVcmds_misc, [sRLVCmd]) != -1)
                 {
                     iIdx = llListFindList(g_lRLVcmds_misc, [sRLVCmd]);
@@ -554,21 +562,21 @@ default
                 }
                 if (llListFindList(g_lRLVcmds_tp, [sRLVCmd]) != -1)
                 {
-					string sOption = llList2String(llParseString2List(sThisItem, ["="], []), 0);
-					if (sOption != sRLVCmd)
-					{
-						return; //this keeps exceptions for tplure from getting set here if they are it is no problem just more data i nthe DB
-					}				
+                    string sOption = llList2String(llParseString2List(sThisItem, ["="], []), 0);
+                    if (sOption != sRLVCmd)
+                    {
+                        return; //this keeps exceptions for tplure from getting set here if they are it is no problem just more data i nthe DB
+                    }                
                     iIdx = llListFindList(g_lRLVcmds_tp, [sRLVCmd]);
                     g_lSettings_tp = RLVCmdSet(iNum, g_lSettings_tp, sRLVCmd, sParam, llList2Integer(g_lRLVcmds_tp,iIdx+3));
                     iChange_tp = TRUE;
-                } 	 				
+                }                      
                 else if (sRLVCmd == "clear")
                 {
                     g_lSettings_sit=ClearSettings(g_sDBToken_sit);
                     g_lSettings_misc=ClearSettings(g_sDBToken_misc);
-					g_lSettings_talk=ClearSettings(g_sDBToken_talk);
-					g_lSettings_tp=ClearSettings(g_sDBToken_tp);
+                    g_lSettings_talk=ClearSettings(g_sDBToken_talk);
+                    g_lSettings_tp=ClearSettings(g_sDBToken_tp);
                 }
             }
                 if (iChange_misc)
@@ -643,7 +651,7 @@ default
                 //everything else is real settings (should be even number)
                 g_lSettings_tp = llParseString2List(llList2String(lParams, 1), [","], []);
                 g_lSettings_tp = UpdateSettings(g_lSettings_tp);
-            }	
+            }    
         }
         else if (iNum == RLV_REFRESH)
         {
@@ -651,8 +659,8 @@ default
             g_iRLVOn = TRUE;
             g_lSettings_sit = UpdateSettings(g_lSettings_sit);
             g_lSettings_misc = UpdateSettings(g_lSettings_misc);
-			g_lSettings_talk = UpdateSettings(g_lSettings_talk);
-			g_lSettings_tp = UpdateSettings(g_lSettings_tp);
+            g_lSettings_talk = UpdateSettings(g_lSettings_talk);
+            g_lSettings_tp = UpdateSettings(g_lSettings_tp);
             // If we had something stored in memory, engage restore mode
             if ((!IsUnsitEnabled()) && (g_sSitTarget != ""))
             {
@@ -671,8 +679,8 @@ default
             //clear db and local settings list
             g_lSettings_sit=ClearSettings(g_sDBToken_sit);
             g_lSettings_misc=ClearSettings(g_sDBToken_misc);
-			g_lSettings_talk=ClearSettings(g_sDBToken_talk);
-			g_lSettings_talk=ClearSettings(g_sDBToken_tp);
+            g_lSettings_talk=ClearSettings(g_sDBToken_talk);
+            g_lSettings_talk=ClearSettings(g_sDBToken_tp);
         }
         else if (iNum == RLV_OFF)        // rlvoff -> we have to turn the menu off too
         {
@@ -740,7 +748,7 @@ default
                             else if (g_sCurrMenu == "talk")
                                 iIndex=llListFindList(g_lRLVcmds_talk, [sCmd]);
                             else if (g_sCurrMenu == "map/tp")
-                                iIndex=llListFindList(g_lRLVcmds_tp, [sCmd]);	
+                                iIndex=llListFindList(g_lRLVcmds_tp, [sCmd]);    
                                 
                             if (sCmd == "All")
                             {
@@ -768,7 +776,7 @@ default
                                 else if (g_sCurrMenu == "talk")
                                     iStop=llGetListLength(g_lRLVcmds_talk);
                                 else if (g_sCurrMenu == "map/tp")
-                                    iStop=llGetListLength(g_lRLVcmds_tp);									
+                                    iStop=llGetListLength(g_lRLVcmds_tp);                                    
                                     
                                 for (n = 0; n < iStop; n=n+4)
                                 {
@@ -798,9 +806,9 @@ default
                                     sOut = llList2String(g_lRLVcmds_misc, iIndex-1);
                                  else if (g_sCurrMenu == "talk")
                                     sOut = llList2String(g_lRLVcmds_talk, iIndex-1);
-                                 else if (g_sCurrMenu == "tp")
+                                 else if (g_sCurrMenu == "map/tp")
                                     sOut = llList2String(g_lRLVcmds_tp, iIndex-1);
-									
+                                    
                                 sOut += "=";
                                 if (sSwitch == TURNON)
                                 {
@@ -814,11 +822,11 @@ default
                                 llMessageLinked(LINK_SET, COMMAND_NOAUTH, sOut, kAv);
                                 g_iReturnMenu = TRUE;
                             }
-							else if (sMessage == DESTINATIONS)
-							{
-								//give menu of LMs
-								LandmarkMenu(kAv);
-							}
+                            else if (sMessage == DESTINATIONS)
+                            {
+                                //give menu of LMs
+                                LandmarkMenu(kAv);
+                            }
                             else
                             {
                                 //something went horribly wrong.  We got a command that we can't find in the list
@@ -826,30 +834,30 @@ default
                         }
                     }
                 }
-				else if (kID == lmkMenuID)
-				{
-					list lMenuParams = llParseString2List(sStr, ["|"], []);
-					key kAv = (key)llList2String(lMenuParams, 0);
-					string sMessage = llList2String(lMenuParams, 1);
-					integer iPage = (integer)llList2String(lMenuParams, 2);
-					//got a response to the LM menu.
-					if (sMessage == UPMENU)
-					{
-						Menu(kAv);
-					}
-					else if (llGetInventoryType(sMessage) == INVENTORY_LANDMARK)
-					{
-						llMessageLinked(LINK_SET, COMMAND_NOAUTH, "tp " + sMessage, kAv);
-						g_iReturnMenu = TRUE;
-					}
-				}
+                else if (kID == lmkMenuID)
+                {
+                    list lMenuParams = llParseString2List(sStr, ["|"], []);
+                    key kAv = (key)llList2String(lMenuParams, 0);
+                    string sMessage = llList2String(lMenuParams, 1);
+                    integer iPage = (integer)llList2String(lMenuParams, 2);
+                    //got a response to the LM menu.
+                    if (sMessage == UPMENU)
+                    {
+                        Menu(kID, g_lRLVcmds_tp, g_lSettings_tp, llToLower(g_sSubMenu_tp));;
+                    }
+                    else if (llGetInventoryType(sMessage) == INVENTORY_LANDMARK)
+                    {
+                        llMessageLinked(LINK_SET, COMMAND_NOAUTH, "tp " + sMessage, kAv);
+                        g_iReturnMenu = TRUE;
+                    }
+                }
                 else if (kID == g_kSitID)
                 {
                     if (sMessage==UPMENU)
                     {
                         Menu(kAv, g_lRLVcmds_sit, g_lSettings_sit, llToLower(g_sSubMenu_sit));
                     }
-                    else if ((key) sMessage)
+                    else if ((key)sMessage)
                     {
                         //we heard a number for an object to sit on
                         //integer seatiNum = (integer)sMessage - 1;
@@ -934,7 +942,7 @@ default
             llMessageLinked(LINK_SET, RLV_CMD, sCmd, "");
         }
     }
-	
+    
     sensor(integer iNum)
     {
         g_lSitButtons = [];

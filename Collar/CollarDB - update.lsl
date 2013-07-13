@@ -51,7 +51,7 @@ integer g_iUpdateAvail = FALSE;
 integer g_iUpdateMode=FALSE;
 integer g_iUpdateBeta = FALSE;
 
-list g_lResetFirst = ["menu", "rlvmain", "anim", "appearance"];
+list g_lResetFirst = ["interface", "rlvmain", "anim", "appearance", "appearance ~ core"];
 
 integer g_iChecked = FALSE;        //set this to true after checking version
 

@@ -154,9 +154,9 @@ QueryFolders()
 string lockFolderButton(integer iLockState, integer iLockNum, integer iAuth)
 {
     string sOut;
-    if ((iLockState >> (4 + iLockNum)) & 0x1) sOut = "☔";
-    else if ((iLockState >> iLockNum) & 0x1) sOut = "✔";
-    else sOut = "✘";
+    if ((iLockState >> (4 + iLockNum)) & 0x1) sOut = "?";
+    else if ((iLockState >> iLockNum) & 0x1) sOut = "?";
+    else sOut = "?";
     if (iLockNum == 0) sOut += LOCK_ATTACH;
     else if (iLockNum == 1) sOut += LOCK_DETACH;
     else if (iLockNum == 2) sOut += LOCK_ATTACH_ALL;
@@ -168,8 +168,8 @@ string lockFolderButton(integer iLockState, integer iLockNum, integer iAuth)
 string lockUnsharedButton(integer iLockNum, integer iAuth)
 {
     string sOut;
-    if ((g_iUnsharedLocks >> iLockNum) & 0x1) sOut = "✔";
-    else sOut = "✘";
+    if ((g_iUnsharedLocks >> iLockNum) & 0x1) sOut = "?";
+    else sOut = "?";
     if (iLockNum == 1) sOut += "Lk Unsh Wear";
     else if  (iLockNum == 0) sOut += "Lk Unsh Remove";
     if (iAuth > COMMAND_GROUP) sOut = "("+sOut+")";
@@ -225,15 +225,15 @@ string folderIcon(integer iState)
     string sOut = "";
     integer iStateThis = iState / 10;
     integer iStateSub = iState % 10;
-    if  (iStateThis==0) sOut += "⬚"; //▪";
-    else if (iStateThis==1) sOut += "◻";
-    else if (iStateThis==2) sOut += "◩";
-    else if (iStateThis==3) sOut += "◼";
+    if  (iStateThis==0) sOut += "?"; //?";
+    else if (iStateThis==1) sOut += "?";
+    else if (iStateThis==2) sOut += "?";
+    else if (iStateThis==3) sOut += "?";
 //    sOut += "/";
-    if (iStateSub==0) sOut += "⬚"; //▪";
-    else if (iStateSub==1) sOut += "◻";
-    else if (iStateSub==2) sOut += "◩";
-    else if (iStateSub==3) sOut += "◼";
+    if (iStateSub==0) sOut += "?"; //?";
+    else if (iStateSub==1) sOut += "?";
+    else if (iStateSub==2) sOut += "?";
+    else if (iStateSub==3) sOut += "?";
     return sOut;
 }
     
@@ -401,15 +401,15 @@ handleMultiSearch()
     else jump next;  // operator was omitted, then repeat last action
     if (pref2 == "++" || pref2 == "--" || pref2 == "&&") 
     {
-		g_sFolderType += "all";
-		sItem = llToLower(llGetSubString(sItem,2,-1));
+        g_sFolderType += "all";
+        sItem = llToLower(llGetSubString(sItem,2,-1));
     }
-	else sItem = llToLower(llGetSubString(sItem,1,-1));
-	
-	if (pref1 == "&") g_sFolderType += "over";
-	
-	@next;
-	
+    else sItem = llToLower(llGetSubString(sItem,1,-1));
+    
+    if (pref1 == "&") g_sFolderType += "over";
+    
+    @next;
+    
     //open listener
     g_iFolderRLV = 9999 + llRound(llFrand(9999999.0));
     g_iListener = llListen(g_iFolderRLV, "", llGetOwner(), "");

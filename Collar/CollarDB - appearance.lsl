@@ -132,6 +132,7 @@ integer APPEARANCE_TEXTURE = -8002;
 integer APPEARANCE_POSITION = -8003;
 integer APPEARANCE_ROTATION = -8004;
 integer APPEARANCE_SIZE = -8005;
+integer APPEARANCE_ALPHA_SETTINGS = -8100;
 integer APPEARANCE_SIZE_FACTOR = -8105;
 
 integer DIALOG = -9000;
@@ -584,6 +585,10 @@ default
                 g_iAppLock = (integer)sValue;
             }
         }
+        else if (iNum == APPEARANCE_ALPHA_SETTINGS)
+        {
+            g_lAlphaSettings = llParseString2List(sStr,[","],[]);
+        }
         else if (iNum == DIALOG_RESPONSE)
         {
             integer iMenuIndex = llListFindList(g_lMenuIDs, [kID]);
@@ -873,18 +878,26 @@ default
 
                         if (sElement == ALL)
                         {
-                            if (sCmd == SHOW)
+                            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, "ALL§" + (string)fAlpha + "§" + (string)TRUE, kAv);
+                            g_lAlphaSettings = [];
+                            integer n;
+                            for (n = 0; n < llGetListLength(g_lHideElements); n++)
                             {
-                                llMessageLinked(LINK_SET, APPEARANCE_ALPHA, "ALL§1.0§" + (string)TRUE, kAv);
-                            }
-                            else if (sCmd == HIDE)
-                            {
-                                llMessageLinked(LINK_SET, APPEARANCE_ALPHA, "ALL§0.0§" + (string)TRUE, kAv);
-                            }
+                                g_lAlphaSettings += llList2List(g_lHideElements,n,n) + [fAlpha];
+                            }                            
                         }
                         else if (sElement != "")//ignore empty element strings since they won't work anyway
                         {
                             llMessageLinked(LINK_SET, APPEARANCE_ALPHA, sElement +"§" + (string)fAlpha + "§" + (string)TRUE, kAv);
+                            integer iIndex2 = llListFindList(g_lAlphaSettings, [sElement]);
+                            if (iIndex2 == -1)
+                            {
+                                g_lAlphaSettings += [sElement, fAlpha];
+                            }
+                            else
+                            {
+                                g_lAlphaSettings = llListReplaceList(g_lAlphaSettings, [fAlpha], iIndex2+ 1, iIndex2 + 1);
+                            }                            
                         }
                         //SaveAlphaSettings();
                         g_sCurrentElement = "";
@@ -929,7 +942,7 @@ default
                         }
                         //loop through links, setting texture if element type matches what we're changing
                         //root prim is 1, so start at 2
-                        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sCurrentElement +"§" + sTex + "§" + (string)TRUE, kAv);
+                        llMessageLinked(LINK_SET, APPEARANCE_TEXTURE, g_sCurrentElement +"§" + sTex + "§" + (string)TRUE, kAv);
                         TextureMenu(kAv, iPage);
                     }                            
                 }                

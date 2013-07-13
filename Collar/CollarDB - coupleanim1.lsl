@@ -170,7 +170,7 @@ integer StartsWith(string sHayStack, string sNeedle) // http://wiki.secondlife.c
 
 string StringReplace(string sSrc, string sFrom, string sTo)
 {//replaces all occurrences of 'sFrom' with 'sTo' in 'sSrc'.
-	return llDumpList2String(llParseStringKeepNulls((sSrc = "") + sSrc, [sFrom], []), sTo);
+    return llDumpList2String(llParseStringKeepNulls((sSrc = "") + sSrc, [sFrom], []), sTo);
 }
 
 PrettySay(string sText)

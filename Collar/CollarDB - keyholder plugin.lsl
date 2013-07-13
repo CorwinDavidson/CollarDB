@@ -155,6 +155,14 @@ integer CPLANIM_STOP = 7005;//str should be valid anim name.  id should be av
 
 integer WEARERLOCKOUT=620;
 
+integer APPEARANCE_ALPHA = -8000;
+integer APPEARANCE_COLOR = -8001;
+integer APPEARANCE_TEXTURE = -8002;
+integer APPEARANCE_POSITION = -8003;
+integer APPEARANCE_ROTATION = -8004;
+integer APPEARANCE_SIZE = -8005;
+integer APPEARANCE_SIZE_FACTOR = -8105;
+
 integer TIMER_EVENT = -10000; // str = "start" or "end". For start, either "online" or "realtime".
 
 // For other things that want to manage showing/hiding keys.
@@ -223,7 +231,7 @@ string CheckBox(string name, integer value)
     string s = "()";
     if (value)
         s = "(*)";
-		
+        
     return s + name;
 }
 
@@ -492,48 +500,47 @@ updateVisible()
     
     if (g_iDeviceShown == FALSE)
     {
-		llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
-		llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
-		llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
-		llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
     }
     else if (oc_locked)
     {
-	llMessageLinked(LINK_SET, APPEARANCE_ALPHA, sElement +"§" + (string)fAlpha + "§" + (string)TRUE, kAv);
         if (kh_key == NULL_KEY && kh_on)
         {
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedKey +"§1.0§" + (string)FALSE, NULL_KEY);
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);			
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedKey +"§1.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);            
             show_key = TRUE;
         }
         else
         {
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
         }
         
-		llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
-		llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedLock +"§1.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedLock +"§1.0§" + (string)FALSE, NULL_KEY);
     }
     else
     {
         if (kh_key == NULL_KEY && kh_on)
         {
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedKey +"§1.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedKey +"§1.0§" + (string)FALSE, NULL_KEY);
             show_key = TRUE;
         }
         else
         {
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
-			llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedKey +"§0.0§" + (string)FALSE, NULL_KEY);
         }
         
         if (!kh_on && g_iHideLockWhenOff) // just hide the thing entirely in this case.
-            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
         else
-            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsUnlockedLock +"§1.0§" + (string)FALSE, NULL_KEY);
-        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementsLockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
+            llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementUnlockedLock +"§1.0§" + (string)FALSE, NULL_KEY);
+        llMessageLinked(LINK_SET, APPEARANCE_ALPHA, g_sElementLockedLock +"§0.0§" + (string)FALSE, NULL_KEY);
     }
     
     // Let other people know in case they are handling it and not us.
@@ -893,13 +900,13 @@ default
                 kh_main_menu = ( str == "khsetmainmenu" );
                 setMainMenu();
                 DoMenuConfigure(kID, 0);
-				saveSettings();
+                saveSettings();
             }
             else if (str == "khsetglobal" || str == "khunsetglobal")
             {
                 g_iGlobalKey = ( str == "khsetglobal" );
                 DoMenuConfigure(kID, 0);
-				saveSettings();
+                saveSettings();
             }
             else if (str == "khseton" || str == "khunseton")
             {
@@ -1038,7 +1045,7 @@ default
             else if ( CompareDBPrefix(token, TOK_LOCAL) )
             {
                 loadLocalSettings(value);
-            }			
+            }            
         }
         else if (num == HTTPDB_DELETE)
         {

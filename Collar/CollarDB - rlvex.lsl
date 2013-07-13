@@ -1149,8 +1149,8 @@ default
         for(i = 0; i < iNum_detected; i++)
         {
             sName = llDetectedName(i);
-			lButtons += [sName];
-			g_lScan += [(string)llDetectedKey(i) ,sName];               
+            lButtons += [sName];
+            g_lScan += [(string)llDetectedKey(i) ,sName];               
         }
         //add wearer if not already in button list
         if (llGetListLength(lButtons) > 0)
