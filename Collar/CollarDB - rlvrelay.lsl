@@ -28,6 +28,7 @@ integer MENUNAME_REMOVE         = 0xCDB303;
 
 integer RLV_CMD                 = 0xCDB600;
 integer RLV_REFRESH             = 0xCDB601;     // RLV plugins should reinstate their restrictions upon receiving this message.
+integer RLVR_CMD                = 0xCDB612;
 
 integer RLV_OFF                 = 0xCDB610;     // send to inform plugins that RLV is disabled now, no message or key needed
 integer RLV_ON                  = 0xCDB611;     // send to inform plugins that RLV is enabled now, no message or key needed

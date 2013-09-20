@@ -36,7 +36,7 @@ integer LOCALSETTING_EMPTY      = 0xCDB254;
 
 integer MENUNAME_REQUEST        = 0xCDB300;
 integer MENUNAME_RESPONSE       = 0xCDB301;
-integer SUBMENU                 = 0xCDB302;
+integer MENUNAME_SUBMENU        = 0xCDB302;
 integer MENUNAME_REMOVE         = 0xCDB303;
 
 integer RLV_CMD                 = 0xCDB600;
@@ -708,7 +708,7 @@ default
             if (g_iReturnMenu) 
                 LeashMenu(kMessageID);
             return ;
-            @othermenu;;
+            @othermenu;
             if(sMesL == "leashmenu" || sMessage == "menu " + SUBMENU)
             {
 
@@ -827,11 +827,11 @@ default
         {
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, PARENTMENU + "|" + SUBMENU, NULL_KEY);
         }
-        else if (iAuth == SUBMENU && sMessage == UPMENU)
+        else if (iAuth == MENUNAME_SUBMENU && sMessage == UPMENU)
         {
             llMessageLinked(LINK_SET, MENUNAME_RESPONSE, PARENTMENU + "|" + SUBMENU, NULL_KEY);
         }
-        else if (iAuth == SUBMENU && sMessage == SUBMENU)
+        else if (iAuth == MENUNAME_SUBMENU && sMessage == SUBMENU)
         {
             LeashMenu(kMessageID);
         }
@@ -920,7 +920,7 @@ default
                     }
                     else
                     {
-                        llMessageLinked(LINK_SET, SUBMENU, PARENTMENU, kAV);
+                        llMessageLinked(LINK_SET, MENUNAME_SUBMENU, PARENTMENU, kAV);
                         return;
                     }
                 }                
