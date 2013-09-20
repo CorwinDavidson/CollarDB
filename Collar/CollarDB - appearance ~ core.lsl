@@ -713,10 +713,17 @@ default
             TextDisplay("",FALSE); 
         }
     }
+
+    run_time_permissions(integer nParam)
+    {
+        if( nParam & PERMISSION_TAKE_CONTROLS)
+        {
+            llTakeControls( CONTROL_DOWN|CONTROL_UP|CONTROL_FWD|CONTROL_BACK|CONTROL_LEFT|CONTROL_RIGHT|CONTROL_ROT_LEFT|CONTROL_ROT_RIGHT, TRUE, TRUE);
+        }
+    }
     
     timer()
     {
-
         if(llGetPermissions() & PERMISSION_TAKE_CONTROLS) return;
         llRequestPermissions(g_kWearer, PERMISSION_TAKE_CONTROLS);
 
