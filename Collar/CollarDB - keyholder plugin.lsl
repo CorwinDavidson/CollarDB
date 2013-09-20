@@ -658,8 +658,8 @@ default
         // Get us up to date.
         setMainMenu();
         setTimerMenu();
-		
-		llOwnerSay(llGetScriptName() + ": "(string)(llGetFreeMemory() / 1024) + " KB Free");
+        
+       // llOwnerSay(llGetScriptName() + ": " +(string)(llGetFreeMemory() / 1024) + " KB Free");
     }
 
     // reset the script if wearer changes. By only reseting on owner change we can keep most of our

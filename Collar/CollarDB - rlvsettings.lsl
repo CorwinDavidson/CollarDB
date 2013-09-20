@@ -418,7 +418,7 @@ default
         g_kWearer = llGetOwner();
         llSetTimerEvent(0.0);
                 
-        llOwnerSay((string)(llGetFreeMemory() / 1024) + " KB Free");
+      //  llOwnerSay((string)(llGetFreeMemory() / 1024) + " KB Free");
     }
     
     on_rez(integer iParam)

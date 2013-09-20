@@ -111,6 +111,14 @@ brushedmetal-roundshaded
 brushedmetal-vshaded
 CollarDB - DBImport
 CollarDB - Bootstrap
+CollarDB - color
+CollarDB - dialog
+CollarDB - hide
+CollarDB - menu
+CollarDB - rlvsit
+CollarDB - rlvtalk
+CollarDB - rlvtp
+CollarDB - texture
 !fadestripe
 !whiteleather
 5fadestripes
@@ -136,3 +144,26 @@ seamless foil
 seamless gold foil
 chain
 rope
+~bottom
+~foot-bottom
+~foot-top
+~hug
+~kiss-bottom
+~kiss-top
+~leap-bottom
+~leap-top
+~love-bottom
+~love-top
+~shock
+~top
+~kneelhug
+~kneelhug-dom
+stomp
+faint
+dive
+davinci
+booty
+Grabby Post
+OpenCollar - touch*
+OpenCollar - getavi*
+OpenCollar - interface*

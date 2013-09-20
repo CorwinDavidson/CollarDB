@@ -2,7 +2,7 @@
 string resetScript = "update";
 
 integer g_iItemPageSize = 20;
-integer UPDATE = 10001;
+integer UPDATE                  = 0xCDB999;
 integer updateChildPin = 4711;
 integer updatechannel = -7483214;
 integer updatehandle;

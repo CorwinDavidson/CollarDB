@@ -221,7 +221,7 @@ SetElementAlpha(string sElement2Set, float fAlpha, integer bSaveHTTPDB)
         integer n;
         for (n = 0; n < llGetListLength(lLinks); n++)
         {
-            llSetLinkAlpha(n, fAlpha, ALL_SIDES);
+            llSetLinkAlpha(llList2Integer(lLinks,n), fAlpha, ALL_SIDES);
         }
         integer iIndex2 = llListFindList(g_lAlphaSettings, [sElement]);
         if (iIndex2 == -1)
@@ -270,7 +270,7 @@ SetElementColor(string sElement2Set, vector vColor, integer bSaveHTTPDB)
         integer n;
         for (n = 0; n < llGetListLength(lLinks); n++)
         {
-            llSetLinkColor(n, vColor, ALL_SIDES);
+            llSetLinkColor(llList2Integer(lLinks,n), vColor, ALL_SIDES);
         }
         //create shorter string from the color vectors before saving
         string sStrColor = (string)vColor;
@@ -323,7 +323,7 @@ SetElementTexture(string sElement2Set, key kTex,integer bSaveHTTPDB)
             {
                 lTemp += [PRIM_TEXTURE, iSide/4, kTex] + llList2List(lParams, iSide+1, iSide+3);
             }
-            llSetLinkPrimitiveParamsFast(n, lTemp);
+            llSetLinkPrimitiveParamsFast(llList2Integer(lLinks,n), lTemp);
         }
 
         //change the textures list entry for the current element
@@ -382,10 +382,14 @@ Store_StartScaleLoop()
     for(iPrimIndex = 0; iPrimIndex <= llGetNumberOfPrims(); iPrimIndex++)
     {
         lPrimParams = llGetLinkPrimitiveParams( iPrimIndex, [PRIM_SIZE, PRIM_POS_LOCAL]);
-        vPrimScale = llList2Vector(lPrimParams, 0);
-        vPrimPos = llList2Vector(lPrimParams, 1);
+//        vPrimScale = llList2Vector(lPrimParams, 0);
+//        vPrimPos = llList2Vector(lPrimParams, 1);
 
-        g_lPrimStartSizes += [(string)vPrimScale + "#" + (string)vPrimPos];
+ //       g_lPrimStartSizes += [(string)vPrimScale + "#" + (string)vPrimPos];
+        if (llGetListLength(lPrimParams) > 0)
+            g_lPrimStartSizes += lPrimParams;
+        else
+            g_lPrimStartSizes += [ZERO_VECTOR, ZERO_VECTOR];
     }
     g_iScaleFactor = 100;
     llMessageLinked(LINK_SET, APPEARANCE_SIZE_FACTOR, (string)g_iScaleFactor, NULL_KEY);
@@ -405,7 +409,8 @@ ScalePrimLoop(integer iScale, integer iRezSize, key kAV)
     g_iSizedByScript = TRUE;
     for (iPrimIndex = 0; iPrimIndex <= llGetNumberOfPrims(); iPrimIndex++ )
     {
-        iPrim = llParseString2List(llList2String(g_lPrimStartSizes,iPrimIndex), ["#"], []);
+        //iPrim = llParseString2List(llList2String(g_lPrimStartSizes,iPrimIndex), ["#"], []);
+        iPrim = llList2List(g_lPrimStartSizes,(iPrimIndex*2),(iPrimIndex*2)+1);
         if (fScale == 1.0)
         {
             vPrimScale = (vector)llList2String(iPrim, 0) * fScale;
