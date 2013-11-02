@@ -338,16 +338,7 @@ integer KeyIsAv(key id)
 key Dialog(key kRCPT, string sPrompt, list lChoices, list lUtilityButtons, integer iPage)
 {
     //debug("dialog:"+(string)llGetFreeMemory( ));
-    string sChars = "0123456789abcdef";
-    string sOut;
-    integer n;
-    for (n = 0; n < 8; n++)
-    {
-        integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
-        sOut += llGetSubString(sChars, iIndex, iIndex);
-    }
-    key kID = (key)(sOut + "-0000-0000-0000-000000000000");
-
+    key kID = llGenerateKey();
     llMessageLinked(LINK_SET, DIALOG, (string)kRCPT + "|" + sPrompt + "|" + (string)iPage + "|" + llDumpList2String(lChoices, "`") + "|" + llDumpList2String(lUtilityButtons, "`"), kID);
     return kID;
 }
@@ -431,12 +422,13 @@ TextureMenu(key kIn)
             sName = llDeleteSubString(sName, 0, 5);
             lButtons += [sName];
         }
-        integer iNoteTex = llGetListLength(g_textures);
-        for (iLoop=0;iLoop<iNoteTex;iLoop=iLoop+2)
-        {
-            string sName = llList2String(g_textures,iLoop);
-            lButtons += [sName];
-        }        
+    }
+    integer iNoteTex = llGetListLength(g_textures);
+    for (iLoop=0;iLoop<iNoteTex;iLoop=iLoop+2)
+    {
+        string sName = llList2String(g_textures,iLoop);
+        lButtons += [sName];
+    } 
     }
     lButtons += ["noTexture", "noLeash"];
     g_sCurrentMenu = L_TEXTURE;
